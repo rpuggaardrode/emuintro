@@ -1,0 +1,40 @@
+# A schematic overview of the Emu Speech Database Management System {#sec-intro}
+
+## Background
+
+The core idea behind Emu today is just the same as it was when it first launched in the mid-late 1980s at [CSTR, Edinburgh University](https://www.cstr.ed.ac.uk/){target='_blank'} and known as APS which stood for [Acoustic Phonetics in S](https://www.phonetik.uni-muenchen.de/~jmh/papers/aps.pdf){target='_blank'}.
+
+The core idea of Emu is:
+
+- A speech database is a *collection of utterances* consisting of signal (waveform, formant, f0 etc) and annotation (label) files.
+- There is a *query language*: annotations can be extracted from the database and read directly into R. It should be straightforward to e.g. find all tokens of [i] in the database.
+- These queried lists of annotations in R can be further queried to get the corresponding signals (e.g. find the formants of the [i] tokens extracted at the previous step).
+
+There have been some landmark changes to Emu since the APS--Edinburgh days of the 1980s.
+
+(@) In the 1990s (at Linguistics, Macquarie University, Sydney), Emu’s query language was updated to handle *hierarchically structured annotations*: see especially @cassidy2001. (The name Emu evolved out of **E**xtended **MU**lti-dimensional and because we were in Australia). The query language is still in use today and is the only one of its kind in existence.
+
+![](img/emu1990s.png){width='30%' fig-align='center'}
+
+The query language is still in use today and the only one of its kind in existence.
+
+![The author of the Emu query language is Steve Cassidy who can be seen here feeding the Emu ca 1996.](img/cassidy.png){width='30%' fig-align='center'}
+
+The point of hierarchical annotations is to be able to query annotations at one tier with respect to another. For example the previous query could be extended to:
+
+- Find all `[i]` vowels in the first syllable of trisyllabic accented words, but only if they are preceded by a function word in any `L%` intonational phrase.
+
+(@) From 2002--2006, the **A**dvanced **S**peech **S**ignal **P**rocessor (ASSP) toolkit developed by Michel Scheffers of the IPdS, University of Kiel was integrated into Emu [@bombien2006]. ASSP then morphed into the R package `wrassp` ca. 2014.
+
+(@) In the last few years, the Emu engine was completely overhauled by Raphael Winkelmann with many excellent new features [see also @winkelmann2017], e.g.:
+
+- Emu is launched and operates entirely within the R programming environment.
+- An interactive graphical user interface for analysing and visualising data: the `Emu-webApp`
+- Extension of the query language to include regular expressions.
+- Far more rapid access to extracting annotations and their signal files from the database.
+
+## The Emu-SDMS
+
+<!-- would be nice to have some discussion of this! -->
+
+![](img/emu_overview.png)

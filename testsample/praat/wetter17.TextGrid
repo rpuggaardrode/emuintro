@@ -1,0 +1,112 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 6.1 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "TextTier" 
+        name = "Ton" 
+        xmin = 0 
+        xmax = 6.1 
+        points: size = 0 
+    item [2]:
+        class = "IntervalTier" 
+        name = "ORT" 
+        xmin = 0 
+        xmax = 6.1 
+        intervals: size = 23 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.06 
+            text = "" 
+        intervals [2]:
+            xmin = 0.06 
+            xmax = 0.26 
+            text = "jetzt" 
+        intervals [3]:
+            xmin = 0.26 
+            xmax = 0.29 
+            text = "in" 
+        intervals [4]:
+            xmin = 0.29 
+            xmax = 0.43 
+            text = "der" 
+        intervals [5]:
+            xmin = 0.43 
+            xmax = 0.6 
+            text = "Nacht" 
+        intervals [6]:
+            xmin = 0.6 
+            xmax = 0.72 
+            text = "sind" 
+        intervals [7]:
+            xmin = 0.72 
+            xmax = 0.8 
+            text = "noch" 
+        intervals [8]:
+            xmin = 0.8 
+            xmax = 0.98 
+            text = "ein" 
+        intervals [9]:
+            xmin = 0.98 
+            xmax = 1.2 
+            text = "paar" 
+        intervals [10]:
+            xmin = 1.2 
+            xmax = 1.69 
+            text = "vereinzelte" 
+        intervals [11]:
+            xmin = 1.69 
+            xmax = 2.24 
+            text = "Schneeschauer" 
+        intervals [12]:
+            xmin = 2.24 
+            xmax = 2.69 
+            text = "unterwegs" 
+        intervals [13]:
+            xmin = 2.69 
+            xmax = 2.96 
+            text = "" 
+        intervals [14]:
+            xmin = 2.96 
+            xmax = 3.74 
+            text = "insbesondere" 
+        intervals [15]:
+            xmin = 3.74 
+            xmax = 3.95 
+            text = "so" 
+        intervals [16]:
+            xmin = 3.95 
+            xmax = 4.37 
+            text = "Richtung" 
+        intervals [17]:
+            xmin = 4.37 
+            xmax = 5.24 
+            text = "Mittelgebirge" 
+        intervals [18]:
+            xmin = 5.24 
+            xmax = 5.27 
+            text = "ist" 
+        intervals [19]:
+            xmin = 5.27 
+            xmax = 5.41 
+            text = "aber" 
+        intervals [20]:
+            xmin = 5.41 
+            xmax = 5.58 
+            text = "nicht" 
+        intervals [21]:
+            xmin = 5.58 
+            xmax = 5.7 
+            text = "mehr" 
+        intervals [22]:
+            xmin = 5.7 
+            xmax = 6 
+            text = "viel" 
+        intervals [23]:
+            xmin = 6 
+            xmax = 6.1 
+            text = "" 

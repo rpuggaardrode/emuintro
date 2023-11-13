@@ -1,0 +1,88 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 4.3 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "TextTier" 
+        name = "Ton" 
+        xmin = 0 
+        xmax = 4.3 
+        points: size = 0 
+    item [2]:
+        class = "IntervalTier" 
+        name = "ORT" 
+        xmin = 0 
+        xmax = 4.3 
+        intervals: size = 17 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.27 
+            text = "" 
+        intervals [2]:
+            xmin = 0.27 
+            xmax = 0.52 
+            text = "kann" 
+        intervals [3]:
+            xmin = 0.52 
+            xmax = 1.18 
+            text = "moeglicherweise" 
+        intervals [4]:
+            xmin = 1.18 
+            xmax = 1.52 
+            text = "danach" 
+        intervals [5]:
+            xmin = 1.52 
+            xmax = 1.65 
+            text = "auch" 
+        intervals [6]:
+            xmin = 1.65 
+            xmax = 1.85 
+            text = "wieder" 
+        intervals [7]:
+            xmin = 1.85 
+            xmax = 2.29 
+            text = "kalt" 
+        intervals [8]:
+            xmin = 2.29 
+            xmax = 2.52 
+            text = "werden" 
+        intervals [9]:
+            xmin = 2.52 
+            xmax = 2.82 
+            text = "aber" 
+        intervals [10]:
+            xmin = 2.82 
+            xmax = 2.96 
+            text = "" 
+        intervals [11]:
+            xmin = 2.96 
+            xmax = 3.07 
+            text = "da" 
+        intervals [12]:
+            xmin = 3.07 
+            xmax = 3.26 
+            text = "sag" 
+        intervals [13]:
+            xmin = 3.26 
+            xmax = 3.34 
+            text = "ich" 
+        intervals [14]:
+            xmin = 3.34 
+            xmax = 3.64 
+            text = "erstmal" 
+        intervals [15]:
+            xmin = 3.64 
+            xmax = 3.89 
+            text = "nichts" 
+        intervals [16]:
+            xmin = 3.89 
+            xmax = 4.09 
+            text = "zu" 
+        intervals [17]:
+            xmin = 4.09 
+            xmax = 4.3 
+            text = "" 

@@ -1,0 +1,43 @@
+project:
+  type: book
+
+book:
+  title: "An introduction to `emuR`"
+  author: 
+    - "Jonathan Harrington"
+    - "Johanna Cronenberg"
+    - "Rasmus Puggaard-Rode"
+  date: today
+  favicon: cover.png
+  cover-image: cover.png
+  chapters:
+    - index.qmd
+    - setup.qmd
+    - intro.qmd
+    - first_steps.qmd
+    - wav2emu.qmd
+    - praat2emu.qmd
+    - forced_alignment.qmd
+    - tobi2emu.qmd
+    - query.qmd
+    - signalproc.qmd
+    - formants.qmd
+    - vowel_norm_dist.qmd
+    - dct.qmd
+    - spectral_proc.qmd
+    - dct_spec.qmd
+    - references.qmd
+
+bibliography: references.bib
+crossref:
+  chapters: true
+
+format:
+  html:
+    theme: sandstone
+    fontsize: large
+    df-print: paged
+    callout-appearance: default
+    linkcolor: teal
+
+

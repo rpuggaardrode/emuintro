@@ -1,0 +1,92 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 4.36 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "TextTier" 
+        name = "Ton" 
+        xmin = 0 
+        xmax = 4.36 
+        points: size = 0 
+    item [2]:
+        class = "IntervalTier" 
+        name = "ORT" 
+        xmin = 0 
+        xmax = 4.36 
+        intervals: size = 18 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.04 
+            text = "" 
+        intervals [2]:
+            xmin = 0.04 
+            xmax = 0.14 
+            text = "und" 
+        intervals [3]:
+            xmin = 0.14 
+            xmax = 0.33 
+            text = "der" 
+        intervals [4]:
+            xmin = 0.33 
+            xmax = 0.62 
+            text = "faellt" 
+        intervals [5]:
+            xmin = 0.62 
+            xmax = 0.9 
+            text = "auf" 
+        intervals [6]:
+            xmin = 0.9 
+            xmax = 0.99 
+            text = "den" 
+        intervals [7]:
+            xmin = 0.99 
+            xmax = 1.58 
+            text = "grefrorenen" 
+        intervals [8]:
+            xmin = 1.58 
+            xmax = 2.1 
+            text = "Boden" 
+        intervals [9]:
+            xmin = 2.1 
+            xmax = 2.15 
+            text = "" 
+        intervals [10]:
+            xmin = 2.15 
+            xmax = 2.43 
+            text = "sodass" 
+        intervals [11]:
+            xmin = 2.43 
+            xmax = 2.46 
+            text = "es" 
+        intervals [12]:
+            xmin = 2.46 
+            xmax = 2.61 
+            text = "auch" 
+        intervals [13]:
+            xmin = 2.61 
+            xmax = 2.73 
+            text = "zu" 
+        intervals [14]:
+            xmin = 2.73 
+            xmax = 3.27 
+            text = "gefrierendem" 
+        intervals [15]:
+            xmin = 3.27 
+            xmax = 3.58 
+            text = "Regen" 
+        intervals [16]:
+            xmin = 3.58 
+            xmax = 3.99 
+            text = "kommen" 
+        intervals [17]:
+            xmin = 3.99 
+            xmax = 4.23 
+            text = "kann" 
+        intervals [18]:
+            xmin = 4.23 
+            xmax = 4.36 
+            text = "" 

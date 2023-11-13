@@ -1,0 +1,128 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 6.13 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "TextTier" 
+        name = "Ton" 
+        xmin = 0 
+        xmax = 6.13 
+        points: size = 0 
+    item [2]:
+        class = "IntervalTier" 
+        name = "ORT" 
+        xmin = 0 
+        xmax = 6.13 
+        intervals: size = 27 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.2 
+            text = "" 
+        intervals [2]:
+            xmin = 0.2 
+            xmax = 0.6 
+            text = "naechste" 
+        intervals [3]:
+            xmin = 0.6 
+            xmax = 0.83 
+            text = "Woche" 
+        intervals [4]:
+            xmin = 0.83 
+            xmax = 1.07 
+            text = "gehts" 
+        intervals [5]:
+            xmin = 1.07 
+            xmax = 1.4 
+            text = "ordentlich" 
+        intervals [6]:
+            xmin = 1.4 
+            xmax = 1.49 
+            text = "in" 
+        intervals [7]:
+            xmin = 1.49 
+            xmax = 1.63 
+            text = "den" 
+        intervals [8]:
+            xmin = 1.63 
+            xmax = 2.16 
+            text = "Plusbereich" 
+        intervals [9]:
+            xmin = 2.16 
+            xmax = 2.46 
+            text = "vielleicht" 
+        intervals [10]:
+            xmin = 2.46 
+            xmax = 2.74 
+            text = "sogar" 
+        intervals [11]:
+            xmin = 2.74 
+            xmax = 2.92 
+            text = "" 
+        intervals [12]:
+            xmin = 2.92 
+            xmax = 3.13 
+            text = "auf" 
+        intervals [13]:
+            xmin = 3.13 
+            xmax = 3.24 
+            text = "die" 
+        intervals [14]:
+            xmin = 3.24 
+            xmax = 3.53 
+            text = "acht" 
+        intervals [15]:
+            xmin = 3.53 
+            xmax = 3.95 
+            text = "neun" 
+        intervals [16]:
+            xmin = 3.95 
+            xmax = 4.23 
+            text = "Grad" 
+        intervals [17]:
+            xmin = 4.23 
+            xmax = 4.31 
+            text = "wie" 
+        intervals [18]:
+            xmin = 4.31 
+            xmax = 4.56 
+            text = "lange" 
+        intervals [19]:
+            xmin = 4.56 
+            xmax = 4.73 
+            text = "das" 
+        intervals [20]:
+            xmin = 4.73 
+            xmax = 4.92 
+            text = "dann" 
+        intervals [21]:
+            xmin = 4.92 
+            xmax = 5.17 
+            text = "haelt" 
+        intervals [22]:
+            xmin = 5.17 
+            xmax = 5.26 
+            text = "ist" 
+        intervals [23]:
+            xmin = 5.26 
+            xmax = 5.39 
+            text = "noch" 
+        intervals [24]:
+            xmin = 5.39 
+            xmax = 5.58 
+            text = "nicht" 
+        intervals [25]:
+            xmin = 5.58 
+            xmax = 5.68 
+            text = "so" 
+        intervals [26]:
+            xmin = 5.68 
+            xmax = 6.07 
+            text = "sicher" 
+        intervals [27]:
+            xmin = 6.07 
+            xmax = 6.13 
+            text = "" 

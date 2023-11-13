@@ -1,0 +1,60 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 3.06 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "TextTier" 
+        name = "Ton" 
+        xmin = 0 
+        xmax = 3.06 
+        points: size = 0 
+    item [2]:
+        class = "IntervalTier" 
+        name = "ORT" 
+        xmin = 0 
+        xmax = 3.06 
+        intervals: size = 10 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.28 
+            text = "" 
+        intervals [2]:
+            xmin = 0.28 
+            xmax = 0.66 
+            text = "weiss" 
+        intervals [3]:
+            xmin = 0.66 
+            xmax = 1.22 
+            text = "verschneite" 
+        intervals [4]:
+            xmin = 1.22 
+            xmax = 1.66 
+            text = "Landschaft" 
+        intervals [5]:
+            xmin = 1.66 
+            xmax = 1.85 
+            text = "wenn" 
+        intervals [6]:
+            xmin = 1.85 
+            xmax = 1.99 
+            text = "man" 
+        intervals [7]:
+            xmin = 1.99 
+            xmax = 2.15 
+            text = "sich" 
+        intervals [8]:
+            xmin = 2.15 
+            xmax = 2.4 
+            text = "drauf" 
+        intervals [9]:
+            xmin = 2.4 
+            xmax = 3.04 
+            text = "einstellt" 
+        intervals [10]:
+            xmin = 3.04 
+            xmax = 3.06 
+            text = "" 

@@ -1,0 +1,3 @@
+# Preface {.unnumbered}
+
+This book is currently being built. It is an updated version of the materials for a [course in Advanced Speech Technology](https://www.phonetik.uni-muenchen.de/~jmh/lehre/sem/ws2122/emuintro.htm){target='_blank'} taught in the [MA Phonetics & Speech Processing](https://www.en.phonetik.uni-muenchen.de/study/master_en/index.html){target='_blank'} at LMU Munich.
