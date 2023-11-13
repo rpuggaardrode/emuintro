@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>An introduction to emuR - 5&nbsp; Forced alignment in emuR</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./tobi2emu.html" rel="next">
+<link href="./praat2emu.html" rel="prev">
+<link href="./cover.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./forced_alignment.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Forced alignment in `emuR`</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">An introduction to <code>emuR</code></a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Initial setup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">A schematic overview of the Emu Speech Database Management System</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./first_steps.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">First steps in using the Emu Speech Database Management System</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./wav2emu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Creating an Emu database from .wav files</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./praat2emu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./forced_alignment.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Forced alignment in <code>emuR</code></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tobi2emu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Configuring <code>emuR</code> for ToBI annotations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./query.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The Emu query language</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./signalproc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">An introduction to signal processing in <code>emuR</code></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./formants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Automatic formant tracking and manual correction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vowel_norm_dist.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Vowel normalisation and vowel distances</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dct.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">The discrete cosine transformation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./spectral_proc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Spectral processing of speech</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dct_spec.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Parameterising spectra with the DCT</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#objective-and-preliminaries" id="toc-objective-and-preliminaries" class="nav-link active" data-scroll-target="#objective-and-preliminaries"><span class="header-section-number">5.1</span> Objective and preliminaries</a></li>
+  <li><a href="#converting-a-text-collection-into-an-emu-database" id="toc-converting-a-text-collection-into-an-emu-database" class="nav-link" data-scroll-target="#converting-a-text-collection-into-an-emu-database"><span class="header-section-number">5.2</span> Converting a text collection into an Emu database</a></li>
+  <li><a href="#forced-alignment" id="toc-forced-alignment" class="nav-link" data-scroll-target="#forced-alignment"><span class="header-section-number">5.3</span> Forced alignment</a></li>
+  <li><a href="#forced-alignment-albanian" id="toc-forced-alignment-albanian" class="nav-link" data-scroll-target="#forced-alignment-albanian"><span class="header-section-number">5.4</span> Forced alignment: Albanian</a>
+  <ul class="collapse">
+  <li><a href="#from-a-text-collection" id="toc-from-a-text-collection" class="nav-link" data-scroll-target="#from-a-text-collection"><span class="header-section-number">5.4.1</span> From a text collection</a></li>
+  <li><a href="#from-a-canonical-representation" id="toc-from-a-canonical-representation" class="nav-link" data-scroll-target="#from-a-canonical-representation"><span class="header-section-number">5.4.2</span> From a canonical representation</a></li>
+  </ul></li>
+  <li><a href="#functions-introduced-in-this-chapter" id="toc-functions-introduced-in-this-chapter" class="nav-link" data-scroll-target="#functions-introduced-in-this-chapter"><span class="header-section-number">5.5</span> Functions introduced in this chapter</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Forced alignment in <code>emuR</code></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="objective-and-preliminaries" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="objective-and-preliminaries"><span class="header-section-number">5.1</span> Objective and preliminaries</h2>
+<p>The objective of this chapter is to show how to go from a directory with <code>.wav</code> files and simple <code>.txt</code> files containing orthographic transcriptions to a phonetically annotated and force-aligned Emu database.</p>
+<p>The assumption is that you already have an R project called <code>ipsR</code> and that it contains the directories <code>emu_databases</code> and <code>testsample</code>. If this is not the case, please go back and follow the preliminaries chapter.</p>
+<!-- add final link to prelim chapter when this is done -->
+<p>Start up R in the project you are using for this course and load the following packages:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emuR)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(wrassp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In R, store the path to the directory <code>testsample</code> as <code>sourceDir</code> in the following way:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sourceDir <span class="ot">&lt;-</span> <span class="st">"./testsample"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And also store in R the path to <code>emu_databases</code> as <code>targetDir</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>targetDir <span class="ot">&lt;-</span> <span class="st">"./emu_databases"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="converting-a-text-collection-into-an-emu-database" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="converting-a-text-collection-into-an-emu-database"><span class="header-section-number">5.2</span> Converting a text collection into an Emu database</h2>
+<p>The directory <code>./testsample/german</code> on your computer contains <code>.wav</code> files and <code>.txt</code> files. Define the path to this directory in R and check that you can see these files with the <code>list.files()</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>path.german <span class="ot">&lt;-</span> <span class="fu">file.path</span>(sourceDir, <span class="st">"german"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(path.german)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "K01BE001.txt" "K01BE001.wav" "K01BE002.txt" "K01BE002.wav"</code></pre>
+</div>
+</div>
+<p>The above is an example of a <strong>text collection</strong> because it contains matching <code>.wav</code> and <code>.txt</code> files in the same directory such that, for each <code>.wav</code> file, the <code>.txt</code> file contains the corresponding orthography. We can see that this is true by using the function <code>read_file()</code> to read the context of these <code>.txt</code> files:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_file</span>(<span class="fu">file.path</span>(path.german, <span class="st">'K01BE001.txt'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "heute ist schönes Frühlingswetter"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_file</span>(<span class="fu">file.path</span>(path.german, <span class="st">'K01BE002.txt'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "die Sonne lacht"</code></pre>
+</div>
+</div>
+<p>The command <code>convert_txtCollection()</code> is used to convert a text collection into an Emu database. Below we make an Emu database called <code>ger2</code>, which we’ll store in <code>targetDir</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">convert_txtCollection</span>(<span class="at">dbName =</span> <span class="st">"ger2"</span>,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sourceDir =</span> path.german,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">targetDir =</span> targetDir,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">verbose=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Load the database into R with <code>load_emuDB()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ger2_DB <span class="ot">&lt;-</span> <span class="fu">load_emuDB</span>(<span class="fu">file.path</span>(targetDir, <span class="st">"ger2_emuDB"</span>), <span class="at">verbose=</span><span class="cn">FALSE</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ger2_DB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Summary of emuDB ────────────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Name:    ger2 
+UUID:    bcf2e700-ff87-48f9-9415-84203a11a290 
+Directory:   C:\Users\rasmu\surfdrive\emuintro\emuintro\emu_databases\ger2_emuDB 
+Session count: 1 
+Bundle count: 2 
+Annotation item count:  2 
+Label count:  4 
+Link count:  0 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Database configuration ──────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── SSFF track definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dataramme med 0 kolonner og 0 rækker</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Level definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> name   type nrOfAttrDefs attrDefNames          
+ bundle ITEM 2            bundle; transcription;</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Link definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dataramme med 0 kolonner og 0 rækker</code></pre>
+</div>
+</div>
+<p><code>serve()</code> the database and have a look at it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(ger2_DB, <span class="at">useViewer =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If you switch to hierarchy view, you should see that the words in the <code>.txt</code> files are a single item in the <code>attribute</code> tier of <code>bundle</code> with the name <code>transcription</code>, as shown in the figure below:</p>
+<p><img src="img/transcr.png" class="img-fluid"></p>
+<p>It is evident when <code>query()</code>ing the database that the words are stored in this way, as shown below. Note that we need to include the argument <code>calcTimes=FALSE</code> here, because the annotation level <code>transcription</code> is of type <code>ITEM</code> and is not linked to a time-based level (i.e.&nbsp;a <code>SEGMENT</code> or an <code>EVENT</code> level).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">query</span>(ger2_DB, <span class="st">"transcription =~ .*"</span>, <span class="at">calcTimes=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["db_uuid"],"name":[4],"type":["chr"],"align":["left"]},{"label":["session"],"name":[5],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[6],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[8],"type":["int"],"align":["right"]},{"label":["level"],"name":[9],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[10],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[12],"type":["int"],"align":["right"]},{"label":["type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[15],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"heute ist schönes Frühlingswetter","2":"NA","3":"NA","4":"bcf2e700-ff87-48f9-9415-84203a11a290","5":"0000","6":"K01BE001","7":"1","8":"1","9":"bundle","10":"bundle","11":"1","12":"1","13":"ITEM","14":"NA","15":"NA","16":"16000"},{"1":"die Sonne lacht","2":"NA","3":"NA","4":"bcf2e700-ff87-48f9-9415-84203a11a290","5":"0000","6":"K01BE002","7":"1","8":"1","9":"bundle","10":"bundle","11":"1","12":"1","13":"ITEM","14":"NA","15":"NA","16":"16000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+<section id="forced-alignment" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="forced-alignment"><span class="header-section-number">5.3</span> Forced alignment</h2>
+<p>We are now going to run the Munich Automatic Segmentation (MAUS) pipeline over the database. We do this with the function <code>runBASwebservice_all()</code>, which combines a number of online processing tools. Obligatory arguments are <code>transcriptionAttributeDefinitionName()</code> which will be the name of the newly created annotation level, and <code>language</code>, which in this case we set to <code>deu-DE</code>. We also set the argument <code>runMINNI</code> to <code>FALSE</code>; this is potentially used to forced-align data which has no annotations at all. Note that <code>runBASwebservice_all()</code> can only be used if you have an active internet connection.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">runBASwebservice_all</span>(ger2_DB,</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">transcriptionAttributeDefinitionName =</span> <span class="st">"transcription"</span>,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">language =</span> <span class="st">"deu-DE"</span>, </span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">runMINNI =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The <code>language</code> setting in MAUS
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There are quite a lot of languages available in MAUS. As of this writing, you can force-align Afrikaans, Albanian, Arabic, Basque, Catalan, Dutch, English, Estonian, Finnish, French, Georgian, German, Hungarian, Icelandic, Italian, Japanese, Luxembourgish, Maltese, Min Nan, Norwegian, Persian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish, and Thai. There’s also a language independent mode which expects files to be phonetically transcribed in X-SAMPA, and a special mode for Australian aboriginal languages. Additionally, many of these languages have modes for multiple different dialects. More information can be found in the <a href="https://clarin.phonetik.uni-muenchen.de/BASWebServices/services/help">MAUS help files</a> and in the <a href="https://clarin.phonetik.uni-muenchen.de/BASWebServices/interface/WebMAUSGeneral">MAUS web interface</a>.</p>
+</div>
+</div>
+<p>Let’s have a look at the database summary again:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ger2_DB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Summary of emuDB ────────────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Name:    ger2 
+UUID:    bcf2e700-ff87-48f9-9415-84203a11a290 
+Directory:   C:\Users\rasmu\surfdrive\emuintro\emuintro\emu_databases\ger2_emuDB 
+Session count: 1 
+Bundle count: 2 
+Annotation item count:  58 
+Label count:  74 
+Link count:  52 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Database configuration ──────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── SSFF track definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dataramme med 0 kolonner og 0 rækker</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Level definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> name   type    nrOfAttrDefs attrDefNames          
+ bundle ITEM    2            bundle; transcription;
+ ORT    ITEM    3            ORT; KAN; KAS;        
+ MAU    SEGMENT 1            MAU;                  
+ MAS    ITEM    1            MAS;                  </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Link definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> type        superlevelName sublevelName
+ ONE_TO_MANY bundle         ORT         
+ ONE_TO_MANY ORT            MAS         
+ ONE_TO_MANY MAS            MAU         </code></pre>
+</div>
+</div>
+<p>Note that multiple extra levels and attributes have been created (<code>ORT</code>, <code>KAN</code>, <code>KAS</code>, <code>MAU</code>, and <code>MAS</code>), as well as links between them.</p>
+<p>Let’s <code>serve()</code> the database.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(ger2_DB, <span class="at">useViewer=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We immediately see that phone-level annotations have been added in the <code>MAU</code> level. Have a look at the hierarchy view and try to identify the levels, links, and attributes.</p>
+<p><img src="img/germaus.png" class="img-fluid"></p>
+<p>This shows that the phone-level annotations are linked to syllable-level annotations in the <code>MAS</code> level and word-level orthographic annotations in the <code>ORT</code> level. The <code>ORT</code> level further has the attributes <code>KAN</code> and <code>KAS</code>. These contain <em>canonical representations</em> of the word, i.e.&nbsp;phonetic annotations corresponding to the canonical pronunciations of these words. The <code>MAS</code> level is chunked into syllables.</p>
+<p>Given this complex information, more complex queries are now also possible. Let’s say we want to find the word-initial <code>MAU</code> segments of all polysyllabic words:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>mau.s <span class="ot">&lt;-</span> <span class="fu">query</span>(ger2_DB,</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>               <span class="st">"[[MAU =~.* &amp; Start(ORT, MAU)=1] ^ Num(ORT, MAS) &gt; 1]"</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>mau.s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["db_uuid"],"name":[4],"type":["chr"],"align":["left"]},{"label":["session"],"name":[5],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[6],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[8],"type":["int"],"align":["right"]},{"label":["level"],"name":[9],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[10],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[12],"type":["int"],"align":["right"]},{"label":["type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[15],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"h","2":"117.0938","3":"167.0938","4":"bcf2e700-ff87-48f9-9415-84203a11a290","5":"0000","6":"K01BE001","7":"7","8":"7","9":"MAU","10":"MAU","11":"2","12":"2","13":"SEGMENT","14":"1874","15":"2673","16":"16000"},{"1":"S","2":"597.0938","3":"717.0938","4":"bcf2e700-ff87-48f9-9415-84203a11a290","5":"0000","6":"K01BE001","7":"13","8":"13","9":"MAU","10":"MAU","11":"8","12":"8","13":"SEGMENT","14":"9554","15":"11473","16":"16000"},{"1":"f","2":"977.0938","3":"1027.0938","4":"bcf2e700-ff87-48f9-9415-84203a11a290","5":"0000","6":"K01BE001","7":"18","8":"18","9":"MAU","10":"MAU","11":"13","12":"13","13":"SEGMENT","14":"15634","15":"16433","16":"16000"},{"1":"z","2":"967.0938","3":"1027.0938","4":"bcf2e700-ff87-48f9-9415-84203a11a290","5":"0000","6":"K01BE002","7":"8","8":"8","9":"MAU","10":"MAU","11":"4","12":"4","13":"SEGMENT","14":"15474","15":"16433","16":"16000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>This data frame can then be passed to <code>requery_hier()</code> so we can see the labels in the <code>ORT</code> level associated with these words, like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">requery_hier</span>(ger2_DB, mau.s, <span class="st">"ORT"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["db_uuid"],"name":[4],"type":["chr"],"align":["left"]},{"label":["session"],"name":[5],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[6],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[8],"type":["int"],"align":["right"]},{"label":["level"],"name":[9],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[10],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[12],"type":["int"],"align":["right"]},{"label":["type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[15],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"heute","2":"117.0938","3":"457.0938","4":"bcf2e700-ff87-48f9-9415-84203a11a290","5":"0000","6":"K01BE001","7":"2","8":"2","9":"ORT","10":"ORT","11":"1","12":"1","13":"ITEM","14":"1874","15":"7313","16":"16000"},{"1":"schönes","2":"597.0938","3":"977.0938","4":"bcf2e700-ff87-48f9-9415-84203a11a290","5":"0000","6":"K01BE001","7":"4","8":"4","9":"ORT","10":"ORT","11":"3","12":"3","13":"ITEM","14":"9554","15":"15633","16":"16000"},{"1":"Frühlingswetter","2":"977.0938","3":"1717.0938","4":"bcf2e700-ff87-48f9-9415-84203a11a290","5":"0000","6":"K01BE001","7":"5","8":"5","9":"ORT","10":"ORT","11":"4","12":"4","13":"ITEM","14":"15634","15":"27473","16":"16000"},{"1":"Sonne","2":"967.0938","3":"1197.0938","4":"bcf2e700-ff87-48f9-9415-84203a11a290","5":"0000","6":"K01BE002","7":"3","8":"3","9":"ORT","10":"ORT","11":"2","12":"2","13":"ITEM","14":"15474","15":"19153","16":"16000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>This may all seem rather opaque, but we’ll go into much more detail with how the querying language works in <a href="query.html"><span>Chapter&nbsp;7</span></a>.</p>
+</section>
+<section id="forced-alignment-albanian" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="forced-alignment-albanian"><span class="header-section-number">5.4</span> Forced alignment: Albanian</h2>
+<p>Next we’ll try out forced alignment for a different language (Albanian) and we will show how forced alignment can be done from a canonical phonemic transcription instead of from text.</p>
+<section id="from-a-text-collection" class="level3" data-number="5.4.1">
+<h3 data-number="5.4.1" class="anchored" data-anchor-id="from-a-text-collection"><span class="header-section-number">5.4.1</span> From a text collection</h3>
+<p>First we’ll use a text collection like we saw for German previously. This text collection is in our <code>sourceDir</code> in a folder called <code>albanian</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>path.albanian <span class="ot">&lt;-</span> <span class="fu">file.path</span>(sourceDir, <span class="st">"albanian"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>First we’ll convert the text collection into an Emu database using <code>convert_txtCollection()</code> as above.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">convert_txtCollection</span>(<span class="at">dbName =</span> <span class="st">"alb"</span>,</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sourceDir =</span> path.albanian,</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">targetDir =</span> targetDir,</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">verbose=</span><span class="cn">FALSE</span>)</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>alb_DB <span class="ot">&lt;-</span> <span class="fu">load_emuDB</span>(<span class="fu">file.path</span>(targetDir, <span class="st">"alb_emuDB"</span>), <span class="at">verbose=</span><span class="cn">FALSE</span>)</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(alb_DB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Summary of emuDB ────────────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Name:    alb 
+UUID:    dd0db274-68af-44fa-adf4-fe430f5af380 
+Directory:   C:\Users\rasmu\surfdrive\emuintro\emuintro\emu_databases\alb_emuDB 
+Session count: 1 
+Bundle count: 4 
+Annotation item count:  4 
+Label count:  8 
+Link count:  0 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Database configuration ──────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── SSFF track definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dataramme med 0 kolonner og 0 rækker</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Level definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> name   type nrOfAttrDefs attrDefNames          
+ bundle ITEM 2            bundle; transcription;</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Link definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dataramme med 0 kolonner og 0 rækker</code></pre>
+</div>
+</div>
+<p>Have a look at the database, switch to hierarchy view, and verify that the words have been located at <code>bundle -&gt; transcription</code> as for the German database above.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(alb_DB, <span class="at">useViewer =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now run MAUS, just as before. The language code for Albanian is <code>sqi-AL</code>. Note that this will take longer than for German, possibly a couple of minutes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">runBASwebservice_all</span>(alb_DB, </span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">transcriptionAttributeDefinitionName =</span> <span class="st">"transcription"</span>,</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">language =</span> <span class="st">"sqi-AL"</span>, </span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">runMINNI =</span> F,</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">verbose=</span><span class="cn">FALSE</span>)</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(alb_DB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Summary of emuDB ────────────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Name:    alb 
+UUID:    dd0db274-68af-44fa-adf4-fe430f5af380 
+Directory:   C:\Users\rasmu\surfdrive\emuintro\emuintro\emu_databases\alb_emuDB 
+Session count: 1 
+Bundle count: 4 
+Annotation item count:  138 
+Label count:  176 
+Link count:  125 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Database configuration ──────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── SSFF track definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dataramme med 0 kolonner og 0 rækker</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Level definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> name   type    nrOfAttrDefs attrDefNames          
+ bundle ITEM    2            bundle; transcription;
+ ORT    ITEM    3            ORT; KAN; KAS;        
+ MAU    SEGMENT 1            MAU;                  
+ MAS    ITEM    1            MAS;                  </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Link definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> type        superlevelName sublevelName
+ ONE_TO_MANY bundle         ORT         
+ ONE_TO_MANY ORT            MAS         
+ ONE_TO_MANY MAS            MAU         </code></pre>
+</div>
+</div>
+<p>Look at the database and verify that the same kind of information has been automatically derived, as for the German database earlier.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(alb_DB, <span class="at">useViewer =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="from-a-canonical-representation" class="level3" data-number="5.4.2">
+<h3 data-number="5.4.2" class="anchored" data-anchor-id="from-a-canonical-representation"><span class="header-section-number">5.4.2</span> From a canonical representation</h3>
+<p>MAUS also allows an automatic segmentation to be derived directly from the canonical level that we saw in the <code>KAN</code> attribute above. This can be useful when the canonical representation provided by MAUS deviates considerably from what was actually said. For one of the words in <code>0001BF_1syll_1</code>, the canonical representation has <code>J E</code> when what was actually said was closer to <code>n J E</code>.</p>
+<p>First switch in hierarchy view from <code>ORT</code> → <code>KAN</code> and then change the node <code>J E</code> of the <code>ORT:KAN</code> level to <code>n J E</code> for file <code>0001BF_1syll_1</code> in the manner of <a href="#fig-albhier">Figure&nbsp;<span>5.1</span></a>, as we also saw in <a href="wav2emu.html"><span>Chapter&nbsp;3</span></a>.</p>
+<div id="fig-albhier" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/figalbhier.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;5.1: A fragment of a hierarchy view.</figcaption>
+</figure>
+</div>
+<p>In order to run MAUS on this more appropriate pronunciation, first change it as in <a href="#fig-albhier">Figure&nbsp;<span>5.1</span></a> above, and don’t forget to save the annotation after editing. Now MAUS can be run directly on this canonical level using the <code>runBASwebservice_maus()</code> function. Here we again pass the language, and we pass the name of the existing annotation level with a canonical representation <code>KAN</code> to the argument <code>canoAttributeDefinitionName</code> and the name of the newly created force-aligned level <code>mausAttributeDefinitionName</code>, which we call <code>MAU2</code> to differentiate it from the already created <code>MAU</code> tier.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">runBASwebservice_maus</span>(alb_DB,</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">canoAttributeDefinitionName =</span> <span class="st">"KAN"</span>,</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">mausAttributeDefinitionName =</span> <span class="st">"MAU2"</span>,</span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">language =</span> <span class="st">"sqi-AL"</span>,</span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">verbose=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Inspect the database again. There should now be a new tier <code>MAU2</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(alb_DB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Summary of emuDB ────────────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Name:    alb 
+UUID:    dd0db274-68af-44fa-adf4-fe430f5af380 
+Directory:   C:\Users\rasmu\surfdrive\emuintro\emuintro\emu_databases\alb_emuDB 
+Session count: 1 
+Bundle count: 4 
+Annotation item count:  219 
+Label count:  257 
+Link count:  197 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Database configuration ──────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── SSFF track definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dataramme med 0 kolonner og 0 rækker</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Level definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> name   type    nrOfAttrDefs attrDefNames          
+ bundle ITEM    2            bundle; transcription;
+ ORT    ITEM    3            ORT; KAN; KAS;        
+ MAU    SEGMENT 1            MAU;                  
+ MAS    ITEM    1            MAS;                  
+ MAU2   SEGMENT 1            MAU2;                 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Link definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> type        superlevelName sublevelName
+ ONE_TO_MANY bundle         ORT         
+ ONE_TO_MANY ORT            MAS         
+ ONE_TO_MANY MAS            MAU         
+ ONE_TO_MANY ORT            MAU2        </code></pre>
+</div>
+</div>
+<p>If you have reason to suspect that the canonical representation will differ from what is actually said in the recording, you can use the function <code>runBASwebserivce_g2pForPronunciation()</code> as the first step. This way, you will not have to run MAUS twice, as <code>runBASwebserivce_g2pForPronunciation()</code> only generates the canonical representations without doing forced alignment. If you have much more data, this could possibly speed up your process.</p>
+</section>
+</section>
+<section id="functions-introduced-in-this-chapter" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="functions-introduced-in-this-chapter"><span class="header-section-number">5.5</span> Functions introduced in this chapter</h2>
+<ul>
+<li><code>read_file()</code>: reads the content of a <code>.txt</code> file into R</li>
+<li><code>convert_txtCollection()</code>: converts pairs of <code>.wav</code> and <code>.txt</code> files into an Emu database.</li>
+<li><code>run_BASwebservice_all()</code>: performs all the steps needed to get from an Emu database with orthographical transcription that aren’t time-aligned to a multi-level force-aligned phonetic annotation</li>
+<li><code>run_BASwebservice_maus()</code>: performs forced alignment on an Emu database which already has (non-time-aligned) canonical phonetic annotations</li>
+<li><code>run_BASwebservice_g2pForPronunciation()</code>: performs grapheme-to-phoneme (G2P) conversion of an orthographical transcription to a canonical phonetic transcription on an Emu database</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./praat2emu.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./tobi2emu.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Configuring <code>emuR</code> for ToBI annotations</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

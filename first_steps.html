@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>An introduction to emuR - 2&nbsp; First steps in using the Emu Speech Database Management System</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./wav2emu.html" rel="next">
+<link href="./intro.html" rel="prev">
+<link href="./cover.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./first_steps.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">First steps in using the Emu Speech Database Management System</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">An introduction to <code>emuR</code></a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Initial setup</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">A schematic overview of the Emu Speech Database Management System</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./first_steps.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">First steps in using the Emu Speech Database Management System</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./wav2emu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Creating an Emu database from .wav files</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./praat2emu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./forced_alignment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Forced alignment in <code>emuR</code></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tobi2emu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Configuring <code>emuR</code> for ToBI annotations</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./query.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The Emu query language</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./signalproc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">An introduction to signal processing in <code>emuR</code></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./formants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Automatic formant tracking and manual correction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vowel_norm_dist.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Vowel normalisation and vowel distances</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dct.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">The discrete cosine transformation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./spectral_proc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Spectral processing of speech</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dct_spec.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Parameterising spectra with the DCT</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#preliminaries-and-loading-libraries" id="toc-preliminaries-and-loading-libraries" class="nav-link active" data-scroll-target="#preliminaries-and-loading-libraries"><span class="header-section-number">2.1</span> Preliminaries and loading libraries</a></li>
+  <li><a href="#accessing-an-existing-emu-speech-database" id="toc-accessing-an-existing-emu-speech-database" class="nav-link" data-scroll-target="#accessing-an-existing-emu-speech-database"><span class="header-section-number">2.2</span> Accessing an existing Emu speech database</a></li>
+  <li><a href="#sec-defprops" id="toc-sec-defprops" class="nav-link" data-scroll-target="#sec-defprops"><span class="header-section-number">2.3</span> Some defining properties of an Emu database</a></li>
+  <li><a href="#viewing-and-annotating-an-emu-database" id="toc-viewing-and-annotating-an-emu-database" class="nav-link" data-scroll-target="#viewing-and-annotating-an-emu-database"><span class="header-section-number">2.4</span> Viewing and annotating an Emu database</a></li>
+  <li><a href="#functions-introduced-in-this-chapter" id="toc-functions-introduced-in-this-chapter" class="nav-link" data-scroll-target="#functions-introduced-in-this-chapter"><span class="header-section-number">2.5</span> Functions introduced in this chapter</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-first_steps" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">First steps in using the Emu Speech Database Management System</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="preliminaries-and-loading-libraries" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="preliminaries-and-loading-libraries"><span class="header-section-number">2.1</span> Preliminaries and loading libraries</h2>
+<p>Follow the setup instructions given in the setup chapter, i.e.&nbsp;download R and RStudio, create a directory on your computer where you will store files for this course, make a note of the directory path, create an R project that accesses this directory, and install all indicated packages. <!-- Manually add link to setup chapter when the doc is up on the IPS Github --></p>
+<p>For this and subsequent tutorials, access the <code>tidyverse</code>,<code>magrittr</code>, <code>emuR</code>, and <code>wrassp</code> libraries:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emuR)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(wrassp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="accessing-an-existing-emu-speech-database" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="accessing-an-existing-emu-speech-database"><span class="header-section-number">2.2</span> Accessing an existing Emu speech database</h2>
+<p>For a first look at the properties of Emu databases, we will use the function <code>create_emuRdemodata()</code> to download and access a demonstration database.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">create_emuRdemoData</span>(<span class="at">dir =</span> <span class="fu">tempdir</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The option <code>dir = tempdir()</code> tells R to store the demo database in a temporary directory, the path of which is determined internally by the <code>tempdir()</code> function.</p>
+<p>We can now use the command <code>list.dirs()</code> to have a look inside the temporary directory and see which directories are in there. (<code>recursive=FALSE</code> tells R not to return the names of all subdirectories, and <code>full.names=FALSE</code> tells R not to return the full paths to directories).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list.dirs</span>(<span class="fu">tempdir</span>(), <span class="at">recursive=</span><span class="cn">FALSE</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "emuR_demoData"</code></pre>
+</div>
+</div>
+<p>Our demo data is stored in the first subdirectory, <code>emuR_demoData</code>. Let’s have a look at what is stored in there. (The second directory with the long obscure name is always created when a new R session is started).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#store path name as an object</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>path.emuDB <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">tempdir</span>(), <span class="st">"/emuR_demoData"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list.dirs</span>(path.emuDB, <span class="at">recursive=</span><span class="cn">FALSE</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "ae_emuDB"            "BPF_collection"      "legacy_ae"          
+[4] "TextGrid_collection" "txt_collection"     </code></pre>
+</div>
+</div>
+<p>There are some folders containing <code>collection</code>s of sound files and annotation files. (In <a href="praat2emu.html"><span>Chapter&nbsp;4</span></a> we will see how to convert an existing collection of sound files and TextGrids to an Emu database). There is also a folder called <code>ae_emuDB</code>, which contains our actual demo database. The database is called <code>ae</code>, and the string <code>_emuDB</code> is always appended to Emu databases. The full path to this Emu database can be accessed with the <code>file.path()</code> function, like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">"emuR_demoData"</span>, <span class="st">"ae_emuDB"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "C:\\Users\\rasmu\\AppData\\Local\\Temp\\RtmpkhTwaR/emuR_demoData/ae_emuDB"</code></pre>
+</div>
+</div>
+<p>In order to see the files that are physically stored in the <code>ae_emuDB</code>, first save the path name and then use the function <code>list.files()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>path.ae <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">"emuR_demoData"</span>, <span class="st">"ae_emuDB"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(path.ae)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "0000_ses"         "ae_DBconfig.json"</code></pre>
+</div>
+</div>
+<p>The file <code>ae_DBconfig.json</code> is a template that stores information about the defining properties of the <code>ae</code> database; see <a href="#sec-defprops"><span>Section&nbsp;2.3</span></a>. The utterances are in this case all stored in the directory <code>0000_ses</code>. To look inside this directory:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(<span class="fu">file.path</span>(path.ae, <span class="st">"0000_ses"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "msajc003_bndl" "msajc010_bndl" "msajc012_bndl" "msajc015_bndl"
+[5] "msajc022_bndl" "msajc023_bndl" "msajc057_bndl"</code></pre>
+</div>
+</div>
+<p>This shows that there <code>0000_ses</code> contains 7 directories of so-called <em>bundles</em> <code>bndl</code>. Emu organises things such that all the files that belong to the same utterance are always in the same bundle. The <em>utterance identifier</em> precedes <code>_</code>. Thus in this case, it is clear from the output above that there are 7 utterances whose identifiers are <code>msajc003</code>, <code>msajc010</code>, <code>msajc012</code>, <code>msajc015</code>, <code>msajc023</code>, <code>msajc057</code>. We can again use <code>list.files()</code> in combination with <code>file.path()</code> to see what files there are for any utterance, in this case for <code>msajc003</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(<span class="fu">file.path</span>(path.ae, <span class="st">"0000_ses"</span>, <span class="st">"msajc003_bndl"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "msajc003.dft"        "msajc003.fms"        "msajc003.wav"       
+[4] "msajc003_annot.json"</code></pre>
+</div>
+</div>
+<p>This shows that <code>msajc003</code> has the following files:</p>
+<ul>
+<li><code>_annot.json</code>: this stores information about the annotations.</li>
+<li><code>.dft</code>: this contains a derived signal file of DFT (spectral) data obtained from the speech waveform; spectral processing is discussed in more detail in <a href="spectral_proc.html"><span>Chapter&nbsp;12</span></a>.</li>
+<li><code>.fms</code>: this contains formant data also obtained from the speech waveform.</li>
+<li><code>.wav</code>: this contains the waveform itself.</li>
+</ul>
+<p><code>.dft</code> and <code>.fms</code> are just examples of the sorts of signal files that can be stored in an Emu database – this could also have been signals like pitch tracks or intensity, but for the advanced user, essentially any signal can be stored in an Emu database. We will see more examples in <a href="signalproc.html"><span>Chapter&nbsp;8</span></a>.</p>
+<p>In order to access the <code>ae</code> emuDB in R, the above path needs to be stored and passed to the function <code>load_emuDB()</code> that reads the database into R. The output of <code>load_emuDB()</code> should always be assigned to an object in R, or you will not be able to access it later. Here we store it as <code>ae</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># store the above path name</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>path2ae <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">"emuR_demoData"</span>, <span class="st">"ae_emuDB"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>ae <span class="ot">&lt;-</span> <span class="fu">load_emuDB</span>(path2ae, <span class="at">verbose=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What does <code>verbose=FALSE</code> mean?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Throughout this book you will often see us use the option <code>verbose=FALSE</code> when calling functions from <code>emuR</code>. By default <code>emuR</code> is pretty talkative (or <code>verbose</code>), meaning it will print a lot of information in the R console about the status of whatever task it is performing. This is usually quite nice, and you may want to avoid the <code>verbose=FALSE</code> option if you are coding along in your own R session – we mostly keep it quiet here because those messages would otherwise clutter up the book.</p>
+</div>
+</div>
+</section>
+<section id="sec-defprops" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="sec-defprops"><span class="header-section-number">2.3</span> Some defining properties of an Emu database</h2>
+<p>The well-known function <code>summary()</code> can also be used with an Emu database to summarise its salient attributes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ae)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Summary of emuDB ────────────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Name:    ae 
+UUID:    0fc618dc-8980-414d-8c7a-144a649ce199 
+Directory:   C:\Users\rasmu\AppData\Local\Temp\RtmpkhTwaR\emuR_demoData\ae_emuDB 
+Session count: 1 
+Bundle count: 7 
+Annotation item count:  736 
+Label count:  844 
+Link count:  785 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Database configuration ──────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── SSFF track definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> name columnName fileExtension
+ dft  dft        dft          
+ fm   fm         fms          </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Level definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> name         type    nrOfAttrDefs attrDefNames       
+ Utterance    ITEM    1            Utterance;         
+ Intonational ITEM    1            Intonational;      
+ Intermediate ITEM    1            Intermediate;      
+ Word         ITEM    3            Word; Accent; Text;
+ Syllable     ITEM    1            Syllable;          
+ Phoneme      ITEM    1            Phoneme;           
+ Phonetic     SEGMENT 1            Phonetic;          
+ Tone         EVENT   1            Tone;              
+ Foot         ITEM    1            Foot;              </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Link definitions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> type         superlevelName sublevelName
+ ONE_TO_MANY  Utterance      Intonational
+ ONE_TO_MANY  Intonational   Intermediate
+ ONE_TO_MANY  Intermediate   Word        
+ ONE_TO_MANY  Word           Syllable    
+ ONE_TO_MANY  Syllable       Phoneme     
+ MANY_TO_MANY Phoneme        Phonetic    
+ ONE_TO_MANY  Syllable       Tone        
+ ONE_TO_MANY  Intonational   Foot        
+ ONE_TO_MANY  Foot           Syllable    </code></pre>
+</div>
+</div>
+<p>The <code>directory</code> shows the path where the directory is located.</p>
+<p><code>Bundle count</code> shows how many utterances there are in the database. We can query their names with the function <code>list_bundles</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list_bundles</span>(ae)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["session"],"name":[1],"type":["chr"],"align":["left"]},{"label":["name"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"0000","2":"msajc003"},{"1":"0000","2":"msajc010"},{"1":"0000","2":"msajc012"},{"1":"0000","2":"msajc015"},{"1":"0000","2":"msajc022"},{"1":"0000","2":"msajc023"},{"1":"0000","2":"msajc057"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>The <code>SSFF track definitions</code> show which signals are currently available in the database apart from the waveforms. For this database there are signals of type <code>dft</code> (discrete Fourier transform, see <a href="spectral_proc.html"><span>Chapter&nbsp;12</span></a>) and of type <code>fm</code> (formant). They have extensions <code>.dft</code> and <code>.fms</code>. This information is also given by:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list_ssffTrackDefinitions</span>(ae)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["columnName"],"name":[2],"type":["chr"],"align":["left"]},{"label":["fileExtension"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"dft","2":"dft","3":"dft"},{"1":"fm","2":"fm","3":"fms"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>The <code>Level definitions</code> show the available <em>annotation levels</em> of the database (equivalent to <em>tiers</em> in Praat). This information is also given by:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list_levelDefinitions</span>(ae)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["type"],"name":[2],"type":["chr"],"align":["left"]},{"label":["nrOfAttrDefs"],"name":[3],"type":["int"],"align":["right"]},{"label":["attrDefNames"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"Utterance","2":"ITEM","3":"1","4":"Utterance;"},{"1":"Intonational","2":"ITEM","3":"1","4":"Intonational;"},{"1":"Intermediate","2":"ITEM","3":"1","4":"Intermediate;"},{"1":"Word","2":"ITEM","3":"3","4":"Word; Accent; Text;"},{"1":"Syllable","2":"ITEM","3":"1","4":"Syllable;"},{"1":"Phoneme","2":"ITEM","3":"1","4":"Phoneme;"},{"1":"Phonetic","2":"SEGMENT","3":"1","4":"Phonetic;"},{"1":"Tone","2":"EVENT","3":"1","4":"Tone;"},{"1":"Foot","2":"ITEM","3":"1","4":"Foot;"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>As the above shows, annotation levels can be of three types: <code>ITEM</code>, <code>SEGMENT</code>, and <code>EVENT</code>. The annotations of <code>ITEM</code> levels <strong>inherit their times</strong> from the (typically) <code>SEGMENT</code> levels that they dominate. In a <code>SEGMENT</code> levels, each annotation has <strong>a start and end time</strong>, equivalent to segment tiers in Praat. In an <code>EVENT</code> level, each annotation <strong>is defined by a single point in time</strong>, equivalent to point tiers in Praat. A level can also be associated with one or more <code>ATTRIBUTE</code> levels. This information is also given by the function <code>list_attributeDefinitions()</code> with the database name as the first argument, and the level to be queried for attributes as the second. For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list_attributeDefinitions</span>(ae, <span class="st">"Word"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["level"],"name":[2],"type":["chr"],"align":["left"]},{"label":["type"],"name":[3],"type":["chr"],"align":["left"]},{"label":["hasLabelGroups"],"name":[4],"type":["lgl"],"align":["right"]},{"label":["hasLegalLabels"],"name":[5],"type":["lgl"],"align":["right"]}],"data":[{"1":"Word","2":"Word","3":"STRING","4":"FALSE","5":"FALSE"},{"1":"Accent","2":"Word","3":"STRING","4":"FALSE","5":"FALSE"},{"1":"Text","2":"Word","3":"STRING","4":"FALSE","5":"FALSE"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>This shows that the levels <code>Accent</code> and <code>Text</code> are attributes of <code>Word</code>. The annotations of an <code>ATTRIBUTE</code> level <strong>always have identical times to those of the main level with which they are associated</strong> (thus the annotations of the <code>Accent</code> level have identical start and end times to those of the <code>Word</code> level). An <code>ATTRIBUTE</code> level is often used to provide additional information about annotations. In the <code>ae</code> database, the annotations in the <code>Word</code> level consist entirely of either <code>C</code> (content word) or <code>F</code> (function word). The annotations at the <code>Text</code> level are used to provide the orthography for each content or function word annotation; and the annotations of the <code>Accent</code> level are used to mark whether or not a word is prosodically accented.</p>
+<p>The information in <code>Link definitions</code> of <code>summary(ae)</code> shows how the levels are associated with each other. This information is also provided by the function <code>list_linkDefinitions()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list_linkDefinitions</span>(ae)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["type"],"name":[1],"type":["chr"],"align":["left"]},{"label":["superlevelName"],"name":[2],"type":["chr"],"align":["left"]},{"label":["sublevelName"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"ONE_TO_MANY","2":"Utterance","3":"Intonational"},{"1":"ONE_TO_MANY","2":"Intonational","3":"Intermediate"},{"1":"ONE_TO_MANY","2":"Intermediate","3":"Word"},{"1":"ONE_TO_MANY","2":"Word","3":"Syllable"},{"1":"ONE_TO_MANY","2":"Syllable","3":"Phoneme"},{"1":"MANY_TO_MANY","2":"Phoneme","3":"Phonetic"},{"1":"ONE_TO_MANY","2":"Syllable","3":"Tone"},{"1":"ONE_TO_MANY","2":"Intonational","3":"Foot"},{"1":"ONE_TO_MANY","2":"Foot","3":"Syllable"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>In the Emu system, annotation levels can be (but need not be) hierarchically organised with respect to each other. One reason for the hierarchical organisation of levels is to allow annotations to inherit times if these are predictable.</p>
+<p>In the left part of <a href="#fig-seen">Figure&nbsp;<span>2.1</span></a> for example, the start and end times of the annotation <code>seen</code> in the <code>Text</code> level are completely predictable from the annotations at the <code>Phonetic</code> level that is dominated by <code>Text</code>. <code>Text</code> is an item level, <code>Phonetic</code> is a segment level as indicated by <code>(S)</code>. <code>Text</code> dominates <code>Phonetic</code> as shown by the vertical downward arrow. Compatibly, the Emu system provides a way for the start and end times of <code>seen</code> to be inherited from the annotations at the hierarchically lower <code>SEGMENT</code> level <code>Phonetic</code>. Because <code>Text</code> is an <code>ITEM</code> level that dominates <code>Phonetic</code> which is a <code>SEGMENT</code> level, annotations at the <code>Text</code> level inherit their times from <code>Phonetic</code>. Consequently, the duration of <code>seen</code> is <span class="math inline">\(t_4 - t_1\)</span>. <code>Text</code> and <code>Phonetic</code> stand in a <code>ONE_TO_MANY</code> association (as signified by the downward arrow) because an annotation at the <code>Text</code> level can be associated with one or more annotations at the <code>Phonetic</code> level, but not vice versa.</p>
+<div id="fig-seen" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/seen.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;2.1: Example relations between annotation levels.</figcaption>
+</figure>
+</div>
+<p>On the right, <code>Phoneme</code> and <code>Phonetic</code> stand in a <code>MANY_TO_MANY</code> relationship (as indicated by the double arrow) because an annotation at the <code>Phoneme</code> tier can map to more than one annotation at the <code>Phonetic</code> level and vice versa. In this hypothetical example of an annotation of the second syllable of a word like <em>region</em>, the single affricate annotation /dZ/ at the <code>Phoneme</code> level maps to a sequence of [d] and [Z] annotations at the <code>Phonetic</code> level, while the single annotation of the syllabic [n] at the <code>Phonetic</code> level maps to a sequence of annotations /@n/ at the <code>Phoneme</code> tier. Note that /@/ and /n/ inherit <strong>the same start and end times</strong> and therefore have the same duration of <span class="math inline">\(t_4 - t_3\)</span> i.e.&nbsp;they overlap with each other in time completely.</p>
+<p>Another reason for the hierarchical organisation of annotation levels is that it allows users to query the database in order to obtain annotations at one tier with respect to another (e.g., all orthographic annotations of the vowels in the database; all <code>H*</code> pitch accents in an intermediate phrase, etc.). Without this linkage, these types of queries would not be possible.</p>
+<p>Emu allows quite a flexible configuration of annotation levels. The type of configuration can be defined by the user and will depend on the types of information that the user wants to be able to extract from the database. The configuration of annotation levels for the currently loaded <code>ae</code> database is shown in <a href="#fig-tree">Figure&nbsp;<span>2.2</span></a>.</p>
+<div id="fig-tree" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/tree.png" class="img-fluid figure-img" style="width:40.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;2.2: The links between the annotation levels of the <code>ae</code> database. <code>ITEM</code> levels are unmarked, <code>SEGMENT</code> levels are marked with <code>(S)</code> and <code>EVENT</code> levels with <code>(E)</code>. <code>ATTRIBUTE</code> levels have no arrow between them (thus <code>Text</code> and <code>Accent</code> are attribute levels of <code>Word</code>). A downward arrow signifies domination in a <code>ONE_TO_MANY</code> relationship; a double arrow signifies domination in a <code>MANY_TO_MANY</code> relationship.</figcaption>
+</figure>
+</div>
+<p>Inherited times percolate up through the tree from levels with associated time information, i.e.&nbsp;from <code>SEGMENT</code> and <code>EVENT</code> levels upwards through <code>ITEM</code> levels. Thus, <code>Phoneme</code> is an item level which inherits its times from the <code>SEGMENT</code> level <code>Phonetic</code>. <code>Word</code> inherits its times from <code>Syllable</code> which inherits its times from <code>Phoneme</code> (and therefore from <code>Phonetic</code>) and so on all the way up to the top level <code>Utterance</code>. Sometimes, levels can inherit more than one set of times. In <a href="#fig-tree">Figure&nbsp;<span>2.2</span></a>, <code>Syllable</code> inherits times both from <code>Phonetic (S)</code> and from <code>Tone (E)</code>. For the same reason, all the levels that dominate <code>Syllable</code> (including <code>Foot</code>) inherit these two sets of times.</p>
+<p>Any two annotation levels <strong>on the same path</strong> can be queried with respect to each other, where a path is defined as levels connected by arrows. There are in fact four paths in the configuration:</p>
+<ol type="1">
+<li><code>Utterance</code> → <code>Intonational</code> → <code>Intermediate</code> → <code>Word</code> → <code>Syllable</code> → <code>Phoneme</code> ↔︎ <code>Phonetic (S)</code></li>
+<li><code>Utterance</code> → <code>Intonational</code> → <code>Root</code> → <code>Syllable</code> → <code>Phoneme</code> ↔︎ <code>Phonetic (S)</code></li>
+<li><code>Utterance</code> → <code>Intonational</code> → <code>Syllable</code> → <code>Tone (E)</code></li>
+<li><code>Utterance</code> → <code>Intonational</code> → <code>Intermediate</code> → <code>Word</code> → <code>Syllable</code> → <code>Tone (E)</code></li>
+</ol>
+<p>From (1–4), it becomes clear that e.g.&nbsp;annotations of the <code>Syllable</code> tier can be queried with respect to <code>Tone</code> (e.g.&nbsp;which syllables contain an <code>H*</code> tone?) and vice versa (e.g.&nbsp;are there any <code>H*</code> tones in weak syllables?); or annotations at the <code>Intermediate</code> tier can be queried with respect to <code>Word</code> (how many words are there in an <code>L-</code> intermediate phrase?) and vice versa (which words are in an <code>L-</code> intermediate phrase?). But e.g.&nbsp;<code>Phoneme</code> and <code>Tone</code> can’t be queried with respect to each other, and nor can <code>Word</code> and <code>Foot</code>, because they aren’t on the same path.</p>
+</section>
+<section id="viewing-and-annotating-an-emu-database" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="viewing-and-annotating-an-emu-database"><span class="header-section-number">2.4</span> Viewing and annotating an Emu database</h2>
+<p>An Emu database can be viewed and annotated in at least two ways using the <code>serve()</code> function. Simply passing the database object to <code>serve()</code> will open the Emu database within the R graphics window:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(ae)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You’ll probably usually prefer to watch the database in a larger window; if you include the argument <code>useViewer=FALSE</code>, it’ll open in your default browser instead (which should preferably be Chrome). Alternatively you can click the <code>Show in new window</code> bottom in the RStudio viewer.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(ae, <span class="at">useViewer=</span>F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="fig-ae" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/figae.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption class="figure-caption">Figure&nbsp;2.3: The <code>ae</code> database</figcaption>
+</figure>
+</div>
+<!-- Move the stuff about this not being the place to discuss annotations, since it is actually explained in some detail in the next chapter.  -->
+<!-- Would this be a good place for a callout block explaining the keyboard shortcuts? -->
+<p>It is not the purpose of this introduction to give explicit instruction on how to annotate which is covered amply in the <a href="https://ips-lmu.github.io/The-EMU-SDMS-Manual">manual for the Emu Speech database management system</a>, especially <a href="https://ips-lmu.github.io/The-EMU-SDMS-Manual/chap-emu-webApp.html">section 9</a>.</p>
+<p>However, some basic properties can be noted. These include:</p>
+<ul>
+<li>There are, as mentioned before, 7 utterances.</li>
+<li>The database displays two types of signals: the waveform, and the spectrogram below it.</li>
+</ul>
+<p>This information about the signals being displayed is also given by the function <code>get_signalCanvasesOrder()</code>. This function takes the obligatory argument <code>perspectiveName</code>, which should be <code>"default"</code> unless you have created custom signal canvases (discussed further below).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_signalCanvasesOrder</span>(ae, <span class="at">perspectiveName =</span> <span class="st">"default"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "OSCI" "SPEC"</code></pre>
+</div>
+</div>
+<p><code>OSCI</code> is the waveform and <code>SPEC</code> the spectrogram. These can be changed with the <code>order</code> argument in the <code>set_signalCanvasesOrder()</code> For example, if we want to display only the spectrogram, we can do it like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set_signalCanvasesOrder</span>(ae, <span class="at">perspectiveName =</span> <span class="st">"default"</span>, <span class="at">order =</span> <span class="st">"SPEC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If you <code>serve()</code> the database again, you should see only the spectrogram:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(ae, <span class="at">useViewer =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To restore the original order, call <code>set_signalCanvasesOrder()</code> again:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set_signalCanvasesOrder</span>(ae, <span class="at">perspectiveName =</span> <span class="st">"default"</span>, </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"OSCI"</span>, <span class="st">"SPEC"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Adding signal canvas with <code>emuhelpeR</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>One of the most common use cases of <code>set_signalCanvasesOrder()</code> is to add a signal (such as the formant track <code>fm</code>) to the <code>default</code> perspective for a quick look at it. This is a little cumbersome with <code>set_signalCanvasesOrder()</code>, but a helper function <code>add_signal_canvas()</code> can be found in the <code>emuhelpeR</code> package. This function takes just two arguments: the database object, and the name(s) of signal tracks to add to the <code>default</code> perspective.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emuhelpeR)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">add_signal_canvas</span>(ae, <span class="at">add=</span><span class="st">"fm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To reset the <code>default</code> perspective so that it shows just a waveform and spectrogram, <code>emuhelpeR</code> has the helper function <code>reset_signal_canvas</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reset_signal_canvas</span>(ae)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p>Emu will only ever display time levels with signals (in this case there are two: <code>Phonetic</code> and <code>Tone</code> that are <code>SEGMENT</code> and <code>EVENT</code> tiers respectively). The time levels to be displayed and their order can be shown and changed with the functions <code>get_levelCanvasesOrder()</code> and <code>set_levelCanvasesOrder()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_levelCanvasesOrder</span>(ae, <span class="at">perspectiveName =</span> <span class="st">"default"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Phonetic" "Tone"    </code></pre>
+</div>
+</div>
+<p>We can change the order of the <code>Phonetic</code> and <code>Tone</code> levels like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set_levelCanvasesOrder</span>(ae, <span class="at">perspectiveName =</span> <span class="st">"default"</span>, </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"Tone"</span>, <span class="st">"Phonetic"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Or display only the tone level, like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set_levelCanvasesOrder</span>(ae, <span class="at">perspectiveName =</span> <span class="st">"default"</span>, <span class="at">order =</span> <span class="st">"Tone"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <code>ITEM</code> annotation levels can all be seen in the hierarchy view. The four paths identified earlier are visible when clicking on the triangle on the far right (<a href="#fig-ae">Figure&nbsp;<span>2.3</span></a>). Clicking the triangle can also be used to change to another path. The attribute levels can be seen by clicking on one of the level names displayed at the top – e.g.&nbsp;click on <code>Word</code> to show the attribute levels <code>Text</code> and <code>Accent</code> with which the <code>Word</code> level is associated.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<code>emuR</code> and pipes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you are a regular user of the <code>tidyverse</code> libraries, you are probably familiar with the pipe operator <code>%&gt;%</code>. You may have noticed that the first argument of <code>emuR</code> functions is almost always the <code>emuDBhandle</code>. This means that you can pipe the database object into these functions, for example</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>ae <span class="sc">%&gt;%</span> list_ssffTrackDefinitions</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["columnName"],"name":[2],"type":["chr"],"align":["left"]},{"label":["fileExtension"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"dft","2":"dft","3":"dft"},{"1":"fm","2":"fm","3":"fms"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>ae <span class="sc">%&gt;%</span> list_levelDefinitions</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["type"],"name":[2],"type":["chr"],"align":["left"]},{"label":["nrOfAttrDefs"],"name":[3],"type":["int"],"align":["right"]},{"label":["attrDefNames"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"Utterance","2":"ITEM","3":"1","4":"Utterance;"},{"1":"Intonational","2":"ITEM","3":"1","4":"Intonational;"},{"1":"Intermediate","2":"ITEM","3":"1","4":"Intermediate;"},{"1":"Word","2":"ITEM","3":"3","4":"Word; Accent; Text;"},{"1":"Syllable","2":"ITEM","3":"1","4":"Syllable;"},{"1":"Phoneme","2":"ITEM","3":"1","4":"Phoneme;"},{"1":"Phonetic","2":"SEGMENT","3":"1","4":"Phonetic;"},{"1":"Tone","2":"EVENT","3":"1","4":"Tone;"},{"1":"Foot","2":"ITEM","3":"1","4":"Foot;"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>ae <span class="sc">%&gt;%</span> <span class="fu">get_levelCanvasesOrder</span>(<span class="st">"default"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Tone"</code></pre>
+</div>
+</div>
+<p>Similarly, you can view a database by calling <code>ae %&gt;% serve</code>.</p>
+</div>
+</div>
+</section>
+<section id="functions-introduced-in-this-chapter" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="functions-introduced-in-this-chapter"><span class="header-section-number">2.5</span> Functions introduced in this chapter</h2>
+<ul>
+<li><code>create_emuRdemoData()</code>: downloads an online demo database</li>
+<li><code>list.dirs()</code> and <code>list.files()</code>: lists the directories or files within a directory on your computer</li>
+<li><code>file.path()</code>: returns the location of a directory on your computer</li>
+<li><code>load_emuDB()</code>: loads an emuDB into the R environment</li>
+<li><code>summary()</code> lists the salient contents of an emuDB</li>
+<li><code>list_bundles()</code>: lists the so-called bundles of an emuDB</li>
+<li><code>list_levelDefinitions()</code>: lists the annotation levels of tiers of an emuDB</li>
+<li><code>list_attributeDefinitions()</code>: lists the attribute tiers of an annotation tier</li>
+<li><code>list_linkDefinitions()</code>: lists the links between the tiers of an emuDB</li>
+<li><code>list_ssffTrackDefinitions()</code>: lists the available signal files of an emuDB</li>
+<li><code>serve()</code>: view and annotate an emuDB</li>
+<li><code>get_signalCanvasesOrder()</code>: shows what signals are being displayed when <code>serve()</code> is launched.</li>
+<li><code>set_signalCanvasesOrder()</code>: changes the signals to be displayed.</li>
+<li><code>add_signal_canvas()</code>: adds one or more signals to the <code>default</code> display perspective (requires the <code>emuhelpeR</code> package)</li>
+<li><code>reset_signal_canvas()</code>: resets the <code>default</code> display perspective so it shows the waveform and spectrogram (requires the <code>emuhelpeR</code> package)</li>
+<li><code>get_levelCanvasesOrder()</code>: shows what annotation levels are being displayed when <code>serve()</code> is launched.</li>
+<li><code>set_levelCanvasesOrder()</code>: changes the annotation levels to be displayed.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./intro.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">A schematic overview of the Emu Speech Database Management System</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./wav2emu.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Creating an Emu database from .wav files</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
