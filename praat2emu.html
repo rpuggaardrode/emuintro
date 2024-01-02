@@ -278,7 +278,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="objective-and-preliminaries" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="objective-and-preliminaries"><span class="header-section-number">4.1</span> Objective and preliminaries</h2>
 <p>The aim of this chapter is to show how to get from a Praat <code>.TextGrid</code> format to an Emu database format. We will show how to convert pairs of <code>.wav</code> and <code>.TextGrid</code> files to an Emu database, how to generate pitch tracks over the sound files, how to add annotation levels in the style of Praat’s point tiers, and finally how to convert the flat annotation structure of Praat TextGrids into the layered annotation structure of an Emu database (see <a href="intro.html"><span>Chapter&nbsp;1</span></a>).</p>
-<p>as exemplified in <a href="#fig-praat2emu">Figure&nbsp;<span>4.1</span></a>:</p>
+<p><a href="#fig-praat2emu">Figure&nbsp;<span>4.1</span></a> exemplifies such a Praat <code>.TextGrid</code> collection and the <code>Emu-webApp</code> configuration we want to achieve:</p>
 <div id="fig-praat2emu" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/figpraat.png" class="img-fluid figure-img"></p>
@@ -344,7 +344,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Name:    praat 
-UUID:    7a89466f-68ec-4310-9a93-7a32fb5fec3a 
+UUID:    40359f1d-a3a8-4a0e-b1c0-bb42c2f94067 
 Directory:   C:\Users\rasmu\surfdrive\emuintro\emuintro\emu_databases\praat_emuDB 
 Session count: 1 
 Bundle count: 14 
@@ -408,7 +408,7 @@ Link count:  0 </code></pre>
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["columnName"],"name":[2],"type":["chr"],"align":["left"]},{"label":["fileExtension"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"pitch","2":"pitch","3":"pit"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["columnName"],"name":[2],"type":["chr"],"align":["left"]},{"label":["fileExtension"],"name":[3],"type":["chr"],"align":["left"]},{"label":["fileFormat"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"pitch","2":"pitch","3":"pit","4":"ssff"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>

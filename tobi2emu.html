@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -62,6 +96,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
 
 </head>
@@ -202,7 +239,23 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#objective-and-preliminaries" id="toc-objective-and-preliminaries" class="nav-link active" data-scroll-target="#objective-and-preliminaries"><span class="header-section-number">6.1</span> Objective and preliminaries</a></li>
+  <li><a href="#forced-alignment" id="toc-forced-alignment" class="nav-link" data-scroll-target="#forced-alignment"><span class="header-section-number">6.2</span> Forced alignment</a></li>
+  <li><a href="#configuring-a-database-for-tobi-annotations" id="toc-configuring-a-database-for-tobi-annotations" class="nav-link" data-scroll-target="#configuring-a-database-for-tobi-annotations"><span class="header-section-number">6.3</span> Configuring a database for ToBI annotations</a>
+  <ul class="collapse">
+  <li><a href="#create-and-display-word-level-annotations" id="toc-create-and-display-word-level-annotations" class="nav-link" data-scroll-target="#create-and-display-word-level-annotations"><span class="header-section-number">6.3.1</span> Create and display word level annotations</a></li>
+  <li><a href="#create-a-tone-level-and-link-it-to-ort2" id="toc-create-a-tone-level-and-link-it-to-ort2" class="nav-link" data-scroll-target="#create-a-tone-level-and-link-it-to-ort2"><span class="header-section-number">6.3.2</span> Create a <code>Tone</code> level and link it to <code>ORT2</code></a></li>
+  <li><a href="#calculating-and-displaying-f0" id="toc-calculating-and-displaying-f0" class="nav-link" data-scroll-target="#calculating-and-displaying-f0"><span class="header-section-number">6.3.3</span> Calculating and displaying <em>F</em><sub>0</sub></a></li>
+  <li><a href="#automatically-linking-annotations-at-the-tone-level" id="toc-automatically-linking-annotations-at-the-tone-level" class="nav-link" data-scroll-target="#automatically-linking-annotations-at-the-tone-level"><span class="header-section-number">6.3.4</span> Automatically linking annotations at the <code>Tone</code> level</a></li>
+  </ul></li>
+  <li><a href="#adding-a-cv-level" id="toc-adding-a-cv-level" class="nav-link" data-scroll-target="#adding-a-cv-level"><span class="header-section-number">6.4</span> Adding a CV level</a></li>
+  <li><a href="#functions-introduced-in-this-chapter" id="toc-functions-introduced-in-this-chapter" class="nav-link" data-scroll-target="#functions-introduced-in-this-chapter"><span class="header-section-number">6.5</span> Functions introduced in this chapter</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -224,8 +277,416 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<section id="objective-and-preliminaries" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="objective-and-preliminaries"><span class="header-section-number">6.1</span> Objective and preliminaries</h2>
+<p>The objective of this chapter is to show how to go from a collection of <code>.wav</code> and <code>.txt</code> files to an Emu database that is useful for <strong>to</strong>nes-and-<strong>b</strong>reak <strong>i</strong>ndices (ToBI) annotation. More specifically, the aim is to configure a database to have a configuration like that shown in <a href="#fig-tobi">Figure&nbsp;<span>6.1</span></a>.</p>
+<div id="fig-tobi" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="img/figtobi.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;6.1: An Emu database with ToBI annotations.</figcaption>
+</figure>
+</div>
+<p>The starting point is the text collection of Albanian data analyzed in <a href="forced_alignment.html"><span>Chapter&nbsp;5</span></a>.</p>
+<p>We will also see how an annotation level with syllable structures can be ascertained from a database by creating an CV-style annotation level.</p>
+<p>The assumption is that you already have an R project called <code>ipsR</code> and that it contains the directories <code>emu_databases</code> and <code>testsample</code>. If this is not the case, please go back and follow the preliminaries chapter.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emuR)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(wrassp)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>sourceDir <span class="ot">&lt;-</span> <span class="st">"./testsample"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>targetDir <span class="ot">&lt;-</span> <span class="st">"./emu_databases"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="forced-alignment" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="forced-alignment"><span class="header-section-number">6.2</span> Forced alignment</h2>
+<p>The first task is to apply forced alignment to these Albanian data. The commands will be presented in this section without detailed comment given that these were discussed in <a href="forced_alignment.html"><span>Chapter&nbsp;5</span></a>. The resulting Emu database will be stored as <code>alb2_DB</code> (to distinguish it from the one created in the <a href="forced_alignment.html"><span>Chapter&nbsp;5</span></a>).</p>
+<p>We first create and load the Emu database using <code>convert_txtCollection()</code> and <code>load_emuDB()</code>, and subsequently use <code>runBASwebservice_all()</code> to run the MAUS pipeline over the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>path.albanian <span class="ot">&lt;-</span> <span class="fu">file.path</span>(sourceDir, <span class="st">"albanian"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">convert_txtCollection</span>(<span class="at">dbName =</span> <span class="st">"alb2"</span>, </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sourceDir =</span> path.albanian,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">targetDir =</span> targetDir,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>alb2_DB <span class="ot">&lt;-</span> <span class="fu">load_emuDB</span>(<span class="fu">file.path</span>(targetDir, <span class="st">"alb2_emuDB"</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">verbose=</span><span class="cn">FALSE</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">runBASwebservice_all</span>(alb2_DB,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">transcriptionAttributeDefinitionName =</span> <span class="st">"transcription"</span>, </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">language =</span> <span class="st">"sqi-AL"</span>,  </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">runMINNI =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                     <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="configuring-a-database-for-tobi-annotations" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="configuring-a-database-for-tobi-annotations"><span class="header-section-number">6.3</span> Configuring a database for ToBI annotations</h2>
+<p>The database currently has an <code>ITEM</code> annotation level <code>ORT</code> that dominates an <code>ITEM</code> level <code>MAS</code> containing syllabifications. <code>MAS</code> dominates the <code>SEGMENT</code> level <code>MAU</code>, which contains the phonetic segmentation. You can confirm this either by <code>serve()</code>ing the database or by calling <code>summary(alb2_DB)</code>.</p>
+<p>Our next task is to add a level <code>Tone</code> for marking intonational events and to add a new <code>SEGMENT</code> level, <code>ORT2</code> which contains word-level segmentations. The tonal events of the <code>Tone</code> tier and annotations of the <code>ORT2</code> tier are to be linked automatically, just as in <a href="#fig-tobi">Figure&nbsp;<span>6.1</span></a>.</p>
+<p>Here are the steps needed:</p>
+<ul>
+<li>Create the <code>SEGMENT</code> level <code>ORT2</code> containing word annotations linked to times.</li>
+<li>Create a <code>Tone</code> level and link it to <code>ORT2</code>.</li>
+<li>Calculate and display pitch tracks.</li>
+<li>Annotate the <code>Tone</code> level and link the annotations automatically to the word level annotations in <code>ORT2</code>.</li>
+</ul>
+<section id="create-and-display-word-level-annotations" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="create-and-display-word-level-annotations"><span class="header-section-number">6.3.1</span> Create and display word level annotations</h3>
+<p>This is a four step process:</p>
+<ul>
+<li>Create a <code>SEGMENT</code>-type annotation level called <code>ORT2</code>.</li>
+</ul>
+<p>As covered in <a href="praat2emu.html"><span>Chapter&nbsp;4</span></a>, this can be done with the <code>add_levelDefinition()</code> function like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">add_levelDefinition</span>(alb2_DB, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">name=</span><span class="st">"ORT2"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type=</span><span class="st">"SEGMENT"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verbose=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can confirm that this step was successful with <code>list_levelDefinitions()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list_levelDefinitions</span>(alb2_DB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["type"],"name":[2],"type":["chr"],"align":["left"]},{"label":["nrOfAttrDefs"],"name":[3],"type":["int"],"align":["right"]},{"label":["attrDefNames"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"bundle","2":"ITEM","3":"2","4":"bundle; transcription;"},{"1":"ORT","2":"ITEM","3":"3","4":"ORT; KAN; KAS;"},{"1":"MAU","2":"SEGMENT","3":"1","4":"MAU;"},{"1":"MAS","2":"ITEM","3":"1","4":"MAS;"},{"1":"ORT2","2":"SEGMENT","3":"1","4":"ORT2;"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<ul>
+<li>Make a list of all words in the database.</li>
+</ul>
+<p>We can do this by using the <code>query()</code> function to find all annotations in the <code>ORT</code> level.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>text.s <span class="ot">&lt;-</span> <span class="fu">query</span>(alb2_DB, <span class="st">"[ORT =~ .*]"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>text.s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["db_uuid"],"name":[4],"type":["chr"],"align":["left"]},{"label":["session"],"name":[5],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[6],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[8],"type":["int"],"align":["right"]},{"label":["level"],"name":[9],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[10],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[12],"type":["int"],"align":["right"]},{"label":["type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[15],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"lena","2":"1049.9887","3":"1669.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"2","8":"2","9":"ORT","10":"ORT","11":"1","12":"1","13":"ITEM","14":"46305","15":"73646","16":"44100"},{"1":"leu","2":"1669.9887","3":"2099.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"3","8":"3","9":"ORT","10":"ORT","11":"2","12":"2","13":"ITEM","14":"73647","15":"92609","16":"44100"},{"1":"nje","2":"2099.9887","3":"2289.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"4","8":"4","9":"ORT","10":"ORT","11":"3","12":"3","13":"ITEM","14":"92610","15":"100988","16":"44100"},{"1":"mur","2":"2289.9887","3":"2769.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"5","8":"5","9":"ORT","10":"ORT","11":"4","12":"4","13":"ITEM","14":"100989","15":"122156","16":"44100"},{"1":"malena","2":"1299.9887","3":"2189.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"2","8":"2","9":"ORT","10":"ORT","11":"1","12":"1","13":"ITEM","14":"57330","15":"96578","16":"44100"},{"1":"leu","2":"2189.9887","3":"2669.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"3","8":"3","9":"ORT","10":"ORT","11":"2","12":"2","13":"ITEM","14":"96579","15":"117746","16":"44100"},{"1":"murin","2":"2669.9887","3":"3419.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"4","8":"4","9":"ORT","10":"ORT","11":"3","12":"3","13":"ITEM","14":"117747","15":"150821","16":"44100"},{"1":"marilena","2":"1089.9887","3":"2109.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"2","8":"2","9":"ORT","10":"ORT","11":"1","12":"1","13":"ITEM","14":"48069","15":"93050","16":"44100"},{"1":"leu","2":"2109.9887","3":"2499.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"3","8":"3","9":"ORT","10":"ORT","11":"2","12":"2","13":"ITEM","14":"93051","15":"110249","16":"44100"},{"1":"njomezen","2":"2499.9887","3":"3419.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"4","8":"4","9":"ORT","10":"ORT","11":"3","12":"3","13":"ITEM","14":"110250","15":"150821","16":"44100"},{"1":"lena","2":"899.9887","3":"1369.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"2","8":"2","9":"ORT","10":"ORT","11":"1","12":"1","13":"ITEM","14":"39690","15":"60416","16":"44100"},{"1":"leu","2":"1369.9887","3":"1619.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"3","8":"3","9":"ORT","10":"ORT","11":"2","12":"2","13":"ITEM","14":"60417","15":"71441","16":"44100"},{"1":"njomezen","2":"1619.9887","3":"2399.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"4","8":"4","9":"ORT","10":"ORT","11":"3","12":"3","13":"ITEM","14":"71442","15":"105839","16":"44100"},{"1":"jo","2":"2549.9887","3":"2839.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"5","8":"5","9":"ORT","10":"ORT","11":"4","12":"4","13":"ITEM","14":"112455","15":"125243","16":"44100"},{"1":"lena","2":"2839.9887","3":"3279.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"6","8":"6","9":"ORT","10":"ORT","11":"5","12":"5","13":"ITEM","14":"125244","15":"144647","16":"44100"},{"1":"leu","2":"3279.9887","3":"3549.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"7","8":"7","9":"ORT","10":"ORT","11":"6","12":"6","13":"ITEM","14":"144648","15":"156554","16":"44100"},{"1":"murin","2":"3549.9887","3":"4289.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"8","8":"8","9":"ORT","10":"ORT","11":"7","12":"7","13":"ITEM","14":"156555","15":"189188","16":"44100"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>We can use the segment list generated by the <code>query()</code> above to populate our new level <code>ORT2</code>. We simply need to change the columns <code>attribute</code> and <code>level</code> so they show the value <code>ORT2</code> instead of <code>ORT</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>text.s<span class="sc">$</span>attribute <span class="ot">&lt;-</span> <span class="st">"ORT2"</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>text.s<span class="sc">$</span>level <span class="ot">&lt;-</span> <span class="st">"ORT2"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Add word-level annotations to <code>ORT2</code>.</li>
+</ul>
+<p>We can now pass <code>text.s</code> on to the function <code>create_itemsInLevel()</code> like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">create_itemsInLevel</span>(alb2_DB, text.s,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verbose=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>It is now possible to <code>query()</code> the word level annotations directly from <code>ORT2</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">query</span>(alb2_DB, <span class="st">"[ORT2 =~ .*]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["db_uuid"],"name":[4],"type":["chr"],"align":["left"]},{"label":["session"],"name":[5],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[6],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[8],"type":["int"],"align":["right"]},{"label":["level"],"name":[9],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[10],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[12],"type":["int"],"align":["right"]},{"label":["type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[15],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"lena","2":"1049.9887","3":"1669.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"26","8":"26","9":"ORT2","10":"ORT2","11":"1","12":"1","13":"SEGMENT","14":"46305","15":"73646","16":"44100"},{"1":"leu","2":"1669.9887","3":"2099.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"27","8":"27","9":"ORT2","10":"ORT2","11":"2","12":"2","13":"SEGMENT","14":"73647","15":"92609","16":"44100"},{"1":"nje","2":"2099.9887","3":"2289.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"28","8":"28","9":"ORT2","10":"ORT2","11":"3","12":"3","13":"SEGMENT","14":"92610","15":"100988","16":"44100"},{"1":"mur","2":"2289.9887","3":"3664.887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"29","8":"29","9":"ORT2","10":"ORT2","11":"4","12":"4","13":"SEGMENT","14":"100989","15":"161621","16":"44100"},{"1":"malena","2":"1299.9887","3":"2189.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"28","8":"28","9":"ORT2","10":"ORT2","11":"1","12":"1","13":"SEGMENT","14":"57330","15":"96578","16":"44100"},{"1":"leu","2":"2189.9887","3":"2669.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"29","8":"29","9":"ORT2","10":"ORT2","11":"2","12":"2","13":"SEGMENT","14":"96579","15":"117746","16":"44100"},{"1":"murin","2":"2669.9887","3":"3991.984","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"30","8":"30","9":"ORT2","10":"ORT2","11":"3","12":"3","13":"SEGMENT","14":"117747","15":"176046","16":"44100"},{"1":"marilena","2":"1089.9887","3":"2109.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"34","8":"34","9":"ORT2","10":"ORT2","11":"1","12":"1","13":"SEGMENT","14":"48069","15":"93050","16":"44100"},{"1":"leu","2":"2109.9887","3":"2499.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"35","8":"35","9":"ORT2","10":"ORT2","11":"2","12":"2","13":"SEGMENT","14":"93051","15":"110249","16":"44100"},{"1":"njomezen","2":"2499.9887","3":"4335.703","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"36","8":"36","9":"ORT2","10":"ORT2","11":"3","12":"3","13":"SEGMENT","14":"110250","15":"191204","16":"44100"},{"1":"lena","2":"899.9887","3":"1369.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"54","8":"54","9":"ORT2","10":"ORT2","11":"1","12":"1","13":"SEGMENT","14":"39690","15":"60416","16":"44100"},{"1":"leu","2":"1369.9887","3":"1619.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"55","8":"55","9":"ORT2","10":"ORT2","11":"2","12":"2","13":"SEGMENT","14":"60417","15":"71441","16":"44100"},{"1":"njomezen","2":"1619.9887","3":"2549.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"56","8":"56","9":"ORT2","10":"ORT2","11":"3","12":"3","13":"SEGMENT","14":"71442","15":"112454","16":"44100"},{"1":"jo","2":"2549.9887","3":"2839.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"57","8":"57","9":"ORT2","10":"ORT2","11":"4","12":"4","13":"SEGMENT","14":"112455","15":"125243","16":"44100"},{"1":"lena","2":"2839.9887","3":"3279.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"58","8":"58","9":"ORT2","10":"ORT2","11":"5","12":"5","13":"SEGMENT","14":"125244","15":"144647","16":"44100"},{"1":"leu","2":"3279.9887","3":"3549.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"59","8":"59","9":"ORT2","10":"ORT2","11":"6","12":"6","13":"SEGMENT","14":"144648","15":"156554","16":"44100"},{"1":"murin","2":"3549.9887","3":"4898.152","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"60","8":"60","9":"ORT2","10":"ORT2","11":"7","12":"7","13":"SEGMENT","14":"156555","15":"216008","16":"44100"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<ul>
+<li>Display the annotations of <code>ORT2</code> time-aligned to the signals.</li>
+</ul>
+<p>Because <code>ORT2</code> is a <code>SEGMENT</code>-type level and not an <code>ITEM</code>-type level, we can now display word-level annotations underneath the signals in the <code>EMU-webApp</code>. However, if we <code>serve()</code> the database now, only the segment-level annotations in <code>MAU</code> can be seen. As covered in <a href="praat2emu.html"><span>Chapter&nbsp;4</span></a>, this can be controlled with the <code>set_levelCanvasesOrder()</code> function like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set_levelCanvasesOrder</span>(alb2_DB,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">perspectiveName =</span> <span class="st">"default"</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">order =</span> <span class="st">"ORT2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>serve()</code>ing the database now will show only the word-level annotations in <code>ORT2</code> underneath the signals:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(alb2_DB, <span class="at">useViewer =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="create-a-tone-level-and-link-it-to-ort2" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="create-a-tone-level-and-link-it-to-ort2"><span class="header-section-number">6.3.2</span> Create a <code>Tone</code> level and link it to <code>ORT2</code></h3>
+<p>This is a three-step process:</p>
+<ul>
+<li>Create the new annotation level named <code>Tone</code>.</li>
+</ul>
+<p>We do this with the <code>add_levelDefinition()</code> function, just as we did earlier when creating <code>ORT2</code>. <code>Tone</code> should be an <code>EVENT</code>-type level, since we want to mark intonational targets as single points in time.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">add_levelDefinition</span>(alb2_DB, </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">name =</span> <span class="st">"Tone"</span>, </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">"EVENT"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Create the link between <code>Tone</code> and <code>ORT2</code>.</li>
+</ul>
+<p>The function <code>list_linkDefinitions()</code> shows that there are no currently no links between <code>Tone</code> and <code>ORT2</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list_linkDefinitions</span>(alb2_DB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["type"],"name":[1],"type":["chr"],"align":["left"]},{"label":["superlevelName"],"name":[2],"type":["chr"],"align":["left"]},{"label":["sublevelName"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"ONE_TO_MANY","2":"bundle","3":"ORT"},{"1":"ONE_TO_MANY","2":"ORT","3":"MAS"},{"1":"ONE_TO_MANY","2":"MAS","3":"MAU"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>In order to allow for annotations in the two levels to be queried relative to each other, they need to be linked. On the assumption that a word can be associated with one or more tones, but that a given tone can only be associated with one word, the association between the two levels should be <code>ONE_TO_MANY</code>. The levels should therefore be linked in the following way with the <code>add_linkDefinitions()</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">add_linkDefinition</span>(alb2_DB, </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">type =</span> <span class="st">"ONE_TO_MANY"</span>, </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">superlevelName =</span> <span class="st">"ORT2"</span>, </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">sublevelName =</span> <span class="st">"Tone"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Calling <code>list_linkDefinitions()</code> again will confirm that the two levels are now linked:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list_linkDefinitions</span>(alb2_DB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["type"],"name":[1],"type":["chr"],"align":["left"]},{"label":["superlevelName"],"name":[2],"type":["chr"],"align":["left"]},{"label":["sublevelName"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"ONE_TO_MANY","2":"bundle","3":"ORT"},{"1":"ONE_TO_MANY","2":"ORT","3":"MAS"},{"1":"ONE_TO_MANY","2":"MAS","3":"MAU"},{"1":"ONE_TO_MANY","2":"ORT2","3":"Tone"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<ul>
+<li>Display the <code>Tone</code> level.</li>
+</ul>
+<p>As before, this can be done with the <code>set_levelCanvasesOrder()</code> function. We now need to specify both <code>Tone</code> and <code>ORT2</code> in the <code>order</code> argument, like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set_levelCanvasesOrder</span>(alb2_DB,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">perspectiveName =</span> <span class="st">"default"</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"Tone"</span>, <span class="st">"ORT2"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>serve()</code>ing the database again will now show both the <code>Tone</code> and <code>ORT2</code> levels underneath the signals:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(alb2_DB, <span class="at">useViewer =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="calculating-and-displaying-f0" class="level3" data-number="6.3.3">
+<h3 data-number="6.3.3" class="anchored" data-anchor-id="calculating-and-displaying-f0"><span class="header-section-number">6.3.3</span> Calculating and displaying <em>F</em><sub>0</sub></h3>
+<p>This is a three-step process. Most of these steps were covered in <a href="praat2emu.html"><span>Chapter&nbsp;4</span></a>, so only a brief summary is given below.</p>
+<ul>
+<li>Calculate <em>F</em><sub>0</sub>.</li>
+</ul>
+<p>We can do this using the <code>add_ssffTrackDefinition</code> with the “on the fly function” <code>mhsF0</code> (see <a href="praat2emu.html"><span>Chapter&nbsp;4</span></a>).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">add_ssffTrackDefinition</span>(alb2_DB, </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">name =</span> <span class="st">"pitch"</span>, </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">onTheFlyFunctionName =</span> <span class="st">"mhsF0"</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can confirm that this worked with the function <code>list_ssffTrackDefinitions()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list_ssffTrackDefinitions</span>(alb2_DB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["columnName"],"name":[2],"type":["chr"],"align":["left"]},{"label":["fileExtension"],"name":[3],"type":["chr"],"align":["left"]},{"label":["fileFormat"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"pitch","2":"pitch","3":"pit","4":"ssff"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<ul>
+<li>Configure the database to show the <em>F</em><sub>0</sub> track.</li>
+</ul>
+<p>As explained in <a href="praat2emu.html"><span>Chapter&nbsp;4</span></a>, the pitch data can be displayed with the function <code>set_signalCanvasesOrder</code>. Currently, only the waveform and spectrogram are displayed, as confirmed with:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_signalCanvasesOrder</span>(alb2_DB, <span class="at">perspectiveName =</span> <span class="st">"default"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "OSCI" "SPEC"</code></pre>
+</div>
+</div>
+<p>In order to display the pitch data underneath the spectrogram, use <code>set_signalCanvasesOrder()</code> like follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set_signalCanvasesOrder</span>(alb2_DB, </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">perspectiveName =</span> <span class="st">"default"</span>,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"OSCI"</span>, <span class="st">"SPEC"</span>, <span class="st">"pitch"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>(Alternatively, if you have installed and loaded <code>emuhelpeR</code>, you can display it like so: <code>alb2DB %&gt;% add_signal_canvas("pitch")</code>.)</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Overlaying pitch on the spectrogram
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you have the library <code>emuhelpeR</code> installed, you can overlay pitch on the spectrogram using the <code>signal_on_spec()</code> function like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emuhelpeR)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>alb2_DB <span class="sc">%&gt;%</span> <span class="fu">signal_on_spec</span>(<span class="st">"pitch"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>(The function <code>clear_spec()</code> from <code>emuhelpeR</code> can be used to remove the signal from the spectrogram if you no longer wish to display it there.)</p>
+<p>If you do not have <code>emuhelpeR</code> installed, the process is a bit more intricate. For this you will usually use a plain text editor to change the database’s configuration JSON file. This file always has the same name as the database + <code>config.json</code> and is stored in the same directory as the database. Once you’ve found this file, you can proceed as follows:</p>
+<ul>
+<li>Optionally make a backup copy of the the <code>alb2_DBconfig.json</code> file in case anything goes wrong.</li>
+<li>Open <code>alb2_DBconfig.json</code> with a plain text editor, e.g.&nbsp;Notepad in Windows.</li>
+<li>Search the file for the text string <code>assign</code>. You should find a line with the following contents:</li>
+</ul>
+<p><code>"assign": [],</code></p>
+<ul>
+<li>Carefully replace this line with the following:</li>
+</ul>
+<p><code>"assign": [{ "signalCanvasName": "SPEC", "ssffTrackName": "pitch" }],</code></p>
+<ul>
+<li>Save the file.</li>
+<li><code>serve()</code> the database again.</li>
+</ul>
+<p>In principle, the configuration JSON file can also be edited in R, e.g.&nbsp;using the <code>rjson</code> library. You should probably avoid this unless you’re an advanced R user – it’s a finnicky process and a lot can go wrong.</p>
+</div>
+</div>
+</section>
+<section id="automatically-linking-annotations-at-the-tone-level" class="level3" data-number="6.3.4">
+<h3 data-number="6.3.4" class="anchored" data-anchor-id="automatically-linking-annotations-at-the-tone-level"><span class="header-section-number">6.3.4</span> Automatically linking annotations at the <code>Tone</code> level</h3>
+<p>The first task here is to make a few annotations. More specifically, add two pitch targets (e.g., <code>L*</code> to <em>Lena</em>, <code>L*</code> to <em>leu</em>) to the utterance <code>0001BF_1syll_1</code> as in <a href="#fig-tobi">Figure&nbsp;<span>6.1</span></a>. See <a href="wav2emu.html"><span>Chapter&nbsp;3</span></a> for details of how to annotate in the <code>Emu-webApp</code>.</p>
+<p>The next task is to automatically link the annotations at the <code>Tone</code> level to the corresponding words in the <code>ORT2</code> level. We can do this using the function <code>autobuild_linkFromTimes()</code>. This function links an annotation <code>Tone</code> level to an annotation at the <code>ORT2</code> level if the <code>Tone</code> annotation falls within the segment segment boundaries of the <code>ORT2</code> annotation. In other words, if the start and end times of an <code>ORT2</code> annotation are denoted <em>t</em><sub>1</sub> and <em>t</em><sub>2</sub>, and the time of a <code>Tone</code> annotation is denoted simply <em>t</em>, then annotations at the two levels are linked if <em>t</em><sub>1</sub> &lt; <em>t</em> &lt; <em>t</em><sub>2</sub>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autobuild_linkFromTimes</span>(alb2_DB,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">superlevelName =</span> <span class="st">"ORT2"</span>,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">sublevelName =</span> <span class="st">"Tone"</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If you <code>serve()</code> the database again and look at the hierarchy view, you can confirm that the links were indeed created.</p>
+<p>It should now be possible to query tones with respect to words and vice-versa. For example, this function finds all words at the <code>ORT2</code> level with an annotated pitch accent at the <code>Tone</code> level. (Much more detail on querying follows in <a href="query.html"><span>Chapter&nbsp;7</span></a>!)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">query</span>(alb2_DB, <span class="st">"[Tone =~.* ^ #ORT2 =~.*]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["db_uuid"],"name":[4],"type":["chr"],"align":["left"]},{"label":["session"],"name":[5],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[6],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[8],"type":["int"],"align":["right"]},{"label":["level"],"name":[9],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[10],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[12],"type":["int"],"align":["right"]},{"label":["type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[15],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"lena","2":"1049.989","3":"1669.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"26","8":"26","9":"ORT2","10":"ORT2","11":"1","12":"1","13":"SEGMENT","14":"46305","15":"73646","16":"44100"},{"1":"leu","2":"1669.989","3":"2099.989","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"27","8":"27","9":"ORT2","10":"ORT2","11":"2","12":"2","13":"SEGMENT","14":"73647","15":"92609","16":"44100"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="adding-a-cv-level" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="adding-a-cv-level"><span class="header-section-number">6.4</span> Adding a CV level</h2>
+<p>It can be helpful to have another annotation level in which every vowel corresponds to <code>V</code> and every consonant to <code>C</code>. This could then be used to establish the syllable types in the database. To do this, a new level called <code>CV</code> will be created that is an attribute of the <code>MAU</code> tier (which contains the segment annotations). We do this with the <code>add_attributeDefinition()</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">add_attributeDefinition</span>(alb2_DB,</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">levelName =</span> <span class="st">"MAU"</span>,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">name =</span> <span class="st">"CV"</span>,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">verbose=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here we query all segments found at the <code>MAU</code> level in the database:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>mau.s <span class="ot">&lt;-</span> <span class="fu">query</span>(alb2_DB, <span class="st">"MAU =~ .*"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>mau.s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["db_uuid"],"name":[4],"type":["chr"],"align":["left"]},{"label":["session"],"name":[5],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[6],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[8],"type":["int"],"align":["right"]},{"label":["level"],"name":[9],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[10],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[12],"type":["int"],"align":["right"]},{"label":["type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[15],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"<p:>","2":"0.0000","3":"1049.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"6","8":"6","9":"MAU","10":"MAU","11":"1","12":"1","13":"SEGMENT","14":"0","15":"46304","16":"44100"},{"1":"L","2":"1049.9887","3":"1359.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"7","8":"7","9":"MAU","10":"MAU","11":"2","12":"2","13":"SEGMENT","14":"46305","15":"59975","16":"44100"},{"1":"E","2":"1359.9887","3":"1449.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"8","8":"8","9":"MAU","10":"MAU","11":"3","12":"3","13":"SEGMENT","14":"59976","15":"63944","16":"44100"},{"1":"n","2":"1449.9887","3":"1479.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"9","8":"9","9":"MAU","10":"MAU","11":"4","12":"4","13":"SEGMENT","14":"63945","15":"65267","16":"44100"},{"1":"a","2":"1479.9887","3":"1669.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"10","8":"10","9":"MAU","10":"MAU","11":"5","12":"5","13":"SEGMENT","14":"65268","15":"73646","16":"44100"},{"1":"L","2":"1669.9887","3":"1879.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"11","8":"11","9":"MAU","10":"MAU","11":"6","12":"6","13":"SEGMENT","14":"73647","15":"82907","16":"44100"},{"1":"E","2":"1879.9887","3":"1949.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"12","8":"12","9":"MAU","10":"MAU","11":"7","12":"7","13":"SEGMENT","14":"82908","15":"85994","16":"44100"},{"1":"u","2":"1949.9887","3":"2099.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"13","8":"13","9":"MAU","10":"MAU","11":"8","12":"8","13":"SEGMENT","14":"85995","15":"92609","16":"44100"},{"1":"J","2":"2099.9887","3":"2259.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"14","8":"14","9":"MAU","10":"MAU","11":"9","12":"9","13":"SEGMENT","14":"92610","15":"99665","16":"44100"},{"1":"E","2":"2259.9887","3":"2289.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"15","8":"15","9":"MAU","10":"MAU","11":"10","12":"10","13":"SEGMENT","14":"99666","15":"100988","16":"44100"},{"1":"m","2":"2289.9887","3":"2459.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"16","8":"16","9":"MAU","10":"MAU","11":"11","12":"11","13":"SEGMENT","14":"100989","15":"108485","16":"44100"},{"1":"u","2":"2459.9887","3":"2729.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"17","8":"17","9":"MAU","10":"MAU","11":"12","12":"12","13":"SEGMENT","14":"108486","15":"120392","16":"44100"},{"1":"4","2":"2729.9887","3":"2769.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"18","8":"18","9":"MAU","10":"MAU","11":"13","12":"13","13":"SEGMENT","14":"120393","15":"122156","16":"44100"},{"1":"<p:>","2":"2769.9887","3":"3664.8639","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_1syll_1","7":"19","8":"19","9":"MAU","10":"MAU","11":"14","12":"14","13":"SEGMENT","14":"122157","15":"161620","16":"44100"},{"1":"<p:>","2":"0.0000","3":"1299.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"5","8":"5","9":"MAU","10":"MAU","11":"1","12":"1","13":"SEGMENT","14":"0","15":"57329","16":"44100"},{"1":"m","2":"1299.9887","3":"1469.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"6","8":"6","9":"MAU","10":"MAU","11":"2","12":"2","13":"SEGMENT","14":"57330","15":"64826","16":"44100"},{"1":"a","2":"1469.9887","3":"1629.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"7","8":"7","9":"MAU","10":"MAU","11":"3","12":"3","13":"SEGMENT","14":"64827","15":"71882","16":"44100"},{"1":"L","2":"1629.9887","3":"1879.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"8","8":"8","9":"MAU","10":"MAU","11":"4","12":"4","13":"SEGMENT","14":"71883","15":"82907","16":"44100"},{"1":"E","2":"1879.9887","3":"1969.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"9","8":"9","9":"MAU","10":"MAU","11":"5","12":"5","13":"SEGMENT","14":"82908","15":"86876","16":"44100"},{"1":"n","2":"1969.9887","3":"2009.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"10","8":"10","9":"MAU","10":"MAU","11":"6","12":"6","13":"SEGMENT","14":"86877","15":"88640","16":"44100"},{"1":"a","2":"2009.9887","3":"2189.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"11","8":"11","9":"MAU","10":"MAU","11":"7","12":"7","13":"SEGMENT","14":"88641","15":"96578","16":"44100"},{"1":"L","2":"2189.9887","3":"2429.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"12","8":"12","9":"MAU","10":"MAU","11":"8","12":"8","13":"SEGMENT","14":"96579","15":"107162","16":"44100"},{"1":"E","2":"2429.9887","3":"2509.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"13","8":"13","9":"MAU","10":"MAU","11":"9","12":"9","13":"SEGMENT","14":"107163","15":"110690","16":"44100"},{"1":"u","2":"2509.9887","3":"2669.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"14","8":"14","9":"MAU","10":"MAU","11":"10","12":"10","13":"SEGMENT","14":"110691","15":"117746","16":"44100"},{"1":"m","2":"2669.9887","3":"2849.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"15","8":"15","9":"MAU","10":"MAU","11":"11","12":"11","13":"SEGMENT","14":"117747","15":"125684","16":"44100"},{"1":"u","2":"2849.9887","3":"3059.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"16","8":"16","9":"MAU","10":"MAU","11":"12","12":"12","13":"SEGMENT","14":"125685","15":"134945","16":"44100"},{"1":"4","2":"3059.9887","3":"3099.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"17","8":"17","9":"MAU","10":"MAU","11":"13","12":"13","13":"SEGMENT","14":"134946","15":"136709","16":"44100"},{"1":"i","2":"3099.9887","3":"3269.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"18","8":"18","9":"MAU","10":"MAU","11":"14","12":"14","13":"SEGMENT","14":"136710","15":"144206","16":"44100"},{"1":"n","2":"3269.9887","3":"3419.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"19","8":"19","9":"MAU","10":"MAU","11":"15","12":"15","13":"SEGMENT","14":"144207","15":"150821","16":"44100"},{"1":"<p:>","2":"3419.9887","3":"3991.9615","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_2syll_1","7":"20","8":"20","9":"MAU","10":"MAU","11":"16","12":"16","13":"SEGMENT","14":"150822","15":"176045","16":"44100"},{"1":"<p:>","2":"0.0000","3":"1089.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"5","8":"5","9":"MAU","10":"MAU","11":"1","12":"1","13":"SEGMENT","14":"0","15":"48068","16":"44100"},{"1":"m","2":"1089.9887","3":"1309.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"6","8":"6","9":"MAU","10":"MAU","11":"2","12":"2","13":"SEGMENT","14":"48069","15":"57770","16":"44100"},{"1":"a","2":"1309.9887","3":"1429.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"7","8":"7","9":"MAU","10":"MAU","11":"3","12":"3","13":"SEGMENT","14":"57771","15":"63062","16":"44100"},{"1":"4","2":"1429.9887","3":"1469.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"8","8":"8","9":"MAU","10":"MAU","11":"4","12":"4","13":"SEGMENT","14":"63063","15":"64826","16":"44100"},{"1":"i","2":"1469.9887","3":"1869.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"9","8":"9","9":"MAU","10":"MAU","11":"5","12":"5","13":"SEGMENT","14":"64827","15":"82466","16":"44100"},{"1":"L","2":"1869.9887","3":"1909.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"10","8":"10","9":"MAU","10":"MAU","11":"6","12":"6","13":"SEGMENT","14":"82467","15":"84230","16":"44100"},{"1":"E","2":"1909.9887","3":"1939.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"11","8":"11","9":"MAU","10":"MAU","11":"7","12":"7","13":"SEGMENT","14":"84231","15":"85553","16":"44100"},{"1":"n","2":"1939.9887","3":"1969.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"12","8":"12","9":"MAU","10":"MAU","11":"8","12":"8","13":"SEGMENT","14":"85554","15":"86876","16":"44100"},{"1":"a","2":"1969.9887","3":"2109.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"13","8":"13","9":"MAU","10":"MAU","11":"9","12":"9","13":"SEGMENT","14":"86877","15":"93050","16":"44100"},{"1":"L","2":"2109.9887","3":"2259.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"14","8":"14","9":"MAU","10":"MAU","11":"10","12":"10","13":"SEGMENT","14":"93051","15":"99665","16":"44100"},{"1":"E","2":"2259.9887","3":"2349.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"15","8":"15","9":"MAU","10":"MAU","11":"11","12":"11","13":"SEGMENT","14":"99666","15":"103634","16":"44100"},{"1":"u","2":"2349.9887","3":"2499.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"16","8":"16","9":"MAU","10":"MAU","11":"12","12":"12","13":"SEGMENT","14":"103635","15":"110249","16":"44100"},{"1":"J","2":"2499.9887","3":"2659.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"17","8":"17","9":"MAU","10":"MAU","11":"13","12":"13","13":"SEGMENT","14":"110250","15":"117305","16":"44100"},{"1":"O","2":"2659.9887","3":"2859.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"18","8":"18","9":"MAU","10":"MAU","11":"14","12":"14","13":"SEGMENT","14":"117306","15":"126125","16":"44100"},{"1":"m","2":"2859.9887","3":"2909.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"19","8":"19","9":"MAU","10":"MAU","11":"15","12":"15","13":"SEGMENT","14":"126126","15":"128330","16":"44100"},{"1":"E","2":"2909.9887","3":"2939.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"20","8":"20","9":"MAU","10":"MAU","11":"16","12":"16","13":"SEGMENT","14":"128331","15":"129653","16":"44100"},{"1":"z","2":"2939.9887","3":"3089.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"21","8":"21","9":"MAU","10":"MAU","11":"17","12":"17","13":"SEGMENT","14":"129654","15":"136268","16":"44100"},{"1":"E","2":"3089.9887","3":"3229.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"22","8":"22","9":"MAU","10":"MAU","11":"18","12":"18","13":"SEGMENT","14":"136269","15":"142442","16":"44100"},{"1":"n","2":"3229.9887","3":"3419.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"23","8":"23","9":"MAU","10":"MAU","11":"19","12":"19","13":"SEGMENT","14":"142443","15":"150821","16":"44100"},{"1":"<p:>","2":"3419.9887","3":"4335.6803","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001BF_3syll_1","7":"24","8":"24","9":"MAU","10":"MAU","11":"20","12":"20","13":"SEGMENT","14":"150822","15":"191203","16":"44100"},{"1":"<p:>","2":"0.0000","3":"899.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"9","8":"9","9":"MAU","10":"MAU","11":"1","12":"1","13":"SEGMENT","14":"0","15":"39689","16":"44100"},{"1":"L","2":"899.9887","3":"1199.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"10","8":"10","9":"MAU","10":"MAU","11":"2","12":"2","13":"SEGMENT","14":"39690","15":"52919","16":"44100"},{"1":"E","2":"1199.9887","3":"1229.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"11","8":"11","9":"MAU","10":"MAU","11":"3","12":"3","13":"SEGMENT","14":"52920","15":"54242","16":"44100"},{"1":"n","2":"1229.9887","3":"1269.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"12","8":"12","9":"MAU","10":"MAU","11":"4","12":"4","13":"SEGMENT","14":"54243","15":"56006","16":"44100"},{"1":"a","2":"1269.9887","3":"1369.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"13","8":"13","9":"MAU","10":"MAU","11":"5","12":"5","13":"SEGMENT","14":"56007","15":"60416","16":"44100"},{"1":"L","2":"1369.9887","3":"1509.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"14","8":"14","9":"MAU","10":"MAU","11":"6","12":"6","13":"SEGMENT","14":"60417","15":"66590","16":"44100"},{"1":"E","2":"1509.9887","3":"1539.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"15","8":"15","9":"MAU","10":"MAU","11":"7","12":"7","13":"SEGMENT","14":"66591","15":"67913","16":"44100"},{"1":"u","2":"1539.9887","3":"1619.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"16","8":"16","9":"MAU","10":"MAU","11":"8","12":"8","13":"SEGMENT","14":"67914","15":"71441","16":"44100"},{"1":"J","2":"1619.9887","3":"1729.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"17","8":"17","9":"MAU","10":"MAU","11":"9","12":"9","13":"SEGMENT","14":"71442","15":"76292","16":"44100"},{"1":"O","2":"1729.9887","3":"1909.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"18","8":"18","9":"MAU","10":"MAU","11":"10","12":"10","13":"SEGMENT","14":"76293","15":"84230","16":"44100"},{"1":"m","2":"1909.9887","3":"1939.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"19","8":"19","9":"MAU","10":"MAU","11":"11","12":"11","13":"SEGMENT","14":"84231","15":"85553","16":"44100"},{"1":"E","2":"1939.9887","3":"1969.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"20","8":"20","9":"MAU","10":"MAU","11":"12","12":"12","13":"SEGMENT","14":"85554","15":"86876","16":"44100"},{"1":"z","2":"1969.9887","3":"2079.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"21","8":"21","9":"MAU","10":"MAU","11":"13","12":"13","13":"SEGMENT","14":"86877","15":"91727","16":"44100"},{"1":"E","2":"2079.9887","3":"2369.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"22","8":"22","9":"MAU","10":"MAU","11":"14","12":"14","13":"SEGMENT","14":"91728","15":"104516","16":"44100"},{"1":"n","2":"2369.9887","3":"2399.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"23","8":"23","9":"MAU","10":"MAU","11":"15","12":"15","13":"SEGMENT","14":"104517","15":"105839","16":"44100"},{"1":"<p:>","2":"2399.9887","3":"2549.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"24","8":"24","9":"MAU","10":"MAU","11":"16","12":"16","13":"SEGMENT","14":"105840","15":"112454","16":"44100"},{"1":"j","2":"2549.9887","3":"2769.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"25","8":"25","9":"MAU","10":"MAU","11":"17","12":"17","13":"SEGMENT","14":"112455","15":"122156","16":"44100"},{"1":"O","2":"2769.9887","3":"2839.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"26","8":"26","9":"MAU","10":"MAU","11":"18","12":"18","13":"SEGMENT","14":"122157","15":"125243","16":"44100"},{"1":"L","2":"2839.9887","3":"3069.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"27","8":"27","9":"MAU","10":"MAU","11":"19","12":"19","13":"SEGMENT","14":"125244","15":"135386","16":"44100"},{"1":"E","2":"3069.9887","3":"3129.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"28","8":"28","9":"MAU","10":"MAU","11":"20","12":"20","13":"SEGMENT","14":"135387","15":"138032","16":"44100"},{"1":"n","2":"3129.9887","3":"3159.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"29","8":"29","9":"MAU","10":"MAU","11":"21","12":"21","13":"SEGMENT","14":"138033","15":"139355","16":"44100"},{"1":"a","2":"3159.9887","3":"3279.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"30","8":"30","9":"MAU","10":"MAU","11":"22","12":"22","13":"SEGMENT","14":"139356","15":"144647","16":"44100"},{"1":"L","2":"3279.9887","3":"3419.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"31","8":"31","9":"MAU","10":"MAU","11":"23","12":"23","13":"SEGMENT","14":"144648","15":"150821","16":"44100"},{"1":"E","2":"3419.9887","3":"3449.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"32","8":"32","9":"MAU","10":"MAU","11":"24","12":"24","13":"SEGMENT","14":"150822","15":"152144","16":"44100"},{"1":"u","2":"3449.9887","3":"3549.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"33","8":"33","9":"MAU","10":"MAU","11":"25","12":"25","13":"SEGMENT","14":"152145","15":"156554","16":"44100"},{"1":"m","2":"3549.9887","3":"3679.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"34","8":"34","9":"MAU","10":"MAU","11":"26","12":"26","13":"SEGMENT","14":"156555","15":"162287","16":"44100"},{"1":"u","2":"3679.9887","3":"3869.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"35","8":"35","9":"MAU","10":"MAU","11":"27","12":"27","13":"SEGMENT","14":"162288","15":"170666","16":"44100"},{"1":"4","2":"3869.9887","3":"3909.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"36","8":"36","9":"MAU","10":"MAU","11":"28","12":"28","13":"SEGMENT","14":"170667","15":"172430","16":"44100"},{"1":"i","2":"3909.9887","3":"4039.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"37","8":"37","9":"MAU","10":"MAU","11":"29","12":"29","13":"SEGMENT","14":"172431","15":"178163","16":"44100"},{"1":"n","2":"4039.9887","3":"4289.9887","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"38","8":"38","9":"MAU","10":"MAU","11":"30","12":"30","13":"SEGMENT","14":"178164","15":"189188","16":"44100"},{"1":"<p:>","2":"4289.9887","3":"4898.1293","4":"b89d6729-b32a-40e8-a8ac-c980af66c9f4","5":"0000","6":"0001CF_ord1_4","7":"39","8":"39","9":"MAU","10":"MAU","11":"31","12":"31","13":"SEGMENT","14":"189189","15":"216007","16":"44100"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>We can find unique segments (and their frequencies) using the <code>count</code> function available in the <code>tidyverse</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(mau.s, labels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"4","2":"4"},{"1":"<p:>","2":"9"},{"1":"E","2":"15"},{"1":"J","2":"3"},{"1":"L","2":"10"},{"1":"O","2":"3"},{"1":"a","2":"7"},{"1":"i","2":"3"},{"1":"j","2":"1"},{"1":"m","2":"7"},{"1":"n","2":"9"},{"1":"u","2":"8"},{"1":"z","2":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>We’ll store the vowels in a vector <code>vowel_phonemes</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>vowel_phonemes <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"E"</span>, <span class="st">"i"</span>, <span class="st">"O"</span>, <span class="st">"u"</span>, <span class="st">"4"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With a few <code>tidyverse</code> commands, we can wrangle <code>mau.s</code> to have the label <code>V</code> for vowels and <code>C</code> for consonants (i.e., the labels that are <em>not</em> in the <code>vowel_phonemes</code> vector), and storing this as a new data frame called <code>new_items</code>.</p>
+<p>We first change the values in the <code>attribute</code> column to <code>CV</code> using the <code>mutate()</code> function. We use the <code>rename()</code> function to change the <code>labels</code> column with phonemic annotations to <code>old_labels</code>. Finally we use <code>mutate()</code> in combination with <code>case_when()</code> to store the label <code>V</code> in <code>labels</code> wherever <code>old_labels</code> has a phonemic annotation found in our <code>vowel_phonemes</code> vector, and to store the label <code>C</code> in all other cases. For more resources on the <code>tidyverse</code> see the initial setup chapter.</p>
+<!-- Add link to the initial setup chapter when all is done. -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>new_items <span class="ot">&lt;-</span> mau.s <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">attribute =</span> <span class="st">"CV"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">old_labels =</span> labels) <span class="sc">%&gt;%</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">labels =</span> <span class="fu">case_when</span>(old_labels <span class="sc">%in%</span> vowel_phonemes <span class="sc">~</span> <span class="st">"V"</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                            <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"C"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Calling the <code>count()</code> function on <code>new_items</code> will give us the number of consonants and vowels in the database:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(new_items, labels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"C","2":"41"},{"1":"V","2":"40"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>We can add these new annotations to the attribute level <code>CV</code> using the <code>update_itemsInLevel()</code> function like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">update_itemsInLevel</span>(alb2_DB, </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">itemsToUpdate =</span> new_items,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verbose =</span> <span class="cn">FALSE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can now <code>query()</code> the <code>CV</code> level for all of its annotations:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>seglist_cv <span class="ot">&lt;-</span> <span class="fu">query</span>(alb2_DB, <span class="st">"CV =~ .*"</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(seglist_cv, labels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"C","2":"41"},{"1":"V","2":"40"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Perhaps more importantly, it is now possible to identify the different types of syllable structure. Recall that the <code>MAS</code> tier parses the <code>Phoneme</code> tier into syllables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>syll <span class="ot">&lt;-</span> <span class="fu">query</span>(alb2_DB, <span class="st">"MAS =~ .*"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(syll, labels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"4 i","2":"1"},{"1":"4 i n","2":"2"},{"1":"J E","2":"1"},{"1":"J O","2":"2"},{"1":"L E","2":"10"},{"1":"j O","2":"1"},{"1":"m E","2":"2"},{"1":"m a","2":"2"},{"1":"m u","2":"2"},{"1":"m u 4","2":"1"},{"1":"n a","2":"5"},{"1":"u","2":"5"},{"1":"z E n","2":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Here are the syllables in terms of their representation at the <code>CV</code> tier:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>syll.cv <span class="ot">&lt;-</span> <span class="fu">requery_hier</span>(alb2_DB, syll, <span class="at">level =</span> <span class="st">"CV"</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(syll.cv, labels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"C->V","2":"25"},{"1":"C->V->C","2":"2"},{"1":"C->V->V","2":"1"},{"1":"V","2":"5"},{"1":"V->V","2":"1"},{"1":"V->V->C","2":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Don’t worry if you don’t yet understand how the <code>query</code>ing functions work – much more on that in <a href="query.html"><span>Chapter&nbsp;7</span></a>!</p>
+</section>
+<section id="functions-introduced-in-this-chapter" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="functions-introduced-in-this-chapter"><span class="header-section-number">6.5</span> Functions introduced in this chapter</h2>
+<ul>
+<li><code>signal_on_spec()</code>: Overlays a signal, such as pitch, on top of the spectrogram in the <code>Emu-webApp</code>. (Requires <code>emuhelpeR</code> to be installed).</li>
+<li><code>count()</code>: Provides a count of all instances of a factor variable in a data frame or tibble.</li>
+<li><code>requery_hier()</code>: Requeries an emuDB based on an existing query. Will be discussed much more in <a href="query.html"><span>Chapter&nbsp;7</span></a>.</li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
