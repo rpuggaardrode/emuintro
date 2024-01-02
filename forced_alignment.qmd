@@ -1,4 +1,4 @@
-# Forced alignment in `emuR`
+# Forced alignment in `emuR` {#sec-forcedalignment}
 
 ```{r}
 #| echo: false

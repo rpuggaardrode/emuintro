@@ -15,7 +15,7 @@ unlink(d, recursive=TRUE)
 
 The aim of this chapter is to show how to get from a Praat `.TextGrid` format to an Emu database format. We will show how to convert pairs of `.wav` and `.TextGrid` files to an Emu database, how to generate pitch tracks over the sound files, how to add annotation levels in the style of Praat's point tiers, and finally how to convert the flat annotation structure of Praat TextGrids into the layered annotation structure of an Emu database (see @sec-intro).
 
-as exemplified in @fig-praat2emu:
+@fig-praat2emu exemplifies such a Praat `.TextGrid` collection and the `Emu-webApp` configuration we want to achieve:
 
 ![An utterance fragment in Praat and in Emu.](img/figpraat.png){#fig-praat2emu}
 
