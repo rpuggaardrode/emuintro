@@ -93,10 +93,10 @@ list_levelDefinitions(alb2_DB)
 
 Second, *make a list of all words in the database.*
 
-We can do this by using the `query()` function to find all annotations in the `ORT` level (as in previous chapters, we'll also remove the `db_uuid` column from the printed results because the data frame is more legible this way). 
+We can do this by using the `query()` function to find all annotations in the `ORT` level. We'll remove the `end` column from the resulting object to ensure as we don't need end times for these labels, and including it can create issues down the line. (As in previous chapters, we'll also remove the `db_uuid` column from the printed results because the data frame is more legible this way). 
 
 ```{r}
-text.s <- query(alb2_DB, "ORT =~ .*")
+text.s <- query(alb2_DB, "ORT =~ .*") %>% select(-end)
 text.s %>% select(-db_uuid)
 ```
 
@@ -116,8 +116,7 @@ We can now pass `text.s` on to the function `create_itemsInLevel()` like so:
 #| error: false
 
 create_itemsInLevel(alb2_DB, text.s,
-                    verbose = FALSE,
-                    calculateEndTimeForSegments = FALSE)
+                    verbose = FALSE)
 ```
 
 It is now possible to `query()` the word level annotations directly from `ORT2`:

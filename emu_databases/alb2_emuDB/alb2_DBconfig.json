@@ -1,0 +1,152 @@
+{
+  "name": "alb2",
+  "UUID": "6e3e986a-ed9d-4724-9408-7e0272cc2070",
+  "mediafileExtension": "wav",
+  "ssffTrackDefinitions": [
+    {
+      "name": "pitch",
+      "columnName": "pitch",
+      "fileExtension": "pit"
+    }
+  ],
+  "levelDefinitions": [
+    {
+      "name": "bundle",
+      "type": "ITEM",
+      "attributeDefinitions": [
+        {
+          "name": "bundle",
+          "type": "STRING"
+        },
+        {
+          "name": "transcription",
+          "type": "STRING",
+          "description": "Transcription imported from txt collection"
+        }
+      ]
+    },
+    {
+      "name": "ORT",
+      "type": "ITEM",
+      "attributeDefinitions": [
+        {
+          "name": "ORT",
+          "type": "STRING",
+          "description": "Tokenized and normalized orthography level automatically derived from 'transcription' by BAS webservice runG2P (1.129), on 2024-07-11 11:06:18.312679, with the following parameters: ()"
+        },
+        {
+          "name": "KAN",
+          "type": "STRING",
+          "description": "Canonical pronunciation word forms automatically derived from 'ORT' by BAS webservice runG2P (1.129), on 2024-07-11 11:06:32.258417, with the following parameters: (embed maus)"
+        },
+        {
+          "name": "KAS",
+          "type": "STRING",
+          "description": "Syllabified canonical pronunciation word forms automatically derived from 'KAN' by BAS webservice runPho2Syl (1.33), on 2024-07-11 11:06:51.851358, with the following parameters: ()"
+        }
+      ]
+    },
+    {
+      "name": "MAU",
+      "type": "SEGMENT",
+      "attributeDefinitions": [
+        {
+          "name": "MAU",
+          "type": "STRING",
+          "description": "Phonetic segmentation by MAUS automatically derived from 'KAN' by BAS webservice runMAUS (5.132), on 2024-07-11 11:06:46.110789, with the following parameters: (USETRN false)"
+        },
+        {
+          "name": "CV",
+          "type": "STRING"
+        }
+      ]
+    },
+    {
+      "name": "MAS",
+      "type": "ITEM",
+      "attributeDefinitions": [
+        {
+          "name": "MAS",
+          "type": "STRING",
+          "description": "Syllable segmentation automatically derived from 'MAU' by BAS webservice runPho2Syl (1.33), on 2024-07-11 11:07:07.494492, with the following parameters: (wsync yes)"
+        }
+      ]
+    },
+    {
+      "name": "ORT2",
+      "type": "SEGMENT",
+      "attributeDefinitions": [
+        {
+          "name": "ORT2",
+          "type": "STRING"
+        }
+      ]
+    },
+    {
+      "name": "Tone",
+      "type": "EVENT",
+      "attributeDefinitions": [
+        {
+          "name": "Tone",
+          "type": "STRING"
+        }
+      ]
+    }
+  ],
+  "linkDefinitions": [
+    {
+      "type": "ONE_TO_MANY",
+      "superlevelName": "bundle",
+      "sublevelName": "ORT"
+    },
+    {
+      "type": "ONE_TO_MANY",
+      "superlevelName": "ORT",
+      "sublevelName": "MAS"
+    },
+    {
+      "type": "ONE_TO_MANY",
+      "superlevelName": "MAS",
+      "sublevelName": "MAU"
+    },
+    {
+      "type": "ONE_TO_MANY",
+      "superlevelName": "ORT2",
+      "sublevelName": "Tone"
+    }
+  ],
+  "EMUwebAppConfig": {
+    "perspectives": [
+      {
+        "name": "default",
+        "signalCanvases": {
+          "order": [
+            "OSCI",
+            "SPEC",
+            "pitch"
+          ],
+          "assign": [
+            {
+              "signalCanvasName": "SPEC",
+              "ssffTrackName": "pitch"
+            }
+          ],
+          "contourLims": []
+        },
+        "levelCanvases": {
+          "order": [
+            "Tone",
+            "ORT2"
+          ]
+        },
+        "twoDimCanvases": {
+          "order": []
+        }
+      }
+    ],
+    "activeButtons": {
+      "saveBundle": true,
+      "showHierarchy": true
+    }
+  }
+}
