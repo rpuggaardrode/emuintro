@@ -100,8 +100,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -172,7 +170,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./praat2emu.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection and tracking pitch</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -193,48 +191,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The Emu query language</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./signalproc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">An introduction to signal processing in <code>emuR</code></span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./formants.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Automatic formant tracking and manual correction</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./vowel_norm_dist.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Vowel normalisation and vowel distances</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./dct.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">The discrete cosine transformation</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./spectral_proc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Spectral processing of speech</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./dct_spec.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Parameterising spectra with the DCT</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
-  </div>
-</li>
     </ul>
     </div>
 </nav>
@@ -248,8 +204,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#preliminaries-and-loading-libraries" id="toc-preliminaries-and-loading-libraries" class="nav-link active" data-scroll-target="#preliminaries-and-loading-libraries"><span class="header-section-number">2.1</span> Preliminaries and loading libraries</a></li>
   <li><a href="#accessing-an-existing-emu-speech-database" id="toc-accessing-an-existing-emu-speech-database" class="nav-link" data-scroll-target="#accessing-an-existing-emu-speech-database"><span class="header-section-number">2.2</span> Accessing an existing Emu speech database</a></li>
   <li><a href="#sec-defprops" id="toc-sec-defprops" class="nav-link" data-scroll-target="#sec-defprops"><span class="header-section-number">2.3</span> Some defining properties of an Emu database</a></li>
-  <li><a href="#viewing-and-annotating-an-emu-database" id="toc-viewing-and-annotating-an-emu-database" class="nav-link" data-scroll-target="#viewing-and-annotating-an-emu-database"><span class="header-section-number">2.4</span> Viewing and annotating an Emu database</a></li>
-  <li><a href="#functions-introduced-in-this-chapter" id="toc-functions-introduced-in-this-chapter" class="nav-link" data-scroll-target="#functions-introduced-in-this-chapter"><span class="header-section-number">2.5</span> Functions introduced in this chapter</a></li>
+  <li><a href="#types-of-annotation-levels-and-links" id="toc-types-of-annotation-levels-and-links" class="nav-link" data-scroll-target="#types-of-annotation-levels-and-links"><span class="header-section-number">2.4</span> Types of annotation levels and links</a></li>
+  <li><a href="#viewing-and-annotating-an-emu-database" id="toc-viewing-and-annotating-an-emu-database" class="nav-link" data-scroll-target="#viewing-and-annotating-an-emu-database"><span class="header-section-number">2.5</span> Viewing and annotating an Emu database</a></li>
+  <li><a href="#functions-introduced-in-this-chapter" id="toc-functions-introduced-in-this-chapter" class="nav-link" data-scroll-target="#functions-introduced-in-this-chapter"><span class="header-section-number">2.6</span> Functions introduced in this chapter</a></li>
   </ul>
 </nav>
     </div>
@@ -286,11 +243,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="accessing-an-existing-emu-speech-database" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="accessing-an-existing-emu-speech-database"><span class="header-section-number">2.2</span> Accessing an existing Emu speech database</h2>
-<p>For a first look at the properties of Emu databases, we will use the function <code>create_emuRdemodata()</code> to download and access a demonstration database.</p>
+<p>For a first look at the properties of Emu databases, we will use the function <code>create_emuRdemodata()</code> to download and access a “demo” database.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">create_emuRdemoData</span>(<span class="at">dir =</span> <span class="fu">tempdir</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The option <code>dir = tempdir()</code> tells R to store the demo database in a temporary directory, the path of which is determined internally by the <code>tempdir()</code> function.</p>
+<p>The option <code>dir = tempdir()</code> tells R to store the demo database in a temporary directory, the path of which is determined automatically by the <code>tempdir()</code> function.</p>
 <p>We can now use the command <code>list.dirs()</code> to have a look inside the temporary directory and see which directories are in there. (<code>recursive=FALSE</code> tells R not to return the names of all subdirectories, and <code>full.names=FALSE</code> tells R not to return the full paths to directories).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list.dirs</span>(<span class="fu">tempdir</span>(), <span class="at">recursive=</span><span class="cn">FALSE</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -298,10 +255,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>[1] "emuR_demoData"</code></pre>
 </div>
 </div>
-<p>Our demo data is stored in the first subdirectory, <code>emuR_demoData</code>. Let’s have a look at what is stored in there. (The second directory with the long obscure name is always created when a new R session is started).</p>
+<p>Our demo data is stored in the first subdirectory, <code>emuR_demoData</code>. Let’s have a look at what is stored in there.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#store path name as an object</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>path.emuDB <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">tempdir</span>(), <span class="st">"/emuR_demoData"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>path.emuDB <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">"emuR_demoData"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list.dirs</span>(path.emuDB, <span class="at">recursive=</span><span class="cn">FALSE</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "ae_emuDB"            "BPF_collection"      "legacy_ae"          
@@ -312,7 +269,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">"emuR_demoData"</span>, <span class="st">"ae_emuDB"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "C:\\Users\\rasmu\\AppData\\Local\\Temp\\RtmpU1LEj3/emuR_demoData/ae_emuDB"</code></pre>
+<pre><code>[1] "C:\\Users\\rasmu\\AppData\\Local\\Temp\\RtmpKESI5u/emuR_demoData/ae_emuDB"</code></pre>
 </div>
 </div>
 <p>In order to see the files that are physically stored in the <code>ae_emuDB</code>, first save the path name and then use the function <code>list.files()</code>:</p>
@@ -331,7 +288,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 [5] "msajc022_bndl" "msajc023_bndl" "msajc057_bndl"</code></pre>
 </div>
 </div>
-<p>This shows that there <code>0000_ses</code> contains 7 directories of so-called <em>bundles</em> <code>bndl</code>. Emu organises things such that all the files that belong to the same utterance are always in the same bundle. The <em>utterance identifier</em> precedes <code>_</code>. Thus in this case, it is clear from the output above that there are 7 utterances whose identifiers are <code>msajc003</code>, <code>msajc010</code>, <code>msajc012</code>, <code>msajc015</code>, <code>msajc023</code>, <code>msajc057</code>. We can again use <code>list.files()</code> in combination with <code>file.path()</code> to see what files there are for any utterance, in this case for <code>msajc003</code>:</p>
+<p>This shows that the <code>0000_ses</code> contains 7 directories of so-called <em>bundles</em> with the <code>_bndl</code> suffix. Emu organises things such that all the files that belong to the same utterance are always in the same bundle. The <em>utterance identifier</em> precedes <code>_</code>. Thus in this case, it is clear from the output above that there are 7 utterances whose identifiers are <code>msajc003</code>, <code>msajc010</code>, <code>msajc012</code>, <code>msajc015</code>, <code>msajc023</code>, <code>msajc057</code>. We can again use <code>list.files()</code> in combination with <code>file.path()</code> to see what files there are for any bundle, in this case for <code>msajc003</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(<span class="fu">file.path</span>(path.ae, <span class="st">"0000_ses"</span>, <span class="st">"msajc003_bndl"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -342,11 +299,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This shows that <code>msajc003</code> has the following files:</p>
 <ul>
 <li><code>_annot.json</code>: this stores information about the annotations.</li>
-<li><code>.dft</code>: this contains a derived signal file of DFT (spectral) data obtained from the speech waveform; spectral processing is discussed in more detail in <a href="spectral_proc.html"><span>Chapter&nbsp;12</span></a>.</li>
+<li><code>.dft</code>: this contains a derived signal file of DFT (spectral) data obtained from the speech waveform.</li>
 <li><code>.fms</code>: this contains formant data also obtained from the speech waveform.</li>
-<li><code>.wav</code>: this contains the waveform itself.</li>
+<li><code>.wav</code>: this contains the sound itself.</li>
 </ul>
-<p><code>.dft</code> and <code>.fms</code> are just examples of the sorts of signal files that can be stored in an Emu database – this could also have been signals like pitch tracks or intensity, but for the advanced user, essentially any signal can be stored in an Emu database. We will see more examples in <a href="signalproc.html"><span>Chapter&nbsp;8</span></a>.</p>
+<p><code>.dft</code> and <code>.fms</code> are just examples of the sorts of signal files that can be stored in an Emu database – this could also have been signals like pitch tracks or intensity, but for the advanced user, essentially any signal can be stored in an Emu database.</p>
+<!-- We want to link this to some later chapter that actually shows how to do this -->
 <p>In order to access the <code>ae</code> emuDB in R, the above path needs to be stored and passed to the function <code>load_emuDB()</code> that reads the database into R. The output of <code>load_emuDB()</code> should always be assigned to an object in R, or you will not be able to access it later. Here we store it as <code>ae</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># store the above path name</span></span>
@@ -381,7 +339,7 @@ What does <code>verbose=FALSE</code> mean?
 <div class="cell-output cell-output-stdout">
 <pre><code>Name:    ae 
 UUID:    0fc618dc-8980-414d-8c7a-144a649ce199 
-Directory:   C:\Users\rasmu\AppData\Local\Temp\RtmpU1LEj3\emuR_demoData\ae_emuDB 
+Directory:   C:\Users\rasmu\AppData\Local\Temp\RtmpKESI5u\emuR_demoData\ae_emuDB 
 Session count: 1 
 Bundle count: 7 
 Annotation item count:  736 
@@ -452,7 +410,7 @@ Link count:  785 </code></pre>
 </div>
 </div>
 </div>
-<p>The <code>SSFF track definitions</code> show which signals are currently available in the database apart from the waveforms. For this database there are signals of type <code>dft</code> (discrete Fourier transform, see <a href="spectral_proc.html"><span>Chapter&nbsp;12</span></a>) and of type <code>fm</code> (formant). They have extensions <code>.dft</code> and <code>.fms</code>. This information is also given by:</p>
+<p>The <code>SSFF track definitions</code> show which signals are currently available in the database apart from the waveforms. For this database there are signals of type <code>dft</code> (discrete Fourier transform, i.e.&nbsp;spectral data) and of type <code>fm</code> (formant). They have extensions <code>.dft</code> and <code>.fms</code>. This information is also given by:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list_ssffTrackDefinitions</span>(ae)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -476,7 +434,11 @@ Link count:  785 </code></pre>
 </div>
 </div>
 </div>
-<p>As the above shows, annotation levels can be of three types: <code>ITEM</code>, <code>SEGMENT</code>, and <code>EVENT</code>. The annotations of <code>ITEM</code> levels <strong>inherit their times</strong> from the (typically) <code>SEGMENT</code> levels that they dominate. In a <code>SEGMENT</code> levels, each annotation has <strong>a start and end time</strong>, equivalent to segment tiers in Praat. In an <code>EVENT</code> level, each annotation <strong>is defined by a single point in time</strong>, equivalent to point tiers in Praat. A level can also be associated with one or more <code>ATTRIBUTE</code> levels. This information is also given by the function <code>list_attributeDefinitions()</code> with the database name as the first argument, and the level to be queried for attributes as the second. For example:</p>
+<p>This requires some unpacking!</p>
+</section>
+<section id="types-of-annotation-levels-and-links" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="types-of-annotation-levels-and-links"><span class="header-section-number">2.4</span> Types of annotation levels and links</h2>
+<p>As the above shows, annotation levels can be of three types: <code>ITEM</code>, <code>SEGMENT</code>, and <code>EVENT</code>. The annotations of <code>ITEM</code> levels inherit their time information from the (typically) <code>SEGMENT</code> levels that they dominate. In <code>SEGMENT</code> levels, each annotation has a start and end time, equivalent to segment tiers in Praat. In an <code>EVENT</code> level, each annotation is defined by a single point in time, equivalent to point tiers in Praat. A level can also be associated with one or more <code>ATTRIBUTE</code> levels. This information is also given by the function <code>list_attributeDefinitions()</code> with the database name as the first argument, and the level to be queried for attributes as the second. For example:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list_attributeDefinitions</span>(ae, <span class="st">"Word"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -488,7 +450,7 @@ Link count:  785 </code></pre>
 </div>
 </div>
 </div>
-<p>This shows that the levels <code>Accent</code> and <code>Text</code> are attributes of <code>Word</code>. The annotations of an <code>ATTRIBUTE</code> level <strong>always have identical times to those of the main level with which they are associated</strong> (thus the annotations of the <code>Accent</code> level have identical start and end times to those of the <code>Word</code> level). An <code>ATTRIBUTE</code> level is often used to provide additional information about annotations. In the <code>ae</code> database, the annotations in the <code>Word</code> level consist entirely of either <code>C</code> (content word) or <code>F</code> (function word). The annotations at the <code>Text</code> level are used to provide the orthography for each content or function word annotation; and the annotations of the <code>Accent</code> level are used to mark whether or not a word is prosodically accented.</p>
+<p>This shows that the levels <code>Accent</code> and <code>Text</code> are attributes of <code>Word</code>. The annotations of an <code>ATTRIBUTE</code> level always have identical times to those of the main level with which they are associated (thus the annotations of the <code>Accent</code> level have identical start and end times to those of the <code>Word</code> level). An <code>ATTRIBUTE</code> level is often used to provide additional information about annotations. In the <code>ae</code> database, the annotations in the <code>Word</code> level consist entirely of either <code>C</code> (content word) or <code>F</code> (function word). The annotations at the <code>Text</code> level are used to provide the orthography for each content or function word annotation; and the annotations of the <code>Accent</code> level are used to mark whether or not a word is prosodically accented.</p>
 <p>The information in <code>Link definitions</code> of <code>summary(ae)</code> shows how the levels are associated with each other. This information is also provided by the function <code>list_linkDefinitions()</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list_linkDefinitions</span>(ae)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -502,15 +464,15 @@ Link count:  785 </code></pre>
 </div>
 </div>
 <p>In the Emu system, annotation levels can be (but need not be) hierarchically organised with respect to each other. One reason for the hierarchical organisation of levels is to allow annotations to inherit times if these are predictable.</p>
-<p>In the left part of <a href="#fig-seen">Figure&nbsp;<span>2.1</span></a> for example, the start and end times of the annotation <code>seen</code> in the <code>Text</code> level are completely predictable from the annotations at the <code>Phonetic</code> level that is dominated by <code>Text</code>. <code>Text</code> is an item level, <code>Phonetic</code> is a segment level as indicated by <code>(S)</code>. <code>Text</code> dominates <code>Phonetic</code> as shown by the vertical downward arrow. Compatibly, the Emu system provides a way for the start and end times of <code>seen</code> to be inherited from the annotations at the hierarchically lower <code>SEGMENT</code> level <code>Phonetic</code>. Because <code>Text</code> is an <code>ITEM</code> level that dominates <code>Phonetic</code> which is a <code>SEGMENT</code> level, annotations at the <code>Text</code> level inherit their times from <code>Phonetic</code>. Consequently, the duration of <code>seen</code> is <span class="math inline">\(t_4 - t_1\)</span>. <code>Text</code> and <code>Phonetic</code> stand in a <code>ONE_TO_MANY</code> association (as signified by the downward arrow) because an annotation at the <code>Text</code> level can be associated with one or more annotations at the <code>Phonetic</code> level, but not vice versa.</p>
+<p>In the left part of <a href="#fig-seen">Figure&nbsp;<span>2.1</span></a> for example, the start and end times of the annotation <code>seen</code> in the <code>Text</code> level are completely predictable from the annotations at the <code>Phonetic</code> level that is dominated by <code>Text</code>. <code>Text</code> is an item level, <code>Phonetic</code> is a segment level as indicated by <code>(S)</code>. <code>Text</code> dominates <code>Phonetic</code> as shown by the vertical downward arrow. Compatibly, the Emu system provides a way for the start and end times of <code>seen</code> to be inherited from the annotations at the hierarchically lower <code>SEGMENT</code> level <code>Phonetic</code>. Because <code>Text</code> is an <code>ITEM</code> level that dominates <code>Phonetic</code> which is a <code>SEGMENT</code> level, annotations at the <code>Text</code> level inherit their times from <code>Phonetic</code>. Consequently, the duration of <code>seen</code> is <em>t</em><sub>4</sub> – <em>t</em><sub>1</sub>. <code>Text</code> and <code>Phonetic</code> stand in a <code>ONE_TO_MANY</code> association (as signified by the downward arrow) because an annotation at the <code>Text</code> level can be associated with one or more annotations at the <code>Phonetic</code> level, but not vice versa.</p>
 <div id="fig-seen" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/seen.png" class="img-fluid figure-img" style="width:85.0%"></p>
 <figcaption class="figure-caption">Figure&nbsp;2.1: Example relations between annotation levels.</figcaption>
 </figure>
 </div>
-<p>On the right, <code>Phoneme</code> and <code>Phonetic</code> stand in a <code>MANY_TO_MANY</code> relationship (as indicated by the double arrow) because an annotation at the <code>Phoneme</code> tier can map to more than one annotation at the <code>Phonetic</code> level and vice versa. In this hypothetical example of an annotation of the second syllable of a word like <em>region</em>, the single affricate annotation /dZ/ at the <code>Phoneme</code> level maps to a sequence of [d] and [Z] annotations at the <code>Phonetic</code> level, while the single annotation of the syllabic [n] at the <code>Phonetic</code> level maps to a sequence of annotations /@n/ at the <code>Phoneme</code> tier. Note that /@/ and /n/ inherit <strong>the same start and end times</strong> and therefore have the same duration of <span class="math inline">\(t_4 - t_3\)</span> i.e.&nbsp;they overlap with each other in time completely.</p>
-<p>Another reason for the hierarchical organisation of annotation levels is that it allows users to query the database in order to obtain annotations at one tier with respect to another (e.g., all orthographic annotations of the vowels in the database; all <code>H*</code> pitch accents in an intermediate phrase, etc.). Without this linkage, these types of queries would not be possible.</p>
+<p>On the right, <code>Phoneme</code> and <code>Phonetic</code> stand in a <code>MANY_TO_MANY</code> relationship (as indicated by the double arrow) because an annotation at the <code>Phoneme</code> tier can map to more than one annotation at the <code>Phonetic</code> level and vice versa. In this hypothetical example of an annotation of the second syllable of a word like <em>region</em>, the single affricate annotation /dZ/ at the <code>Phoneme</code> level maps to a sequence of [d] and [Z] annotations at the <code>Phonetic</code> level, while the single annotation of the syllabic [n] at the <code>Phonetic</code> level maps to a sequence of annotations /@n/ at the <code>Phoneme</code> tier. Note that /@/ and /n/ inherit the same start and end times and therefore have the same duration of <em>t</em><sub>4</sub> – <em>t</em><sub>3</sub>, i.e.&nbsp;they overlap with each other in time completely.</p>
+<p>Another reason for the hierarchical organisation of annotation levels is that it allows users to query the database in order to obtain annotations at one tier with respect to another (e.g., all orthographic annotations of the vowels in the database; all H* pitch accents in an intermediate phrase, etc.). Without this linkage, these types of queries would not be possible.</p>
 <p>Emu allows quite a flexible configuration of annotation levels. The type of configuration can be defined by the user and will depend on the types of information that the user wants to be able to extract from the database. The configuration of annotation levels for the currently loaded <code>ae</code> database is shown in <a href="#fig-tree">Figure&nbsp;<span>2.2</span></a>.</p>
 <div id="fig-tree" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -519,24 +481,24 @@ Link count:  785 </code></pre>
 </figure>
 </div>
 <p>Inherited times percolate up through the tree from levels with associated time information, i.e.&nbsp;from <code>SEGMENT</code> and <code>EVENT</code> levels upwards through <code>ITEM</code> levels. Thus, <code>Phoneme</code> is an item level which inherits its times from the <code>SEGMENT</code> level <code>Phonetic</code>. <code>Word</code> inherits its times from <code>Syllable</code> which inherits its times from <code>Phoneme</code> (and therefore from <code>Phonetic</code>) and so on all the way up to the top level <code>Utterance</code>. Sometimes, levels can inherit more than one set of times. In <a href="#fig-tree">Figure&nbsp;<span>2.2</span></a>, <code>Syllable</code> inherits times both from <code>Phonetic (S)</code> and from <code>Tone (E)</code>. For the same reason, all the levels that dominate <code>Syllable</code> (including <code>Foot</code>) inherit these two sets of times.</p>
-<p>Any two annotation levels <strong>on the same path</strong> can be queried with respect to each other, where a path is defined as levels connected by arrows. There are in fact four paths in the configuration:</p>
+<p>Any two annotation levels on the same path can be queried with respect to each other, where a path is defined as levels connected by arrows. There are in fact four paths in the configuration:</p>
 <ol type="1">
 <li><code>Utterance</code> → <code>Intonational</code> → <code>Intermediate</code> → <code>Word</code> → <code>Syllable</code> → <code>Phoneme</code> ↔︎ <code>Phonetic (S)</code></li>
 <li><code>Utterance</code> → <code>Intonational</code> → <code>Root</code> → <code>Syllable</code> → <code>Phoneme</code> ↔︎ <code>Phonetic (S)</code></li>
 <li><code>Utterance</code> → <code>Intonational</code> → <code>Syllable</code> → <code>Tone (E)</code></li>
 <li><code>Utterance</code> → <code>Intonational</code> → <code>Intermediate</code> → <code>Word</code> → <code>Syllable</code> → <code>Tone (E)</code></li>
 </ol>
-<p>From (1–4), it becomes clear that e.g.&nbsp;annotations of the <code>Syllable</code> tier can be queried with respect to <code>Tone</code> (e.g.&nbsp;which syllables contain an <code>H*</code> tone?) and vice versa (e.g.&nbsp;are there any <code>H*</code> tones in weak syllables?); or annotations at the <code>Intermediate</code> tier can be queried with respect to <code>Word</code> (how many words are there in an <code>L-</code> intermediate phrase?) and vice versa (which words are in an <code>L-</code> intermediate phrase?). But e.g.&nbsp;<code>Phoneme</code> and <code>Tone</code> can’t be queried with respect to each other, and nor can <code>Word</code> and <code>Foot</code>, because they aren’t on the same path.</p>
+<p>From (1–4), it becomes clear that e.g.&nbsp;annotations of the <code>Syllable</code> tier can be queried with respect to <code>Tone</code> (e.g.&nbsp;which syllables contain an H* tone?) and vice versa (e.g.&nbsp;are there any H* tones in weak syllables?); or annotations at the <code>Intermediate</code> tier can be queried with respect to <code>Word</code> (how many words are there in an <code>L-</code> intermediate phrase?) and vice versa (which words are in an <code>L-</code> intermediate phrase?). But e.g.&nbsp;<code>Phoneme</code> and <code>Tone</code> can’t be queried with respect to each other, and nor can <code>Word</code> and <code>Foot</code>, because they aren’t on the same path.</p>
 </section>
-<section id="viewing-and-annotating-an-emu-database" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="viewing-and-annotating-an-emu-database"><span class="header-section-number">2.4</span> Viewing and annotating an Emu database</h2>
-<p>An Emu database can be viewed and annotated in at least two ways using the <code>serve()</code> function. Simply passing the database object to <code>serve()</code> will open the Emu database within the R graphics window:</p>
+<section id="viewing-and-annotating-an-emu-database" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="viewing-and-annotating-an-emu-database"><span class="header-section-number">2.5</span> Viewing and annotating an Emu database</h2>
+<p>An Emu database can be viewed and annotated in at least two ways using the <code>serve()</code> function. Simply passing the database object to <code>serve()</code> will open the Emu database within the RStudio graphics window:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(ae)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>You’ll probably usually prefer to watch the database in a larger window; if you include the argument <code>useViewer=FALSE</code>, it’ll open in your default browser instead (which should preferably be Chrome). Alternatively you can click the <code>Show in new window</code> bottom in the RStudio viewer.</p>
+<p>You’ll probably usually prefer to watch the database in a larger window; if you include the argument <code>useViewer = FALSE</code>, it’ll open in your default browser instead (which should preferably be Chrome). Alternatively you can click the <code>Show in new window</code> bottom in the RStudio viewer.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(ae, <span class="at">useViewer=</span>F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(ae, <span class="at">useViewer =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="fig-ae" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -546,20 +508,19 @@ Link count:  785 </code></pre>
 </div>
 <!-- Move the stuff about this not being the place to discuss annotations, since it is actually explained in some detail in the next chapter.  -->
 <!-- Would this be a good place for a callout block explaining the keyboard shortcuts? -->
-<p>It is not the purpose of this introduction to give explicit instruction on how to annotate which is covered amply in the <a href="https://ips-lmu.github.io/The-EMU-SDMS-Manual">manual for the Emu Speech database management system</a>, especially <a href="https://ips-lmu.github.io/The-EMU-SDMS-Manual/chap-emu-webApp.html">section 9</a>.</p>
-<p>However, some basic properties can be noted. These include:</p>
+<p>The properties of the Emu WebApp are covered in a fair amount of detail in <a href="wav2emu.html"><span>Chapter&nbsp;3</span></a>. For now, we will just mention a few basic properties of what we see when we view the <code>ae</code> database:</p>
 <ul>
 <li>There are, as mentioned before, 7 utterances.</li>
 <li>The database displays two types of signals: the waveform, and the spectrogram below it.</li>
 </ul>
-<p>This information about the signals being displayed is also given by the function <code>get_signalCanvasesOrder()</code>. This function takes the obligatory argument <code>perspectiveName</code>, which should be <code>"default"</code> unless you have created custom signal canvases (discussed further below).</p>
+<p>This information about which signals are being displayed is also given by the function <code>get_signalCanvasesOrder()</code>. This function takes the obligatory argument <code>perspectiveName</code>, which should be <code>"default"</code> unless you have created custom signal canvases (discussed further below).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_signalCanvasesOrder</span>(ae, <span class="at">perspectiveName =</span> <span class="st">"default"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "OSCI" "SPEC"</code></pre>
 </div>
 </div>
-<p><code>OSCI</code> is the waveform and <code>SPEC</code> the spectrogram. These can be changed with the <code>order</code> argument in the <code>set_signalCanvasesOrder()</code> For example, if we want to display only the spectrogram, we can do it like so:</p>
+<p><code>OSCI</code> is the waveform and <code>SPEC</code> the spectrogram. These can be changed with the <code>order</code> argument in the function <code>set_signalCanvasesOrder()</code>. For example, if we want to display only the spectrogram, we can do it like so:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set_signalCanvasesOrder</span>(ae, <span class="at">perspectiveName =</span> <span class="st">"default"</span>, <span class="at">order =</span> <span class="st">"SPEC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -578,7 +539,7 @@ Link count:  785 </code></pre>
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Adding signal canvas with <code>emuhelpeR</code>
+Adding signal canvases with <code>emuhelpeR</code>
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -649,8 +610,8 @@ Adding signal canvas with <code>emuhelpeR</code>
 </div>
 </div>
 </section>
-<section id="functions-introduced-in-this-chapter" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="functions-introduced-in-this-chapter"><span class="header-section-number">2.5</span> Functions introduced in this chapter</h2>
+<section id="functions-introduced-in-this-chapter" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="functions-introduced-in-this-chapter"><span class="header-section-number">2.6</span> Functions introduced in this chapter</h2>
 <ul>
 <li><code>create_emuRdemoData()</code>: downloads an online demo database</li>
 <li><code>list.dirs()</code> and <code>list.files()</code>: lists the directories or files within a directory on your computer</li>

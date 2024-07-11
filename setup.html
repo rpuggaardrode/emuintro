@@ -189,7 +189,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./praat2emu.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection and tracking pitch</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -210,48 +210,6 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The Emu query language</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./signalproc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">An introduction to signal processing in <code>emuR</code></span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./formants.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Automatic formant tracking and manual correction</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./vowel_norm_dist.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Vowel normalisation and vowel distances</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./dct.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">The discrete cosine transformation</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./spectral_proc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Spectral processing of speech</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./dct_spec.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Parameterising spectra with the DCT</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
-  </div>
-</li>
     </ul>
     </div>
 </nav>
@@ -264,13 +222,14 @@ div.csl-indent {
   <ul>
   <li><a href="#required-set-up-for-the-course-on-emur" id="toc-required-set-up-for-the-course-on-emur" class="nav-link active" data-scroll-target="#required-set-up-for-the-course-on-emur">Required set up for the course on <code>emuR</code></a></li>
   <li><a href="#default-browser" id="toc-default-browser" class="nav-link" data-scroll-target="#default-browser">Default browser</a></li>
-  <li><a href="#start-up-rstudio" id="toc-start-up-rstudio" class="nav-link" data-scroll-target="#start-up-rstudio">Start up Rstudio</a></li>
+  <li><a href="#start-up-rstudio" id="toc-start-up-rstudio" class="nav-link" data-scroll-target="#start-up-rstudio">Start up RStudio</a></li>
   <li><a href="#create-a-directory-on-your-hard-drive" id="toc-create-a-directory-on-your-hard-drive" class="nav-link" data-scroll-target="#create-a-directory-on-your-hard-drive">Create a directory on your hard drive</a></li>
   <li><a href="#create-a-project" id="toc-create-a-project" class="nav-link" data-scroll-target="#create-a-project">Create a project</a></li>
   <li><a href="#install-packages" id="toc-install-packages" class="nav-link" data-scroll-target="#install-packages">Install packages</a></li>
   <li><a href="#loading-libraries" id="toc-loading-libraries" class="nav-link" data-scroll-target="#loading-libraries">Loading libraries</a></li>
   <li><a href="#quitting-from-rstudio-and-r" id="toc-quitting-from-rstudio-and-r" class="nav-link" data-scroll-target="#quitting-from-rstudio-and-r">Quitting from RStudio (and R)</a></li>
   <li><a href="#learning-r" id="toc-learning-r" class="nav-link" data-scroll-target="#learning-r">Learning R</a></li>
+  <li><a href="#having-trouble" id="toc-having-trouble" class="nav-link" data-scroll-target="#having-trouble">Having trouble?</a></li>
   </ul>
 </nav>
     </div>
@@ -298,12 +257,12 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="required-set-up-for-the-course-on-emur">Required set up for the course on <code>emuR</code></h2>
 <ul>
 <li>In order to use <code>emuR</code>, you must first download and install <a href="https://ftp.fau.de/cran/" target="_blank">the program R</a>. The latest version is currently <code>4.3.x</code> (September 2023).</li>
-<li>Also download and install the program <a href="https://rstudio.com/products/rstudio/download/#download" target="_blank">RStudio</a>, which is a so-called <em>integrated development environment</em>.</li>
+<li>Also download and install the program <a href="https://rstudio.com/products/rstudio/download/#download" target="_blank">RStudio</a>, which is a so-called <em>integrated development environment</em> that makes working with R much much easier.</li>
 </ul>
 </section>
 <section id="default-browser" class="level2">
 <h2 class="anchored" data-anchor-id="default-browser">Default browser</h2>
-<p>The <code>EMU-webApp</code> for visualizing sound files and editing transcriptions should in theory work with most modern browsers, but you may run into unexpected problems if you use it with other browsers than Google Chrome. For this reason, we recommend that change standard browser to ensure that the <code>EMU-webApp</code> is opened in Chrome.</p>
+<p>The <code>EMU-webApp</code> for visualizing sound files and editing transcriptions should in theory work with most modern browsers, but you may run into unexpected problems if you use it with other browsers than Google Chrome. For this reason, we recommend that you change your standard browser to ensure that the <code>EMU-webApp</code> is opened in Chrome.</p>
 <p>If you <a href="https://www.google.com/chrome/" target="_blank">install Chrome</a>, you can do this from the <a href="chrome://settings/" target="_blank">Settings</a> tab as shown below:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -312,8 +271,8 @@ div.csl-indent {
 </div>
 </section>
 <section id="start-up-rstudio" class="level2">
-<h2 class="anchored" data-anchor-id="start-up-rstudio">Start up Rstudio</h2>
-<p>Start Rstudio by clicking on the Rstudio icon – it should look like this:</p>
+<h2 class="anchored" data-anchor-id="start-up-rstudio">Start up RStudio</h2>
+<p>Start RStudio by clicking on the RStudio icon – it should look like this:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="img/Rstudio_icon.png" class="img-fluid figure-img" style="width:10.0%"></p>
@@ -324,13 +283,13 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="create-a-directory-on-your-hard-drive">Create a directory on your hard drive</h2>
 <p>Create a directory on your hard drive to be used on this course. You can do this from R. What exactly to call the directory will depend on your computer – this will create a directory called <code>ipsR</code> on the desktop of my machine (which runs Windows):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">'C:/users/rasmu/desktop/ipsR'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">'C:/users/Rasmus/desktop/ipsR'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>If I was a Mac user, I would have done it like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">'/Users/rasmu/Desktop/ipsR'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">'/Users/Rasmus/Desktop/ipsR'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Alternatively you can just create a directory in the usual way – e.g.&nbsp;by right clicking anywhere on your desktop and selecting new directory.</p>
+<p>Alternatively you can just create a directory in the usual way – e.g.&nbsp;by right clicking anywhere on your desktop and selecting <code>New directory</code> or similar.</p>
 </section>
 <section id="create-a-project" class="level2">
 <h2 class="anchored" data-anchor-id="create-a-project">Create a project</h2>
@@ -340,13 +299,13 @@ div.csl-indent {
 <p><img src="img/setup2.png" class="img-fluid figure-img" style="width:60.0%"></p>
 </figure>
 </div>
-<p>You only need to create the project once. When you start up Rstudio the next time, the system should automatically open up inside this project that you created. If not, or if you closed the project, you can open it again:</p>
+<p>You only need to create the project once. When you start up RStudio the next time, the system should automatically open up inside this project that you created. If not, or if you closed the project, you can open it again:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="img/setup2b.png" class="img-fluid figure-img" style="width:60.0%"></p>
 </figure>
 </div>
-<p>You can get back to your default directory (if you were using R before then) any time by selecting close project in the above menu.</p>
+<p>You can get back to your default directory (if you were using R before then) any time by selecting <code>Close project</code> in the above menu.</p>
 </section>
 <section id="install-packages" class="level2">
 <h2 class="anchored" data-anchor-id="install-packages">Install packages</h2>
@@ -354,8 +313,8 @@ div.csl-indent {
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"Rcpp"</span>, <span class="st">"remotes"</span>, <span class="st">"knitr"</span>, </span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"tidyverse"</span>, <span class="st">"magrittr"</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"rmarkdown"</span>, <span class="st">"emuR"</span>, <span class="st">"gridExtra"</span>, <span class="st">"emmeans"</span>, </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"broom"</span>, <span class="st">"lmerTest"</span>, <span class="st">"pbkrtest"</span>, <span class="st">"MuMIn"</span>, <span class="st">"wrassp"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"rmarkdown"</span>, <span class="st">"emuR"</span>, <span class="st">"gridExtra"</span>, </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"broom"</span>, <span class="st">"pbkrtest"</span>, <span class="st">"wrassp"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -367,13 +326,13 @@ More information: Installation of R packages
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Should the above result in the error message <code>installation of package had non-zero exit status</code>, then it means that installation has failed. For Windows, you might then additionally have to install <a href="https://cran.r-project.org/bin/windows/Rtools/" target="_blank">Rtools</a>. For iOS you might need to install/reset the <em>XCode command-line tools</em>. For this purpose, open a Mac terminal window and execute the following:</p>
+<p>Should the above result in the error message <code>installation of package had non-zero exit status</code>, then it means that installation has failed. For Windows, you might then additionally have to install <a href="https://cran.r-project.org/bin/windows/Rtools/" target="_blank">Rtools</a>. For iOS you might need to install/reset the <em>XCode command-line tools</em>. For this purpose, you can call the following code in the R console:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>xcode<span class="sc">-</span>select <span class="sc">--</span>install</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system</span>(<span class="st">"xcode-select --install"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>If the installation of R packages still does not work, execute the following:</p>
+<p>If the installation of R packages still does not work, call the following code:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>xcode<span class="sc">-</span>select <span class="sc">--</span>reset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system</span>(<span class="st">"xcode-select --reset"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -407,59 +366,57 @@ The <code>emuhelpeR</code> package
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ae <span class="ot">&lt;-</span> <span class="fu">load_emuDB</span>(<span class="fu">file.path</span>(<span class="fu">tempdir</span>(), <span class="st">"emuR_demoData"</span>, <span class="st">"ae_emuDB"</span>))</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(ae, <span class="at">useViewer=</span>F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The third command <code>serve(ae, useViewer=F)</code> should produce the following image in your browser:</p>
+<p>The third command <code>serve(ae, useViewer=F)</code> should produce the following view in your browser:</p>
 <p><img src="img/setup3.png" class="img-fluid"></p>
 <p>Have a look around and close the window to move on.</p>
 </section>
 <section id="quitting-from-rstudio-and-r" class="level2">
 <h2 class="anchored" data-anchor-id="quitting-from-rstudio-and-r">Quitting from RStudio (and R)</h2>
-<p>You shut down RStudio by either clicking <code>Session &gt; Quit Session</code> in the main Rstudio toolbar or by running <code>q()</code> in the R console as below:</p>
+<p>You shut down RStudio by either clicking <code>Session</code> &gt; <code>Quit Session</code> in the main Rstudio toolbar or by running <code>q()</code> in the R console:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">q</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>You will then be asked whether you want to save the <em>workspace image</em>. <strong>For this course, please never save the workspace i.e.&nbsp;(<code>Don't save</code>).</strong></p>
+<p>You will then be asked whether you want to save the <em>workspace image</em>. <strong>For working through the materials in this tutorial, you shouldn’t save the workspace image – i.e.&nbsp;(<code>Don't save</code>).</strong></p>
 </section>
 <section id="learning-r" class="level2">
 <h2 class="anchored" data-anchor-id="learning-r">Learning R</h2>
-<p>A basic knowledge in R is a prerequisite for this course. If you are unfamiliar with R then please start by working through these two sources:</p>
+<p>A basic knowledge in R is a prerequisite for this tutorial. If you are unfamiliar with R then please start by working through these two sources:</p>
 <ul>
 <li><a href="https://www.phonetik.uni-muenchen.de/~jmh/lehre/sem/ws2122/WP_4.1/IntroR.html" target="_blank">A short introduction to R by Raphael Winkelmann (in English)</a></li>
 <li>A more detailed introduction to R and the <code>tidyverse</code> package by Johanna Cronenberg in <a href="https://johannacronenberg.github.io/files/basicR_book/deutsch/book-output/index.html" target="_blank">German</a> or <a href="https://johannacronenberg.github.io/files/basicR_book/english/book-output/index.html" target="_blank">English</a></li>
 </ul>
 <p>There is a very large and helpful R community online that will make learning R easier for you. Here are a few useful links and commands in case you get stuck:</p>
 <ul>
-<li><a href="https://stackoverflow.com/questions/tagged/r" target="_blank">Stack Overflow</a>: A blog where you can often find an answer to your questions about R. The easiest way is to google your question in English; a Stack Overflow member’s answer will be included in the first search results.</li>
-<li>The book <a href="https://r4ds.hadley.nz/" target="_blank"><em>R for Data Science</em></a> <span class="citation" data-cites="wickham2023">(<a href="references.html#ref-wickham2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, and Grolemund 2023</a>)</span>: Hadley Wickham is the chief programmer of the <code>tidyverse</code>. His books are very readable, well-structured, and entertaining.</li>
-<li>Cheat sheets: These are PDFs that provide an overview of functions with explanations and examples in a very compact form. You will find some cheat sheets in the main RStudio toolbar via <code>Help &gt; Cheat Sheets</code>. The first three are especially useful.</li>
+<li><a href="https://stackoverflow.com/questions/tagged/r" target="_blank">Stack Overflow</a>: A blog where you can often find an answer to your questions about R. The easiest way is to do an internet search of your question in English; a Stack Overflow member’s answer is usually included in the first search results.</li>
+<li>The book <a href="https://r4ds.hadley.nz/" target="_blank"><em>R for Data Science</em></a> <span class="citation" data-cites="wickham2023">(<a href="#ref-wickham2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, and Grolemund 2023</a>)</span>: Hadley Wickham is the chief programmer of the <code>tidyverse</code>. His books are very readable, well-structured, and entertaining.</li>
+<li>Cheat sheets: These are PDFs that provide an overview of functions with explanations and examples in a very compact form. You will find some cheat sheets in the main RStudio toolbar via <code>Help</code> &gt; <code>Cheat Sheets</code>. The first three are especially useful.</li>
 <li>Vignettes: For some packages there are so-called <em>vignettes</em> available. These are mostly HTMLs or PDFs that have been written by the package authors. You can search for vignettes using the following input to the console (this example finds a vignette for <code>dplyr</code>, one of the libraries from <code>tidyverse</code>):</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vignette</span>(<span class="st">"dplyr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li>You can get information about a function by entering its name in the RStudio <code>Help</code> toolbar. You’ll then get information about the function’s arguments and often some examples. You can also get help via the console, as follows ( e.g.&nbsp;here for <code>getwd()</code>):</li>
+<li>You can get information about a function by entering its name in the RStudio <code>Help</code> toolbar. You’ll then get information about the function’s arguments and often some examples. You can also get help via the console by typing a question mark followed by the function name, as follows (e.g.&nbsp;here for <code>getwd()</code>):</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>?getwd</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">help</span>(<span class="st">"getwd"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><code>ggplot2</code> is both a well-known and popular program for creating plots. There is plenty of help available for <code>ggplot2</code> from the R community. Here are some useful links for creating graphics:</p>
+<p>R is first and foremost an environment developed for statistical computing. If you need more information about using statistics in R, the following are recommended:</p>
 <ul>
-<li>The chapter <a href="https://r4ds.hadley.nz/visualize" target="_blank">Visualize</a> in <span class="citation" data-cites="wickham2023">Wickham, Çetinkaya-Rundel, and Grolemund (<a href="references.html#ref-wickham2023" role="doc-biblioref">2023</a>)</span></li>
-<li><a href="http://www.cookbook-r.com/Graphs/" target="_blank">Cookbook for R</a></li>
-<li><a href="https://stackoverflow.com/questions/tagged/ggplot2?sort=faq" target="_blank">Stack Overflow</a></li>
+<li><span class="citation" data-cites="winter2019">Winter (<a href="#ref-winter2019" role="doc-biblioref">2019</a>)</span> is a recent book with excellent explanations to all major themes in inferential statistics.</li>
+<li><span class="citation" data-cites="gries2021">Gries (<a href="#ref-gries2021" role="doc-biblioref">2021</a>)</span> is a recent update of a classic which gives a methodical introduction to both R data structures and statistical models, starting with the very basics. It is useful for decision making about which model to use for which kind of question.</li>
+<li><span class="citation" data-cites="sonderegger2023">Sonderegger (<a href="#ref-sonderegger2023" role="doc-biblioref">2023</a>)</span> is a very recent book which introduces regression models and discusses in depth which problems you may run into when fitting them.</li>
+<li>Although the R code in <span class="citation" data-cites="baayen2008">Baayen (<a href="#ref-baayen2008" role="doc-biblioref">2008</a>)</span> is a bit out of date, the explanations and examples of statistics foundations are very helpful.</li>
 </ul>
-<p>R is first and foremost an environment for developed for statistical computing. If you need more information about using statistics in R, the following are recommended:</p>
-<ul>
-<li><span class="citation" data-cites="winter2019">Winter (<a href="references.html#ref-winter2019" role="doc-biblioref">2019</a>)</span> is a recent book with excellent explanations to all major themes in inferential statistics.</li>
-<li><span class="citation" data-cites="gries2021">Gries (<a href="references.html#ref-gries2021" role="doc-biblioref">2021</a>)</span> is a recent update of a classic which gives a methodical introduction to both R data structures and statistical models, starting with the very basics. It is useful for decision making about which model to use for which kind of question.</li>
-<li><span class="citation" data-cites="sonderegger2023">Sonderegger (<a href="references.html#ref-sonderegger2023" role="doc-biblioref">2023</a>)</span> is a very recent book which introduces regression models and discusses in depth which problems you may run into when fitting them.</li>
-<li>Although the R code in <span class="citation" data-cites="baayen2008">Baayen (<a href="references.html#ref-baayen2008" role="doc-biblioref">2008</a>)</span> is a bit out of date, the explanations and examples of statistics foundations are very helpful.</li>
-</ul>
-<!-- may be worth writing explicitly that we encourage people to submit GitHub issues if they run into trouble -->
+<p>Based on personal experience, we cannot recommend using large language models like ChatGPT to fix or explain R functions. Current versions of these models make many mistakes which can be difficult to solve without a solid understanding of R.</p>
+</section>
+<section id="having-trouble" class="level1">
+<h1>Having trouble?</h1>
+<p>If you run into trouble with <code>emuR</code>, e.g.&nbsp;something doesn’t seem to be working like it’s supposed to and you’re fairly confident that the mistake isn’t yours, we strongly encourage you to alert the developers to this. You can do this via the <a href="https://github.com/IPS-LMU/emuR/issues" target="_blank">issue tracker</a> on GitHub. If you do so, please include as much information as possible, ideally providing a so-called <em>reproducible example</em> of code that produces the error.</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-baayen2008" class="csl-entry" role="listitem">
 Baayen, R. Harald. 2008. <em>Analyzing Linguistic Data. A Practical Introduction to Statistics Using r</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9780511801686">https://doi.org/10.1017/CBO9780511801686</a>.
 </div>

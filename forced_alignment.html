@@ -170,7 +170,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./praat2emu.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection and tracking pitch</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -189,48 +189,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="./query.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The Emu query language</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./signalproc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">An introduction to signal processing in <code>emuR</code></span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./formants.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Automatic formant tracking and manual correction</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./vowel_norm_dist.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Vowel normalisation and vowel distances</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./dct.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">The discrete cosine transformation</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./spectral_proc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Spectral processing of speech</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./dct_spec.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Parameterising spectra with the DCT</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
@@ -277,10 +235,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="objective-and-preliminaries" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="objective-and-preliminaries"><span class="header-section-number">5.1</span> Objective and preliminaries</h2>
-<p>The objective of this chapter is to show how to go from a directory with <code>.wav</code> files and simple <code>.txt</code> files containing orthographic transcriptions to a phonetically annotated and force-aligned Emu database.</p>
+<p>The objective of this chapter is to show how to go from a directory with <code>.wav</code> files that are orthographically transcribed in simple <code>.txt</code> files to a phonetically annotated and force-aligned Emu database.</p>
 <p>The assumption is that you already have an R project called <code>ipsR</code> and that it contains the directories <code>emu_databases</code> and <code>testsample</code>. If this is not the case, please go back and follow the preliminaries chapter.</p>
 <!-- add final link to prelim chapter when this is done -->
-<p>Start up R in the project you are using for this course and load the following packages:</p>
+<p>Start up R in the project you are using for this tutorial and load the usual packages:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emuR)</span>
@@ -305,7 +263,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>[1] "K01BE001.txt" "K01BE001.wav" "K01BE002.txt" "K01BE002.wav"</code></pre>
 </div>
 </div>
-<p>The above is an example of a <strong>text collection</strong> because it contains matching <code>.wav</code> and <code>.txt</code> files in the same directory such that, for each <code>.wav</code> file, the <code>.txt</code> file contains the corresponding orthography. We can see that this is true by using the function <code>read_file()</code> to read the context of these <code>.txt</code> files:</p>
+<p>The above is an example of what we’ll call a <em>text collection</em> because it contains matching <code>.wav</code> and <code>.txt</code> files in the same directory, and each <code>.wav</code> file, the <code>.txt</code> file contains the corresponding orthography. We can see that this is true by using the function <code>read_file()</code> to read the content of these <code>.txt</code> files:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read_file</span>(<span class="fu">file.path</span>(path.german, <span class="st">'K01BE001.txt'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -323,7 +281,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">targetDir =</span> targetDir,</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">verbose=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Load the database into R with <code>load_emuDB()</code>:</p>
+<p>You can now load the database into R with <code>load_emuDB()</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ger2_DB <span class="ot">&lt;-</span> <span class="fu">load_emuDB</span>(<span class="fu">file.path</span>(targetDir, <span class="st">"ger2_emuDB"</span>), <span class="at">verbose=</span><span class="cn">FALSE</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ger2_DB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -335,7 +293,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Name:    ger2 
-UUID:    6f52b7d1-7228-45c1-9d9c-58357a66345f 
+UUID:    6fa81b59-fc09-4ba8-8792-9a87a6062ad8 
 Directory:   C:\Users\rasmu\surfdrive\emuintro\emuintro\emu_databases\ger2_emuDB 
 Session count: 1 
 Bundle count: 2 
@@ -375,20 +333,20 @@ Link count:  0 </code></pre>
 <pre><code>dataramme med 0 kolonner og 0 rækker</code></pre>
 </div>
 </div>
-<p><code>serve()</code> the database and have a look at it:</p>
+<p>Try to <code>serve()</code> the database and have a look at it:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(ger2_DB, <span class="at">useViewer =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>If you switch to hierarchy view, you should see that the words in the <code>.txt</code> files are a single item in the <code>attribute</code> tier of <code>bundle</code> with the name <code>transcription</code>, as shown in the figure below:</p>
+<p>If you switch to hierarchy view, you should see that the words in the <code>.txt</code> files are a single item in the <code>attribute</code> level of <code>bundle</code> with the name <code>transcription</code>, as shown in the image below:</p>
 <p><img src="img/transcr.png" class="img-fluid"></p>
-<p>It is evident when <code>query()</code>ing the database that the words are stored in this way, as shown below. Note that we need to include the argument <code>calcTimes=FALSE</code> here, because the annotation level <code>transcription</code> is of type <code>ITEM</code> and is not linked to a time-based level (i.e.&nbsp;a <code>SEGMENT</code> or an <code>EVENT</code> level).</p>
+<p>If we <code>query()</code> the database to find all annotations at the <code>transcription</code> level, it’s clear that the words are all stored in this way. Note that we need to include the argument <code>calcTimes = FALSE</code> here, because the annotation level <code>transcription</code> is of type <code>ITEM</code> and has no time information.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">query</span>(ger2_DB, <span class="st">"transcription =~ .*"</span>, <span class="at">calcTimes=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">query</span>(ger2_DB, <span class="st">"transcription =~ .*"</span>, <span class="at">calcTimes =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["db_uuid"],"name":[4],"type":["chr"],"align":["left"]},{"label":["session"],"name":[5],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[6],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[8],"type":["int"],"align":["right"]},{"label":["level"],"name":[9],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[10],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[12],"type":["int"],"align":["right"]},{"label":["type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[15],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"heute ist schönes Frühlingswetter","2":"NA","3":"NA","4":"6f52b7d1-7228-45c1-9d9c-58357a66345f","5":"0000","6":"K01BE001","7":"1","8":"1","9":"bundle","10":"bundle","11":"1","12":"1","13":"ITEM","14":"NA","15":"NA","16":"16000"},{"1":"die Sonne lacht","2":"NA","3":"NA","4":"6f52b7d1-7228-45c1-9d9c-58357a66345f","5":"0000","6":"K01BE002","7":"1","8":"1","9":"bundle","10":"bundle","11":"1","12":"1","13":"ITEM","14":"NA","15":"NA","16":"16000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["db_uuid"],"name":[4],"type":["chr"],"align":["left"]},{"label":["session"],"name":[5],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[6],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[8],"type":["int"],"align":["right"]},{"label":["level"],"name":[9],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[10],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[12],"type":["int"],"align":["right"]},{"label":["type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[15],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"heute ist schönes Frühlingswetter","2":"NA","3":"NA","4":"6fa81b59-fc09-4ba8-8792-9a87a6062ad8","5":"0000","6":"K01BE001","7":"1","8":"1","9":"bundle","10":"bundle","11":"1","12":"1","13":"ITEM","14":"NA","15":"NA","16":"16000"},{"1":"die Sonne lacht","2":"NA","3":"NA","4":"6fa81b59-fc09-4ba8-8792-9a87a6062ad8","5":"0000","6":"K01BE002","7":"1","8":"1","9":"bundle","10":"bundle","11":"1","12":"1","13":"ITEM","14":"NA","15":"NA","16":"16000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -396,7 +354,7 @@ Link count:  0 </code></pre>
 </section>
 <section id="forced-alignment" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="forced-alignment"><span class="header-section-number">5.3</span> Forced alignment</h2>
-<p>We are now going to run the Munich Automatic Segmentation (MAUS) pipeline over the database. We do this with the function <code>runBASwebservice_all()</code>, which combines a number of online processing tools. Obligatory arguments are <code>transcriptionAttributeDefinitionName()</code> which will be the name of the newly created annotation level, and <code>language</code>, which in this case we set to <code>deu-DE</code>. We also set the argument <code>runMINNI</code> to <code>FALSE</code>; this is potentially used to forced-align data which has no annotations at all. Note that <code>runBASwebservice_all()</code> can only be used if you have an active internet connection.</p>
+<p>We are now going to run the Munich Automatic Segmentation (MAUS) pipeline over the database. We do this with the function <code>runBASwebservice_all()</code>, which combines a number of online processing tools. The obligatory arguments of this function are <code>transcriptionAttributeDefinitionName()</code> which will be the name of the newly created annotation level, and <code>language</code>, which in this case we set to <code>deu-DE</code>. We also set the argument <code>runMINNI</code> to <code>FALSE</code>; this is potentially used to forced-align data which has no annotations at all by first running the MINNI automatic speech recognition (ASR) routine. Note that <code>runBASwebservice_all()</code> can only be used if you have an active internet connection.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">runBASwebservice_all</span>(ger2_DB,</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">transcriptionAttributeDefinitionName =</span> <span class="st">"transcription"</span>,</span>
@@ -425,7 +383,7 @@ The <code>language</code> setting in MAUS
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Name:    ger2 
-UUID:    6f52b7d1-7228-45c1-9d9c-58357a66345f 
+UUID:    6fa81b59-fc09-4ba8-8792-9a87a6062ad8 
 Directory:   C:\Users\rasmu\surfdrive\emuintro\emuintro\emu_databases\ger2_emuDB 
 Session count: 1 
 Bundle count: 2 
@@ -471,36 +429,37 @@ Link count:  52 </code></pre>
  ONE_TO_MANY MAS            MAU         </code></pre>
 </div>
 </div>
-<p>Note that multiple extra levels and attributes have been created (<code>ORT</code>, <code>KAN</code>, <code>KAS</code>, <code>MAU</code>, and <code>MAS</code>), as well as links between them.</p>
+<p>Note that multiple extra annotation levels and attributes have been created (<code>ORT</code>, <code>KAN</code>, <code>KAS</code>, <code>MAU</code>, and <code>MAS</code>), as well as links between them.</p>
 <p>Let’s <code>serve()</code> the database.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(ger2_DB, <span class="at">useViewer=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(ger2_DB, <span class="at">useViewer =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We immediately see that phone-level annotations have been added in the <code>MAU</code> level. Have a look at the hierarchy view and try to identify the levels, links, and attributes.</p>
 <p><img src="img/germaus.png" class="img-fluid"></p>
 <p>This shows that the phone-level annotations are linked to syllable-level annotations in the <code>MAS</code> level and word-level orthographic annotations in the <code>ORT</code> level. The <code>ORT</code> level further has the attributes <code>KAN</code> and <code>KAS</code>. These contain <em>canonical representations</em> of the word, i.e.&nbsp;phonetic annotations corresponding to the canonical pronunciations of these words. The <code>MAS</code> level is chunked into syllables.</p>
-<p>Given this complex information, more complex queries are now also possible. Let’s say we want to find the word-initial <code>MAU</code> segments of all polysyllabic words:</p>
+<p>Given this complex information, more complex queries are now also possible. We can find the word-initial <code>MAU</code> segments of all polysyllabic words like this:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>mau.s <span class="ot">&lt;-</span> <span class="fu">query</span>(ger2_DB,</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>               <span class="st">"[[MAU =~.* &amp; Start(ORT, MAU)=1] ^ Num(ORT, MAS) &gt; 1]"</span>)</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>mau.s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co">#deselect the db_uuid column for readability</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>mau.s <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>db_uuid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["db_uuid"],"name":[4],"type":["chr"],"align":["left"]},{"label":["session"],"name":[5],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[6],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[8],"type":["int"],"align":["right"]},{"label":["level"],"name":[9],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[10],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[12],"type":["int"],"align":["right"]},{"label":["type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[15],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"h","2":"117.0938","3":"167.0938","4":"6f52b7d1-7228-45c1-9d9c-58357a66345f","5":"0000","6":"K01BE001","7":"7","8":"7","9":"MAU","10":"MAU","11":"2","12":"2","13":"SEGMENT","14":"1874","15":"2673","16":"16000"},{"1":"S","2":"597.0938","3":"717.0938","4":"6f52b7d1-7228-45c1-9d9c-58357a66345f","5":"0000","6":"K01BE001","7":"13","8":"13","9":"MAU","10":"MAU","11":"8","12":"8","13":"SEGMENT","14":"9554","15":"11473","16":"16000"},{"1":"f","2":"977.0938","3":"1027.0938","4":"6f52b7d1-7228-45c1-9d9c-58357a66345f","5":"0000","6":"K01BE001","7":"18","8":"18","9":"MAU","10":"MAU","11":"13","12":"13","13":"SEGMENT","14":"15634","15":"16433","16":"16000"},{"1":"z","2":"967.0938","3":"1027.0938","4":"6f52b7d1-7228-45c1-9d9c-58357a66345f","5":"0000","6":"K01BE002","7":"8","8":"8","9":"MAU","10":"MAU","11":"4","12":"4","13":"SEGMENT","14":"15474","15":"16433","16":"16000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["session"],"name":[4],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[5],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[6],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["level"],"name":[8],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[9],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[10],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["type"],"name":[12],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[13],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[15],"type":["int"],"align":["right"]}],"data":[{"1":"h","2":"117.0938","3":"167.0938","4":"0000","5":"K01BE001","6":"7","7":"7","8":"MAU","9":"MAU","10":"2","11":"2","12":"SEGMENT","13":"1874","14":"2673","15":"16000"},{"1":"S","2":"597.0938","3":"717.0938","4":"0000","5":"K01BE001","6":"13","7":"13","8":"MAU","9":"MAU","10":"8","11":"8","12":"SEGMENT","13":"9554","14":"11473","15":"16000"},{"1":"f","2":"977.0938","3":"1027.0938","4":"0000","5":"K01BE001","6":"18","7":"18","8":"MAU","9":"MAU","10":"13","11":"13","12":"SEGMENT","13":"15634","14":"16433","15":"16000"},{"1":"z","2":"967.0938","3":"1027.0938","4":"0000","5":"K01BE002","6":"8","7":"8","8":"MAU","9":"MAU","10":"4","11":"4","12":"SEGMENT","13":"15474","14":"16433","15":"16000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <p>This data frame can then be passed to <code>requery_hier()</code> so we can see the labels in the <code>ORT</code> level associated with these words, like so:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">requery_hier</span>(ger2_DB, mau.s, <span class="st">"ORT"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">requery_hier</span>(ger2_DB, mau.s, <span class="st">"ORT"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>db_uuid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["db_uuid"],"name":[4],"type":["chr"],"align":["left"]},{"label":["session"],"name":[5],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[6],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[8],"type":["int"],"align":["right"]},{"label":["level"],"name":[9],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[10],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[12],"type":["int"],"align":["right"]},{"label":["type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[15],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"heute","2":"117.0938","3":"457.0938","4":"6f52b7d1-7228-45c1-9d9c-58357a66345f","5":"0000","6":"K01BE001","7":"2","8":"2","9":"ORT","10":"ORT","11":"1","12":"1","13":"ITEM","14":"1874","15":"7313","16":"16000"},{"1":"schönes","2":"597.0938","3":"977.0938","4":"6f52b7d1-7228-45c1-9d9c-58357a66345f","5":"0000","6":"K01BE001","7":"4","8":"4","9":"ORT","10":"ORT","11":"3","12":"3","13":"ITEM","14":"9554","15":"15633","16":"16000"},{"1":"Frühlingswetter","2":"977.0938","3":"1717.0938","4":"6f52b7d1-7228-45c1-9d9c-58357a66345f","5":"0000","6":"K01BE001","7":"5","8":"5","9":"ORT","10":"ORT","11":"4","12":"4","13":"ITEM","14":"15634","15":"27473","16":"16000"},{"1":"Sonne","2":"967.0938","3":"1197.0938","4":"6f52b7d1-7228-45c1-9d9c-58357a66345f","5":"0000","6":"K01BE002","7":"3","8":"3","9":"ORT","10":"ORT","11":"2","12":"2","13":"ITEM","14":"15474","15":"19153","16":"16000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["session"],"name":[4],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[5],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[6],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["level"],"name":[8],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[9],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[10],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["type"],"name":[12],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[13],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[15],"type":["int"],"align":["right"]}],"data":[{"1":"heute","2":"117.0938","3":"457.0938","4":"0000","5":"K01BE001","6":"2","7":"2","8":"ORT","9":"ORT","10":"1","11":"1","12":"ITEM","13":"1874","14":"7313","15":"16000"},{"1":"schönes","2":"597.0938","3":"977.0938","4":"0000","5":"K01BE001","6":"4","7":"4","8":"ORT","9":"ORT","10":"3","11":"3","12":"ITEM","13":"9554","14":"15633","15":"16000"},{"1":"Frühlingswetter","2":"977.0938","3":"1717.0938","4":"0000","5":"K01BE001","6":"5","7":"5","8":"ORT","9":"ORT","10":"4","11":"4","12":"ITEM","13":"15634","14":"27473","15":"16000"},{"1":"Sonne","2":"967.0938","3":"1197.0938","4":"0000","5":"K01BE002","6":"3","7":"3","8":"ORT","9":"ORT","10":"2","11":"2","12":"ITEM","13":"15474","14":"19153","15":"16000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -523,14 +482,14 @@ Link count:  52 </code></pre>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">targetDir =</span> targetDir,</span>
 <span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">verbose=</span><span class="cn">FALSE</span>)</span>
 <span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>alb_DB <span class="ot">&lt;-</span> <span class="fu">load_emuDB</span>(<span class="fu">file.path</span>(targetDir, <span class="st">"alb_emuDB"</span>), <span class="at">verbose=</span><span class="cn">FALSE</span>)</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>alb_DB <span class="ot">&lt;-</span> <span class="fu">load_emuDB</span>(<span class="fu">file.path</span>(targetDir, <span class="st">"alb_emuDB"</span>), <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(alb_DB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Summary of emuDB ────────────────────────────────────────────────────────────</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Name:    alb 
-UUID:    b631536e-dda0-433c-a57a-4a6a668fe1e8 
+UUID:    ad493e68-da1c-438f-b042-3e1ea02e814e 
 Directory:   C:\Users\rasmu\surfdrive\emuintro\emuintro\emu_databases\alb_emuDB 
 Session count: 1 
 Bundle count: 4 
@@ -579,8 +538,8 @@ Link count:  0 </code></pre>
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">runBASwebservice_all</span>(alb_DB, </span>
 <span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">transcriptionAttributeDefinitionName =</span> <span class="st">"transcription"</span>,</span>
 <span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">language =</span> <span class="st">"sqi-AL"</span>, </span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">runMINNI =</span> F,</span>
-<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">verbose=</span><span class="cn">FALSE</span>)</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">runMINNI =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(alb_DB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -588,7 +547,7 @@ Link count:  0 </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Name:    alb 
-UUID:    b631536e-dda0-433c-a57a-4a6a668fe1e8 
+UUID:    ad493e68-da1c-438f-b042-3e1ea02e814e 
 Directory:   C:\Users\rasmu\surfdrive\emuintro\emuintro\emu_databases\alb_emuDB 
 Session count: 1 
 Bundle count: 4 
@@ -636,28 +595,23 @@ Link count:  125 </code></pre>
 </div>
 <p>Look at the database and verify that the same kind of information has been automatically derived, as for the German database earlier.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(alb_DB, <span class="at">useViewer =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(alb_DB, <span class="at">useViewer =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="from-a-canonical-representation" class="level3" data-number="5.4.2">
 <h3 data-number="5.4.2" class="anchored" data-anchor-id="from-a-canonical-representation"><span class="header-section-number">5.4.2</span> From a canonical representation</h3>
-<p>MAUS also allows an automatic segmentation to be derived directly from the canonical level that we saw in the <code>KAN</code> attribute above. This can be useful when the canonical representation provided by MAUS deviates considerably from what was actually said. For one of the words in <code>0001BF_1syll_1</code>, the canonical representation has <code>J E</code> when what was actually said was closer to <code>n J E</code>.</p>
-<p>First switch in hierarchy view from <code>ORT</code> → <code>KAN</code> and then change the node <code>J E</code> of the <code>ORT:KAN</code> level to <code>n J E</code> for file <code>0001BF_1syll_1</code> in the manner of <a href="#fig-albhier">Figure&nbsp;<span>5.1</span></a>, as we also saw in <a href="wav2emu.html"><span>Chapter&nbsp;3</span></a>.</p>
-<div id="fig-albhier" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="img/figalbhier.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;5.1: A fragment of a hierarchy view.</figcaption>
-</figure>
-</div>
-<p>In order to run MAUS on this more appropriate pronunciation, first change it as in <a href="#fig-albhier">Figure&nbsp;<span>5.1</span></a> above, and don’t forget to save the annotation after editing. Now MAUS can be run directly on this canonical level using the <code>runBASwebservice_maus()</code> function. Here we again pass the language, and we pass the name of the existing annotation level with a canonical representation <code>KAN</code> to the argument <code>canoAttributeDefinitionName</code> and the name of the newly created force-aligned level <code>mausAttributeDefinitionName</code>, which we call <code>MAU2</code> to differentiate it from the already created <code>MAU</code> tier.</p>
+<p>MAUS also allows to segment sound files based on the canonical level that we saw in the <code>KAN</code> attribute above. This can be useful when the canonical representation provided by MAUS deviates considerably from what was actually said. For one of the words in <code>0001BF_1syll_1</code>, the canonical representation is <code>J E</code> but what was actually said is closer to <code>n J E</code>.</p>
+<p>To see how this works, switch the hierarchy view in the <code>webApp</code> from <code>ORT</code> → <code>KAN</code> and then change the node <code>J E</code> of the <code>ORT:KAN</code> level to <code>n J E</code> for file <code>0001BF_1syll_1</code>, as in <span class="quarto-unresolved-ref">?fig-albhier</span>. Remember to save the annotation after editing.</p>
+<p><img src="img/figalbhier.png" id="fig-albhier" class="img-fluid"></p>
+<p>We can now run MAUSdirectly on this canonical level using the <code>runBASwebservice_maus()</code> function. Here we again pass the language, and we pass the name of the existing annotation level with a canonical representation <code>KAN</code> to the argument <code>canoAttributeDefinitionName</code>. We also specify the newly created force-aligned level <code>mausAttributeDefinitionName</code>, which we call <code>MAU2</code> in order to differentiate it <code>MAU</code> level that we already created.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">runBASwebservice_maus</span>(alb_DB,</span>
 <span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">canoAttributeDefinitionName =</span> <span class="st">"KAN"</span>,</span>
 <span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">mausAttributeDefinitionName =</span> <span class="st">"MAU2"</span>,</span>
 <span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">language =</span> <span class="st">"sqi-AL"</span>,</span>
-<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">verbose=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Inspect the database again. There should now be a new tier <code>MAU2</code>.</p>
+<p>Inspect the database again. There should now be a new annotation level called <code>MAU2</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(alb_DB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -665,7 +619,7 @@ Link count:  125 </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Name:    alb 
-UUID:    b631536e-dda0-433c-a57a-4a6a668fe1e8 
+UUID:    ad493e68-da1c-438f-b042-3e1ea02e814e 
 Directory:   C:\Users\rasmu\surfdrive\emuintro\emuintro\emu_databases\alb_emuDB 
 Session count: 1 
 Bundle count: 4 
@@ -713,7 +667,7 @@ Link count:  197 </code></pre>
  ONE_TO_MANY ORT            MAU2        </code></pre>
 </div>
 </div>
-<p>If you have reason to suspect that the canonical representation will differ from what is actually said in the recording, you can use the function <code>runBASwebserivce_g2pForPronunciation()</code> as the first step. This way, you will not have to run MAUS twice, as <code>runBASwebserivce_g2pForPronunciation()</code> only generates the canonical representations without doing forced alignment. If you have much more data, this could possibly speed up your process.</p>
+<p>If you have reason to suspect that the canonical representation will differ from what is actually said in the recording, you can use the function <code>runBASwebservice_g2pForPronunciation()</code> as the first step. This will only generate the canonical reprsentations without doing forced alignment, and this can then be corrected before running the MAUS forced alignment routine. If you have much more data, this may speed up your process.</p>
 </section>
 </section>
 <section id="functions-introduced-in-this-chapter" class="level2" data-number="5.5">
@@ -966,7 +920,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./praat2emu.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection and tracking pitch</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

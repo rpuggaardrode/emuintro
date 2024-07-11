@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>An introduction to emuR - 4&nbsp; Converting a Praat TextGrid collection</title>
+<title>An introduction to emuR - 4&nbsp; Converting a Praat TextGrid collection and tracking pitch</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -112,7 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./praat2emu.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./praat2emu.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection and tracking pitch</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -170,7 +170,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./praat2emu.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection and tracking pitch</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -189,48 +189,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="./query.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The Emu query language</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./signalproc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">An introduction to signal processing in <code>emuR</code></span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./formants.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Automatic formant tracking and manual correction</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./vowel_norm_dist.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Vowel normalisation and vowel distances</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./dct.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">The discrete cosine transformation</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./spectral_proc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Spectral processing of speech</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./dct_spec.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Parameterising spectra with the DCT</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
@@ -259,7 +217,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-praat2emu" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection</span></span></h1>
+<h1 class="title"><span id="sec-praat2emu" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection and tracking pitch</span></span></h1>
 </div>
 
 
@@ -278,7 +236,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="objective-and-preliminaries" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="objective-and-preliminaries"><span class="header-section-number">4.1</span> Objective and preliminaries</h2>
 <p>The aim of this chapter is to show how to get from a Praat <code>.TextGrid</code> format to an Emu database format. We will show how to convert pairs of <code>.wav</code> and <code>.TextGrid</code> files to an Emu database, how to generate pitch tracks over the sound files, how to add annotation levels in the style of Praat’s point tiers, and finally how to convert the flat annotation structure of Praat TextGrids into the layered annotation structure of an Emu database (see <a href="intro.html"><span>Chapter&nbsp;1</span></a>).</p>
-<p><a href="#fig-praat2emu">Figure&nbsp;<span>4.1</span></a> exemplifies such a Praat <code>.TextGrid</code> collection and the <code>Emu-webApp</code> configuration we want to achieve:</p>
+<p><a href="#fig-praat2emu">Figure&nbsp;<span>4.1</span></a> exemplifies an annotated sound file in Praat with pitch overlaid on the spectrogram. Below this, we see the <code>Emu-webApp</code> we want to achieve, with a visible pitch track, annotations, and a layered annotation structure.</p>
 <div id="fig-praat2emu" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="img/figpraat.png" class="img-fluid figure-img"></p>
@@ -287,7 +245,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The assumption is that you already have an R project called <code>ipsR</code> and that it contains the directories <code>emu_databases</code> and <code>testsample</code>. If this is not the case, please go back and follow the preliminaries chapter.</p>
 <!-- add final link to prelim chapter when this is done -->
-<p>Start up R in the project you are using for this course.</p>
+<p>Start up R in the project you are using for this course and load the usual libraries.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emuR)</span>
@@ -321,17 +279,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 [28] "wetter7.wav"      </code></pre>
 </div>
 </div>
-<p>The <code>emuR</code> function for converting the collection of <code>.wav</code>–<code>.TextGrid</code> pairs to an Emu database called and then storing the latter in <code>targetDir</code> (defined above) is <code>convert_TextGridCollection()</code>. It works like this:</p>
+<p>The <code>emuR</code> function for converting the collection of <code>.wav</code> / <code>.TextGrid</code> pairs to an Emu database called and then storing the latter in <code>targetDir</code> (defined above) is <code>convert_TextGridCollection()</code>. It works like this:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">convert_TextGridCollection</span>(path.praat, </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">dbName =</span> <span class="st">"praat"</span>,</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">targetDir =</span> targetDir,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">verbose=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The converted Praat database called <code>praat_emuDB</code> can now be loaded with <code>load_emuDB()</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>praat_DB <span class="ot">&lt;-</span> <span class="fu">load_emuDB</span>(<span class="fu">file.path</span>(targetDir, <span class="st">"praat_emuDB"</span>),</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">verbose=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And its properties can be examined with the <code>summary()</code> command as we’ve seen in previous chapters.</p>
 <div class="cell">
@@ -344,7 +302,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Name:    praat 
-UUID:    40359f1d-a3a8-4a0e-b1c0-bb42c2f94067 
+UUID:    4c19bd0b-06eb-4500-b7ad-833ffceba0c9 
 Directory:   C:\Users\rasmu\surfdrive\emuintro\emuintro\emu_databases\praat_emuDB 
 Session count: 1 
 Bundle count: 14 
@@ -384,22 +342,23 @@ Link count:  0 </code></pre>
 <pre><code>dataramme med 0 kolonner og 0 rækker</code></pre>
 </div>
 </div>
-<p>And it can of course be viewed, using the <code>serve()</code> command.</p>
+<p>You’ll see that there are no <code>Link definitions</code>, as <code>.TextGrid</code>s do not offer this kind of structure.</p>
+<p>The database can of course be viewed using the <code>serve()</code> command as we’ve seen in previous chapters.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(praat_DB, <span class="at">useViewer =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(praat_DB, <span class="at">useViewer =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="calculating-pitch-with-wrassp" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="calculating-pitch-with-wrassp"><span class="header-section-number">4.3</span> Calculating pitch with <code>wrassp</code></h2>
 <!-- The original doc used what seemed like a very roundabout way to calculate pitch, by first generating files with wrassp::mhsF0 based on the original wav collection and then adding them in a multistep procedure. I'll go ahead and do everything with onTheFlyFunctionName. -->
-<p>The <code>summary()</code> above showed that there are no SSFF tracks associated with the database. Recall from <a href="first_steps.html"><span>Chapter&nbsp;2</span></a> that SSFF tracks store signal data that is timelocked to the audio signal. In this next step, we will generate SSFF tracks for <code>praat_emuDB</code> containing information about pitch.</p>
-<p>In order to do this, we use the signal processing package <code>wrassp</code>. There are several different signal processing packages in R, and several of them have pitch tracking algorithms. We work with <code>wrassp</code> here because it was developed in conjunction with <code>emuR</code>.</p>
-<p>To see the full range of signal processing routines available in <code>wrassp</code>, enter <code>?wrassp</code> in the R console. There are two possible routines for calculating pitch: <code>ksvF0</code> and <code>mhsF0</code>. For this demonstration, we will use <code>mhsF0</code>.</p>
-<p>The function <code>mhsF0</code> (and other signal processing functions in <code>wrassp</code>) operates directly on one or more <code>.wav</code> files, and creates corresponding new files containing pitch tracks. It does not care whether those <code>.wav</code> files are part of an Emu database, so to speak. In order to add SSFF tracks that are based on the signal processing capabilities in <code>wrassp</code> directly to an Emu database, we can use the handy <code>emuR</code> function <code>add_ssffTrackDefinition()</code> with the argument <code>onTheFlyFunctionName</code>. The <code>onTheFlyFunctionName</code> should be one of the signal processing routines in <code>wrassp</code>.</p>
-<p>Here’s how to use <code>mhsF0</code> to generate pitch tracks with the default settings and add them to a Emu database:</p>
+<p>The <code>summary()</code> above showed that there are no SSFF tracks associated with the database – this is also not a file structure that Praat understands. Recall from <a href="first_steps.html"><span>Chapter&nbsp;2</span></a> that SSFF tracks store signal data that is timelocked to the audio signal. In this next step, we will generate SSFF tracks for <code>praat_emuDB</code> containing information about pitch.</p>
+<p>In order to do this, we use the signal processing package <code>wrassp</code>. There are several different signal processing packages in R, and several of them have pitch tracking algorithms. We work with <code>wrassp</code> here because it was developed in conjunction with <code>emuR</code>, and thus is very easy to integrate with <code>emuR</code>.</p>
+<p>To see the full range of signal processing routines available in <code>wrassp</code>, enter <code>?wrassp</code> in the R console. There are two functions for calculating pitch: <code>ksvF0()</code> and <code>mhsF0()</code>. For this demonstration, we will use <code>mhsF0()</code>.</p>
+<p>The function <code>mhsF0()</code> (and other signal processing functions in <code>wrassp</code>) operates directly on one or more <code>.wav</code> files, and creates corresponding new files containing pitch tracks. It does not care whether those <code>.wav</code> files are part of an Emu database, so to speak. In order to add SSFF tracks that are based on the signal processing capabilities in <code>wrassp</code> directly to an Emu database, we can use the handy <code>emuR</code> function <code>add_ssffTrackDefinition()</code> with the argument <code>onTheFlyFunctionName</code>. The <code>onTheFlyFunctionName</code> should usually be one of the signal processing routines in <code>wrassp</code>, although other functions can also be used.</p>
+<p>Here’s how to use <code>mhsF0()</code> to generate pitch tracks with the default settings and add them to a Emu database:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">add_ssffTrackDefinition</span>(praat_DB, <span class="at">name=</span><span class="st">'pitch'</span>, <span class="at">onTheFlyFunctionName=</span><span class="st">'mhsF0'</span>,</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">verbose=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>If we run <code>list_ssffTrackDefinitions()</code> we will now see that an SSFF track called <code>pitch</code> with the file extension <code>.pit</code> has been added:</p>
 <div class="cell">
@@ -423,7 +382,7 @@ Changing the pitch tracking parameters
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>It is often not a good idea to use the default parameters for pitch tracking. For example, <code>mhsF0()</code> and <code>ksvF0()</code> by default search for pitch in an extremely broad frequency range (between 50–600 Hz), and it can often be a good idea to narrow this down. We can see all possible <code>mhsF0()</code> parameters using the <code>args()</code> function, which returns all arguments of a given function:</p>
+<p>It is often not a good idea to use the default parameters for pitch tracking. For example, <code>mhsF0()</code> and <code>ksvF0()</code> by default search for pitch in an extremely broad frequency range (between 50–600 Hz), and narrowing this down often gives better results. We can see all possible <code>mhsF0()</code> parameters using the <code>args()</code> function, which returns all arguments of a given function:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">args</span>(mhsF0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -438,7 +397,7 @@ NULL</code></pre>
 </div>
 <p>All of these arguments can be changed. If you want to change the settings when adding an SSFF track, you can pass a <em>named list</em> of parameters to the argument <code>onTheFlyParams</code> in the <code>add_ssffTrackDefinition()</code> call. A named list looks e.g.&nbsp;like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>pitch_params <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">maxF=</span><span class="dv">400</span>, <span class="at">minF=</span><span class="dv">75</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>pitch_params <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">maxF =</span> <span class="dv">400</span>, <span class="at">minF =</span> <span class="dv">75</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The function call to add pitch tracks with these parameters looks like this. Since we already have a track called <code>pitch</code> with the file extension <code>pit</code>, we call this one <code>pitch2</code> and use the file extension <code>pit2</code>.</p>
 <div class="cell">
@@ -451,7 +410,6 @@ NULL</code></pre>
 <!-- would be good to have an explainer about how to add non-wrassp files -->
 </div>
 </div>
-<p>The functions in <code>wrassp</code> are discussed in much more detail in <a href="signalproc.html"><span>Chapter&nbsp;8</span></a>.</p>
 </section>
 <section id="displaying-the-pitch-files-in-the-emu-webapp" class="level2" data-number="4.4">
 <h2 data-number="4.4" class="anchored" data-anchor-id="displaying-the-pitch-files-in-the-emu-webapp"><span class="header-section-number">4.4</span> Displaying the pitch files in the <code>Emu-webApp</code></h2>
@@ -469,14 +427,14 @@ NULL</code></pre>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"OSCI"</span>, <span class="st">"SPEC"</span>, <span class="st">"pitch"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>(Alternatively, if you have installed <code>emuhelpeR</code>, you can add it like so: <code>praat_DB %&gt;% add_signal_canvas('pitch')</code>).</p>
-<p>And the pitch track should now be visible when you <code>serve()</code>:</p>
+<p>The pitch track should now be visible when you <code>serve()</code> the database:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(praat_DB, <span class="at">useViewer =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(praat_DB, <span class="at">useViewer =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="adding-an-event-level" class="level2" data-number="4.5">
 <h2 data-number="4.5" class="anchored" data-anchor-id="adding-an-event-level"><span class="header-section-number">4.5</span> Adding an event level</h2>
-<p>The next task is to add an annotation level of type <code>EVENT</code> (similar to the point tiers in Praat) that can be used for labeling tones. We will call this level <code>Tone</code>. So far, the only existing time tier is <code>ORT</code> as confirmed with:</p>
+<p>The next task is to add an annotation level of type <code>EVENT</code> (similar to “point tiers” in Praat) that can be used for labeling tones. We will call this level <code>Tone</code>. So far, the only existing annotation level with time information is <code>ORT</code> as confirmed with:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list_levelDefinitions</span>(praat_DB)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -488,12 +446,12 @@ NULL</code></pre>
 </div>
 </div>
 </div>
-<p>In order to add a new <code>EVENT</code>-type level called <code>Tone</code>, we use the function `add_levelDefinition like so:</p>
+<p>In order to add a new <code>EVENT</code>-type level called <code>Tone</code>, we use the function <code>add_levelDefinition()</code> like so:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">add_levelDefinition</span>(praat_DB, </span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">name=</span><span class="st">"Tone"</span>, </span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type=</span><span class="st">"EVENT"</span>,</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verbose=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">name =</span> <span class="st">"Tone"</span>, </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">"EVENT"</span>,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><code>set_levelCanvasesOrder()</code> can be used to ensure that <code>Tone</code> is shown when directly underneath the signals when <code>serve()</code>ing the database:</p>
 <div class="cell">
@@ -504,9 +462,9 @@ NULL</code></pre>
 </section>
 <section id="labelling-some-tones" class="level2" data-number="4.6">
 <h2 data-number="4.6" class="anchored" data-anchor-id="labelling-some-tones"><span class="header-section-number">4.6</span> Labelling some tones</h2>
-<p>Try and add two tone labels <code>H*</code> at the time of the pitch peaks of <em>morgens</em> and <em>ruhig</em> in the bundle <code>wetter1</code> as in <a href="#fig-praat2emu">Figure&nbsp;<span>4.1</span></a> and save the result. The pointers for annotating given in <a href="first_steps.html"><span>Chapter&nbsp;2</span></a> also apply here.</p>
+<p>Try and add two tone labels <code>H*</code> at the time of the pitch peaks of <code>morgens</code> and <code>ruhig</code> in the bundle <code>wetter1</code> as in <a href="#fig-praat2emu">Figure&nbsp;<span>4.1</span></a> and save the result. The pointers for annotating given in <a href="first_steps.html"><span>Chapter&nbsp;2</span></a> also apply here.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(praat_DB, <span class="at">useViewer=</span>F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(praat_DB, <span class="at">useViewer =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>At present, there are no defined relationships between the different annotation levels, as confirmed with <code>list_linkDefinitions()</code>:</p>
 <div class="cell">
@@ -534,7 +492,7 @@ NULL</code></pre>
 </div>
 <p>To see the results of this procedure, <code>serve()</code> the database again and switch to hierarchy view.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(praat_DB, <span class="at">useViewer =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(praat_DB, <span class="at">useViewer =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="automatically-linking-event-and-segment-times" class="level2" data-number="4.7">
@@ -544,12 +502,13 @@ NULL</code></pre>
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autobuild_linkFromTimes</span>(praat_DB,</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">superlevelName =</span> <span class="st">"ORT"</span>,</span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">sublevelName =</span> <span class="st">"Tone"</span>,</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">verbose=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To see the results of this procedure, <code>serve()</code> the database again and switch to hierarchy view.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(praat_DB, <span class="at">useViewer =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(praat_DB, <span class="at">useViewer =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>In this chapter, we have seen how to convert a collection of Praat-based annotations and sound files into an Emu database, and we’ve taken the first steps towards analyzing and annotating pitch. In <a href="tobi2emu.html"><span>Chapter&nbsp;6</span></a>, we’ll go into more detail about the analysis and annotation of intonation.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -561,9 +520,9 @@ Want to make plots in the style of Praat Picture?
 </div>
 <div class="callout-body-container callout-body">
 <p>A very nice feature of Praat is that when you’ve found a nice portion of the signal, it’s fairly simple to make a plot that combines waveform, spectrogram, other derived tracks, and annotations. Say you’ve fallen in love with the portion in <code>wetter3</code> in our <code>praat_emuDB</code>, and you want to plot the <em>zu Samstag</em> portion. Unfortunately, there are no functions internal to <code>emuR</code> that allows you to plot audio data along with annotations, but the package <code>praatpicture</code> allows this.</p>
-<p><code>praatpicture</code> can be installed from GitHub like so, assuming that <code>devtools</code> is installed on your machine:</p>
+<p><code>praatpicture</code> can be installed in the usual way:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">'rpuggaardrode/praatpicture'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"praatpicture"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The function <code>emupicture()</code> can now be called to produce a Praat-style plot like so, setting the <code>start</code> and <code>end</code> time to plot our favorite part of the signal. The argument <code>tg_tiers</code> specifies which annotation levels (equivalent to <em>TextGrid tiers</em> should be plotted), and the <code>wave_channels</code> argument specifies which channels of the sound file should be plotted. (This is not visible in the <code>Emu-webApp</code>, but the sound files in <code>praat_DB</code> actually have two channels).</p>
 <div class="cell">
@@ -574,7 +533,7 @@ Want to make plots in the style of Praat Picture?
 <p><img src="praat2emu_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p><code>emupicture()</code> is under development, but it is a quite flexible function with functionality that goes way beyond what was shown here. See the <a href="https://github.com/rpuggaardrode/praatpicture">GitHub page</a> for my information.</p>
+<p>For my information about the options you get with <code>emupicture()</code> and the <code>praatpicture</code> library, see <a href="https://rpuggaardrode.github.io/praatpicture_manual" target="_blank">the manual</a>.</p>
 </div>
 </div>
 </section>

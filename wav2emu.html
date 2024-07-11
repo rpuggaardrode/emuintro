@@ -170,7 +170,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./praat2emu.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection and tracking pitch</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -189,48 +189,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="./query.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The Emu query language</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./signalproc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">An introduction to signal processing in <code>emuR</code></span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./formants.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Automatic formant tracking and manual correction</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./vowel_norm_dist.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Vowel normalisation and vowel distances</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./dct.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">The discrete cosine transformation</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./spectral_proc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Spectral processing of speech</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./dct_spec.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Parameterising spectra with the DCT</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
@@ -276,7 +234,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="preliminaries" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="preliminaries"><span class="header-section-number">3.1</span> Preliminaries</h2>
-<p>If you want to code along with this chapter, you should download and unzip the file <code>testsample</code> (accessible <a href="https://www.phonetik.uni-muenchen.de/~jmh/lehre/Rdf/testsample.zip" target="_blank">here</a>). Store the <code>testsample</code> folder in the <code>ipsR</code> directory you made when you did the initial setup for the tutorial. Also create as directory called <code>emu_databases</code> on your machine in the <code>ipsR</code> directory. The directory should now look like this:</p>
+<p>If you want to code along with this chapter, you should download and unzip the file <code>testsample</code> (accessible <a href="https://www.phonetik.uni-muenchen.de/~jmh/lehre/Rdf/testsample.zip" target="_blank">here</a>). Store the <code>testsample</code> folder in the <code>ipsR</code> directory you made when you did the initial setup for the tutorial. Also create a directory called <code>emu_databases</code> on your machine in the <code>ipsR</code> directory. The directory should now look like this:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="img/emu2021.png" class="img-fluid figure-img" style="width:70.0%"></p>
@@ -305,7 +263,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>path.german <span class="ot">&lt;-</span> <span class="fu">file.path</span>(sourceDir, <span class="st">"german"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This database contains the following sound files (we use the <code>pattern="*wav"</code> argument to get only files where the name ends in <code>wav</code>).</p>
+<p>This database contains the following sound files (we use the <code>pattern = "*wav"</code> argument to get only files where the name ends in <code>wav</code>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(path.german, <span class="at">pattern =</span> <span class="st">"*wav"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -332,7 +290,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Name:    german 
-UUID:    90c598b3-9be5-4e48-82d8-a3ea056c8cac 
+UUID:    7ae2a927-684f-4b94-9409-ccd3ab5a06f2 
 Directory:   C:\Users\rasmu\surfdrive\emuintro\emuintro\emu_databases\german_emuDB 
 Session count: 0 
 Bundle count: 0 
@@ -383,7 +341,7 @@ Link count:  0 </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Name:    german 
-UUID:    90c598b3-9be5-4e48-82d8-a3ea056c8cac 
+UUID:    7ae2a927-684f-4b94-9409-ccd3ab5a06f2 
 Directory:   C:\Users\rasmu\surfdrive\emuintro\emuintro\emu_databases\german_emuDB 
 Session count: 1 
 Bundle count: 2 
@@ -437,14 +395,14 @@ Link count:  0 </code></pre>
 <p>Note that all bundles are associated with a session. If the sound files all come from a single directory, they are assigned to a session called <code>0000</code>. If our <code>testsample/german</code> directory had had multiple subdirectories, these would be assigned to different sessions with the same names as the subdirectories.</p>
 <p>You can now <code>serve()</code> the database and have a look at the data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(german_DB, <span class="at">useViewer =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(german_DB, <span class="at">useViewer =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We’re almost always interested in adding annotations to our databases. You can add an annotation level using the <code>add_levelDefinition()</code> function. Annotation levels need a name (we call this one <code>Phon</code>) and a type. The type is <code>SEGMENT</code> because we want to add annotation units with start and end times; the different types of annotation levels (<code>SEGMENT</code>, <code>ITEM</code>, and <code>EVENT</code>) were presented in the previous chapter.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">add_levelDefinition</span>(german_DB, </span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">name =</span> <span class="st">"Phon"</span>, </span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">"SEGMENT"</span>,</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verbose=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Will this new annotation level be shown when we <code>serve()</code> the database again? We can check this with <code>get_levelCanvasesOrder()</code>, as seen in the previous chapter</p>
 <div class="cell">
@@ -462,7 +420,7 @@ Link count:  0 </code></pre>
 </div>
 <p>If we now <code>serve()</code> the database, the <code>Phon</code> level should be visible.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(german_DB, <span class="at">useViewer =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(german_DB, <span class="at">useViewer =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>It’s still empty though. Try to annotate some segments as in <a href="#fig-annotex">Figure&nbsp;<span>3.1</span></a>, e.g.&nbsp;/O, a/ for the vowels of <em>Sonne</em> and <em>lacht</em> in <code>K01BE002</code> and save the annotations.</p>
 <div id="fig-annotex" class="quarto-figure quarto-figure-center anchored">
@@ -490,14 +448,14 @@ Some information about annotating in Emu
 <p>To <strong>save an annotation</strong>, either hit Shift + S, or left click on the Save icon next to the bundle name in the left side your Emu window; it will have turned red.</p>
 </div>
 </div>
-<p>Assuming you have managed to annotate the segments as in <a href="#fig-annotex">Figure&nbsp;<span>3.1</span></a> above, the segments should now be accessible in R with the function <code>query()</code>. (As mentioned in <a href="intro.html"><span>Chapter&nbsp;1</span></a>, the Emu query language is one-of-a-kind and very flexible! It will be discussed in much more detail in <a href="query.html"><span>Chapter&nbsp;7</span></a>.)</p>
+<p>Assuming you have managed to annotate the segments as in <a href="#fig-annotex">Figure&nbsp;<span>3.1</span></a> above, the segments should now be accessible in R with the function <code>query()</code>. (As mentioned in <a href="intro.html"><span>Chapter&nbsp;1</span></a>, the Emu query language is one-of-a-kind and very flexible! It will be discussed in much more detail in <a href="query.html"><span>Chapter&nbsp;7</span></a>. Here we query the regular expression <code>.*</code> in the <code>Phon</code> level, which will return all intervals in that annotation level. Note that the data frame returned by <code>query()</code> contains a column <code>db_uuid</code> which we’ll remove for now, simply to make the output more readable.)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">query</span>(german_DB, <span class="st">"Phon =~ .*"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">query</span>(german_DB, <span class="st">"Phon =~ .*"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>db_uuid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["db_uuid"],"name":[4],"type":["chr"],"align":["left"]},{"label":["session"],"name":[5],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[6],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[8],"type":["int"],"align":["right"]},{"label":["level"],"name":[9],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[10],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[12],"type":["int"],"align":["right"]},{"label":["type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[15],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"O","2":"1048.469","3":"1111.719","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE002","7":"1","8":"1","9":"Phon","10":"Phon","11":"1","12":"1","13":"SEGMENT","14":"16776","15":"17787","16":"16000"},{"1":"","2":"1111.719","3":"1274.969","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE002","7":"2","8":"2","9":"Phon","10":"Phon","11":"2","12":"2","13":"SEGMENT","14":"17788","15":"20399","16":"16000"},{"1":"a","2":"1274.969","3":"1391.094","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE002","7":"3","8":"3","9":"Phon","10":"Phon","11":"3","12":"3","13":"SEGMENT","14":"20400","15":"22257","16":"16000"},{"1":"","2":"1391.094","3":"1920.031","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE002","7":"4","8":"4","9":"Phon","10":"Phon","11":"4","12":"4","13":"SEGMENT","14":"22258","15":"30720","16":"16000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["session"],"name":[4],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[5],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[6],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["level"],"name":[8],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[9],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[10],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["type"],"name":[12],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[13],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[15],"type":["int"],"align":["right"]}],"data":[{"1":"O","2":"1048.469","3":"1111.719","4":"0000","5":"K01BE002","6":"1","7":"1","8":"Phon","9":"Phon","10":"1","11":"1","12":"SEGMENT","13":"16776","14":"17787","15":"16000"},{"1":"","2":"1111.719","3":"1274.969","4":"0000","5":"K01BE002","6":"2","7":"2","8":"Phon","9":"Phon","10":"2","11":"2","12":"SEGMENT","13":"17788","14":"20399","15":"16000"},{"1":"a","2":"1274.969","3":"1391.094","4":"0000","5":"K01BE002","6":"3","7":"3","8":"Phon","9":"Phon","10":"3","11":"3","12":"SEGMENT","13":"20400","14":"22257","15":"16000"},{"1":"","2":"1391.094","3":"1920.031","4":"0000","5":"K01BE002","6":"4","7":"4","8":"Phon","9":"Phon","10":"4","11":"4","12":"SEGMENT","13":"22258","14":"30720","15":"16000"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -506,14 +464,14 @@ Some information about annotating in Emu
 <section id="adding-word-annotations" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="adding-word-annotations"><span class="header-section-number">3.3</span> Adding word annotations</h2>
 <p>The next task is to add orthographic labels as <code>ITEM</code> annotations. This should be done if either (a) the start and end times are of no concern and/or (b) a word’s start and end time are inherited from segments. There are three steps:</p>
-<p>Add a new level to the database using the command <code>add_levelDefinition()</code>. Here we add one with the name <code>ORT</code>:</p>
+<p>Add a new level to the database using the function <code>add_levelDefinition()</code>. Here we add one with the name <code>ORT</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">add_levelDefinition</span>(german_DB, </span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">name =</span> <span class="st">"ORT"</span>, </span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">"ITEM"</span>,</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verbose=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Define how it is linked with a time-based level, in this case with <code>Phon</code>. We do this with the command <code>add_linkDefinition</code>. The different <code>type</code>s of link were discussed in <a href="first_steps.html"><span>Chapter&nbsp;2</span></a>.</p>
+<p>Define how it is linked with a time-based level, in this case with <code>Phon</code>. We do this with the function <code>add_linkDefinition()</code>. The different <code>type</code>s of link were discussed in <a href="first_steps.html"><span>Chapter&nbsp;2</span></a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">add_linkDefinition</span>(german_DB, </span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">type =</span> <span class="st">"ONE_TO_MANY"</span>, </span>
@@ -534,16 +492,16 @@ Some information about annotating in Emu
 </div>
 <section id="adding-item-annotations-via-the-emu-webapp" class="level3" data-number="3.3.1">
 <h3 data-number="3.3.1" class="anchored" data-anchor-id="adding-item-annotations-via-the-emu-webapp"><span class="header-section-number">3.3.1</span> Adding <code>ITEM</code> annotations via the <code>EMU-webApp</code></h3>
-<p>Open the hierarchy window for utterance <code>K01BE001</code>, and click on the blue and white <code>+</code> sign next to <code>ORT</code>. Each time you do so, a node appears. You can enter annotation text for any node by positioning the mouse over it and then left click to bring up a green rectangle (see figure below) into which you can type text and then hit enter. To delete a node, move the mouse over it and hit the <code>y</code> key. Further details can be seen in the figure below.</p>
+<p>If you <code>serve()</code> the database, you can add <code>ITEM</code> annotations interactively. Open the hierarchy window for utterance <code>K01BE001</code>, and click on the blue and white <code>+</code> sign next to <code>ORT</code>. Each time you do so, a node appears. You can enter annotation text for any node by positioning the mouse over it and then left click to bring up a green rectangle as in the figure below. You can type the text corresponding to your <code>ITEM</code> annotation into this rectangle, and then hit enter. To delete a node, move the mouse over it and hit the <code>y</code> key. Further details can be seen in the figure below.</p>
 <p><img src="img/hier1.png" class="img-fluid"></p>
-<p>If you have done something as in the above figure, you should be able to access the annotations in R. Notice the <code>NA</code> under start and end times. This is because they are <em>timeless</em>, i.e.&nbsp;unlinked to any annotations of a time (<code>SEGMENT</code> or <code>EVENT</code>) tier.</p>
+<p>If you have done something as in the above figure, you should be able to access the annotations in R using <code>query()</code> as we saw above. Notice the <code>NA</code> under start and end times. This is because they are <em>timeless</em>, i.e.&nbsp;unlinked to any annotations of a time (<code>SEGMENT</code> or <code>EVENT</code>) level</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">query</span>(german_DB, <span class="st">"ORT=~.*"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">query</span>(german_DB, <span class="st">"ORT =~ .*"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>db_uuid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["db_uuid"],"name":[4],"type":["chr"],"align":["left"]},{"label":["session"],"name":[5],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[6],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[8],"type":["int"],"align":["right"]},{"label":["level"],"name":[9],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[10],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[12],"type":["int"],"align":["right"]},{"label":["type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[15],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"heute","2":"NA","3":"NA","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE001","7":"1","8":"1","9":"ORT","10":"ORT","11":"1","12":"1","13":"ITEM","14":"NA","15":"NA","16":"NA"},{"1":"ist","2":"NA","3":"NA","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE001","7":"2","8":"2","9":"ORT","10":"ORT","11":"2","12":"2","13":"ITEM","14":"NA","15":"NA","16":"NA"},{"1":"schönes","2":"NA","3":"NA","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE001","7":"3","8":"3","9":"ORT","10":"ORT","11":"3","12":"3","13":"ITEM","14":"NA","15":"NA","16":"NA"},{"1":"Frühlingswetter","2":"NA","3":"NA","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE001","7":"4","8":"4","9":"ORT","10":"ORT","11":"4","12":"4","13":"ITEM","14":"NA","15":"NA","16":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["session"],"name":[4],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[5],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[6],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["level"],"name":[8],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[9],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[10],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["type"],"name":[12],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[13],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[15],"type":["int"],"align":["right"]}],"data":[{"1":"heute","2":"NA","3":"NA","4":"0000","5":"K01BE001","6":"1","7":"1","8":"ORT","9":"ORT","10":"1","11":"1","12":"ITEM","13":"NA","14":"NA","15":"NA"},{"1":"ist","2":"NA","3":"NA","4":"0000","5":"K01BE001","6":"2","7":"2","8":"ORT","9":"ORT","10":"2","11":"2","12":"ITEM","13":"NA","14":"NA","15":"NA"},{"1":"schönes","2":"NA","3":"NA","4":"0000","5":"K01BE001","6":"3","7":"3","8":"ORT","9":"ORT","10":"3","11":"3","12":"ITEM","13":"NA","14":"NA","15":"NA"},{"1":"Frühlingswetter","2":"NA","3":"NA","4":"0000","5":"K01BE001","6":"4","7":"4","8":"ORT","9":"ORT","10":"4","11":"4","12":"ITEM","13":"NA","14":"NA","15":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -551,7 +509,7 @@ Some information about annotating in Emu
 </section>
 <section id="adding-item-annotations-via-the-emur" class="level3" data-number="3.3.2">
 <h3 data-number="3.3.2" class="anchored" data-anchor-id="adding-item-annotations-via-the-emur"><span class="header-section-number">3.3.2</span> Adding <code>ITEM</code> annotations via the <code>emuR</code></h3>
-<p>You can also add timeless annotations (in this case to the <code>ORT</code> tier) with the function <code>create_itemsInLevel()</code>. This requires passing a data frame with certain specific requirements to the <code>itemsToCreate</code> argument. This data frame should have the columns <code>labels</code>, <code>session</code>, <code>bundle</code>, <code>level</code>, <code>start_item_seq_idx</code>, and <code>attribute</code>, with one row for each annotation to be added. In this example, the words <em>die Sonne lacht</em> will be added to the second utterance.</p>
+<p>You can also add timeless annotations (in this case to the <code>ORT</code> level) with the function <code>create_itemsInLevel()</code>. This requires passing a data frame with certain specific requirements to the <code>itemsToCreate</code> argument. This data frame should have the columns <code>labels</code>, <code>session</code>, <code>bundle</code>, <code>level</code>, <code>start_item_seq_idx</code>, and <code>attribute</code>, with one row for each annotation to be added. In this example, the words <em>die Sonne lacht</em> will be added to the second utterance.</p>
 <p>Let’s make a data frame with this information step-by-step. First, we store the sentence as a vector <code>w</code> with a string corresponding to each word:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"die"</span>, <span class="st">"Sonne"</span>, <span class="st">"lacht"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -580,7 +538,7 @@ Some information about annotating in Emu
 <span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">start_item_seq_idx =</span> inds,</span>
 <span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">attribute =</span> lev, </span>
 <span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">labels =</span> w,</span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">stringsAsFactors =</span> F)</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>newItems_ORT</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
@@ -594,7 +552,7 @@ Some information about annotating in Emu
 <p>Add these word annotations to the database:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">create_itemsInLevel</span>(german_DB, newItems_ORT, </span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verbose=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -607,7 +565,7 @@ Using <code>create_itemsInLevel()</code> with <code>SEGMENT</code> or <code>EVEN
 </div>
 <div class="callout-body-container callout-body">
 <p>You can also add annotation items for annotation levels with time information, i.e.&nbsp;<code>SEGMENT</code> or <code>EVENT</code> levels. This requires a data frame with the same columns as <code>newItems_ORT</code> which we created above, but instead of having numeric indexes in the column <code>start_item_seq_idx</code>, this column should contain the start time in ms of the selected boundary. (In the case of an <code>EVENT</code> level, this should be called <code>start</code> instead of <code>start_item_seq_idx</code>).</p>
-<p>If you’re creating annotation items programmatically in a <code>SEGMENT</code> tier in this way, you’ll likely also want to add an end time. Somewhat counterintuitively, you do this by adding another row to the data frame with an empty label. If we wanted to use <code>create_itemsInLevel()</code> to create the vowel labels in <code>K01BE002</code> that we made manually below, we would do it like this:</p>
+<p>If you’re creating annotation items programmatically in a <code>SEGMENT</code> tier in this way, you’ll likely also want to add an end time. Somewhat counterintuitively, you do this by adding another row to the data frame with an empty label. If we wanted to use <code>create_itemsInLevel()</code> to create the vowel labels in <code>K01BE002</code> that we just made manually, we would do it like this:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"O"</span>, <span class="st">""</span>, <span class="st">"a"</span>, <span class="st">""</span>)</span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>sess <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">"0000"</span>, <span class="fu">length</span>(w))</span>
@@ -621,7 +579,7 @@ Using <code>create_itemsInLevel()</code> with <code>SEGMENT</code> or <code>EVEN
 <span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">start_item_seq_idx =</span> times,</span>
 <span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">attribute =</span> lev, </span>
 <span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">labels =</span> w,</span>
-<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a>                          <span class="at">stringsAsFactors =</span> F)</span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a>                          <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>newItems_Phon</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
@@ -638,21 +596,21 @@ Using <code>create_itemsInLevel()</code> with <code>SEGMENT</code> or <code>EVEN
 </div>
 <p>If we use <code>query()</code> as above, we should now see words in both bundles:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">query</span>(german_DB, <span class="st">"ORT=~.*"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">query</span>(german_DB, <span class="st">"ORT =~ .*"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>db_uuid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["db_uuid"],"name":[4],"type":["chr"],"align":["left"]},{"label":["session"],"name":[5],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[6],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[8],"type":["int"],"align":["right"]},{"label":["level"],"name":[9],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[10],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[12],"type":["int"],"align":["right"]},{"label":["type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[15],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"heute","2":"NA","3":"NA","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE001","7":"1","8":"1","9":"ORT","10":"ORT","11":"1","12":"1","13":"ITEM","14":"NA","15":"NA","16":"NA"},{"1":"ist","2":"NA","3":"NA","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE001","7":"2","8":"2","9":"ORT","10":"ORT","11":"2","12":"2","13":"ITEM","14":"NA","15":"NA","16":"NA"},{"1":"schönes","2":"NA","3":"NA","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE001","7":"3","8":"3","9":"ORT","10":"ORT","11":"3","12":"3","13":"ITEM","14":"NA","15":"NA","16":"NA"},{"1":"Frühlingswetter","2":"NA","3":"NA","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE001","7":"4","8":"4","9":"ORT","10":"ORT","11":"4","12":"4","13":"ITEM","14":"NA","15":"NA","16":"NA"},{"1":"die","2":"NA","3":"NA","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE002","7":"5","8":"5","9":"ORT","10":"ORT","11":"1","12":"1","13":"ITEM","14":"NA","15":"NA","16":"NA"},{"1":"Sonne","2":"NA","3":"NA","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE002","7":"6","8":"6","9":"ORT","10":"ORT","11":"2","12":"2","13":"ITEM","14":"NA","15":"NA","16":"NA"},{"1":"lacht","2":"NA","3":"NA","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE002","7":"7","8":"7","9":"ORT","10":"ORT","11":"3","12":"3","13":"ITEM","14":"NA","15":"NA","16":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["session"],"name":[4],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[5],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[6],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["level"],"name":[8],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[9],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[10],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["type"],"name":[12],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[13],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[15],"type":["int"],"align":["right"]}],"data":[{"1":"heute","2":"NA","3":"NA","4":"0000","5":"K01BE001","6":"1","7":"1","8":"ORT","9":"ORT","10":"1","11":"1","12":"ITEM","13":"NA","14":"NA","15":"NA"},{"1":"ist","2":"NA","3":"NA","4":"0000","5":"K01BE001","6":"2","7":"2","8":"ORT","9":"ORT","10":"2","11":"2","12":"ITEM","13":"NA","14":"NA","15":"NA"},{"1":"schönes","2":"NA","3":"NA","4":"0000","5":"K01BE001","6":"3","7":"3","8":"ORT","9":"ORT","10":"3","11":"3","12":"ITEM","13":"NA","14":"NA","15":"NA"},{"1":"Frühlingswetter","2":"NA","3":"NA","4":"0000","5":"K01BE001","6":"4","7":"4","8":"ORT","9":"ORT","10":"4","11":"4","12":"ITEM","13":"NA","14":"NA","15":"NA"},{"1":"die","2":"NA","3":"NA","4":"0000","5":"K01BE002","6":"5","7":"5","8":"ORT","9":"ORT","10":"1","11":"1","12":"ITEM","13":"NA","14":"NA","15":"NA"},{"1":"Sonne","2":"NA","3":"NA","4":"0000","5":"K01BE002","6":"6","7":"6","8":"ORT","9":"ORT","10":"2","11":"2","12":"ITEM","13":"NA","14":"NA","15":"NA"},{"1":"lacht","2":"NA","3":"NA","4":"0000","5":"K01BE002","6":"7","7":"7","8":"ORT","9":"ORT","10":"3","11":"3","12":"ITEM","13":"NA","14":"NA","15":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
 <p>Have a look at the database again:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(german_DB, <span class="at">useViewer =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">serve</span>(german_DB, <span class="at">useViewer =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Look at the hierarchy for the second utterance. The word annotations in the <code>ORT</code> tier should now be visible. These can be linked manually in the <code>Emu-WebApp</code> so that the word labels are accessible in <code>emuR</code>. Please see <a href="https://ips-lmu.github.io/The-EMU-SDMS-Manual/chap-emu-webApp.html#working-with-hierarchical-annotations-2-chapemu-webapp">section 9.2.2 of the Emu SDMS manual</a> for details on how to annotate hierarchically.</p>
+<p>Look at the hierarchy for the second utterance. The word annotations in the <code>ORT</code> level should now be visible. These can be linked manually in the <code>Emu-WebApp</code> so that the word labels are accessible in <code>emuR</code>. Please see <a href="https://ips-lmu.github.io/The-EMU-SDMS-Manual/chap-emu-webApp.html#working-with-hierarchical-annotations-2-chapemu-webapp">section 9.2.2 of the Emu SDMS manual</a> for details on how to annotate hierarchically.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -663,21 +621,21 @@ Some information about annotating hierarchically
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Adding hierarchical links and annotations is not difficult. The present task is to add links from <code>O</code> and from <code>a</code> at the <code>Phon</code> tier to <code>Sonne</code> and to <code>lacht</code> respectively at the <code>ORT</code> tier. To do this for the first of these, hover the mouse over <code>Sonne</code> (the node will turn blue), hold down the shift key, and sweep the mouse to <code>O</code> (whose node will also turn blue), release the shift key, and the link is made. If you want to delete the link, hover the mouse over it (the link will then turn bright yellow) and hit backspace.</p>
-<p>You can add new nodes at the <code>ORT</code> tier as follows: Move the mouse over <code>lacht</code>, type <code>n</code> and hit enter. This will create a new node <em>before</em> <code>lacht</code> (between <code>Sonne</code> and <code>lacht</code>). If you enter <code>m</code> instead of <code>n</code> in the above operation, a new node will be created <em>after</em> <code>lacht</code>. To edit or play a node at the <code>ORT</code> tier, left click on the node. You can enter or modify text in the green panel. To denote a node at the <code>ORT</code> tier, hover over it and enter <code>y</code>. See figure below.</p>
+<p>Adding hierarchical links and annotations is not difficult. The present task is to add links from <code>O</code> and from <code>a</code> at the <code>Phon</code> level to <code>Sonne</code> and to <code>lacht</code> respectively at the <code>ORT</code> level To do this for the first of these, hover the mouse over <code>Sonne</code> (the node will turn blue), hold down the shift key, and sweep the mouse to <code>O</code> (whose node will also turn blue), release the shift key, and the link is made. If you want to delete the link, hover the mouse over it (the link will then turn bright yellow) and hit backspace.</p>
+<p>You can add new nodes at the <code>ORT</code> level as follows: Move the mouse over <code>lacht</code>, type <code>n</code> and hit enter. This will create a new node <em>before</em> <code>lacht</code> (between <code>Sonne</code> and <code>lacht</code>). If you enter <code>m</code> instead of <code>n</code> in the above operation, a new node will be created <em>after</em> <code>lacht</code>. To edit or play a node at the <code>ORT</code> tier, left click on the node. You can enter or modify text in the green panel. To denote a node at the <code>ORT</code> level, hover over it and enter <code>y</code>. This is shown in the figure below.</p>
 <p><img src="img/hier2.png" class="img-fluid"></p>
 </div>
 </div>
-<p>If you have annotated as in the above figure and saved it, the words and their times will be accessible (note that the times at the <code>ORT</code> level and the same as the times at the <code>Phon</code> level, because each word only dominates one segment (and inherits its times from those). Note also that <code>die</code> has no times, because it hasn’t been linked to any annotations at the <code>Phon</code> level. We can check this with query:</p>
+<p>If you have annotated as in the above figure and saved it, the words and their times will be accessible (note that the times at the <code>ORT</code> level are the same as the times at the <code>Phon</code> level, because each word only dominates one segment (and inherits its times from those). Note also that <code>die</code> has no times, because it hasn’t been linked to any annotations at the <code>Phon</code> level. We can check this with <code>query()</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">query</span>(german_DB, <span class="st">"ORT =~ .*"</span>, <span class="at">bundlePattern =</span> <span class="st">"K01BE002"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">query</span>(german_DB, <span class="st">"ORT =~ .*"</span>, <span class="at">bundlePattern =</span> <span class="st">"K01BE002"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>db_uuid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["db_uuid"],"name":[4],"type":["chr"],"align":["left"]},{"label":["session"],"name":[5],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[6],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[8],"type":["int"],"align":["right"]},{"label":["level"],"name":[9],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[10],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[12],"type":["int"],"align":["right"]},{"label":["type"],"name":[13],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[15],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"die","2":"NA","3":"NA","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE002","7":"5","8":"5","9":"ORT","10":"ORT","11":"1","12":"1","13":"ITEM","14":"NA","15":"NA","16":"NA"},{"1":"Sonne","2":"1042.781","3":"1116.594","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE002","7":"6","8":"6","9":"ORT","10":"ORT","11":"2","12":"2","13":"ITEM","14":"NA","15":"NA","16":"NA"},{"1":"lacht","2":"1279.719","3":"1369.469","4":"90c598b3-9be5-4e48-82d8-a3ea056c8cac","5":"0000","6":"K01BE002","7":"7","8":"7","9":"ORT","10":"ORT","11":"3","12":"3","13":"ITEM","14":"NA","15":"NA","16":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["labels"],"name":[1],"type":["chr"],"align":["left"]},{"label":["start"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["end"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["session"],"name":[4],"type":["chr"],"align":["left"]},{"label":["bundle"],"name":[5],"type":["chr"],"align":["left"]},{"label":["start_item_id"],"name":[6],"type":["int"],"align":["right"]},{"label":["end_item_id"],"name":[7],"type":["int"],"align":["right"]},{"label":["level"],"name":[8],"type":["chr"],"align":["left"]},{"label":["attribute"],"name":[9],"type":["chr"],"align":["left"]},{"label":["start_item_seq_idx"],"name":[10],"type":["int"],"align":["right"]},{"label":["end_item_seq_idx"],"name":[11],"type":["int"],"align":["right"]},{"label":["type"],"name":[12],"type":["chr"],"align":["left"]},{"label":["sample_start"],"name":[13],"type":["int"],"align":["right"]},{"label":["sample_end"],"name":[14],"type":["int"],"align":["right"]},{"label":["sample_rate"],"name":[15],"type":["int"],"align":["right"]}],"data":[{"1":"die","2":"NA","3":"NA","4":"0000","5":"K01BE002","6":"5","7":"5","8":"ORT","9":"ORT","10":"1","11":"1","12":"ITEM","13":"NA","14":"NA","15":"NA"},{"1":"Sonne","2":"1042.781","3":"1116.594","4":"0000","5":"K01BE002","6":"6","7":"6","8":"ORT","9":"ORT","10":"2","11":"2","12":"ITEM","13":"NA","14":"NA","15":"NA"},{"1":"lacht","2":"1279.719","3":"1369.469","4":"0000","5":"K01BE002","6":"7","7":"7","8":"ORT","9":"ORT","10":"3","11":"3","12":"ITEM","13":"NA","14":"NA","15":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -939,7 +897,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./praat2emu.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection and tracking pitch</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

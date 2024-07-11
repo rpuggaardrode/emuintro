@@ -152,7 +152,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./praat2emu.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Converting a Praat TextGrid collection and tracking pitch</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -171,48 +171,6 @@ div.csl-indent {
   <div class="sidebar-item-container"> 
   <a href="./query.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The Emu query language</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./signalproc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">An introduction to signal processing in <code>emuR</code></span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./formants.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Automatic formant tracking and manual correction</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./vowel_norm_dist.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Vowel normalisation and vowel distances</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./dct.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">The discrete cosine transformation</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./spectral_proc.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Spectral processing of speech</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./dct_spec.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Parameterising spectra with the DCT</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
@@ -252,16 +210,16 @@ div.csl-indent {
 
 <section id="background" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="background"><span class="header-section-number">1.1</span> Background</h2>
-<p>The core idea behind Emu today is just the same as it was when it first launched in the mid-late 1980s at <a href="https://www.cstr.ed.ac.uk/" target="_blank">CSTR, Edinburgh University</a> and known as APS which stood for <a href="https://www.phonetik.uni-muenchen.de/~jmh/papers/aps.pdf" target="_blank">Acoustic Phonetics in S</a>.</p>
-<p>The core idea of Emu is:</p>
+<p>The core idea behind Emu today is just the same as it was when it first launched in the mid-late 1980s at <a href="https://www.cstr.ed.ac.uk/" target="_blank">CSTR, Edinburgh University</a>. At the time, it was known as APS which stood for <a href="https://www.phonetik.uni-muenchen.de/~jmh/papers/aps.pdf" target="_blank">Acoustic Phonetics in S</a>.</p>
+<p>The core idea behind Emu is:</p>
 <ul>
-<li>A speech database is a <em>collection of utterances</em> consisting of signal (waveform, formant, f0 etc) and annotation (label) files.</li>
-<li>There is a <em>query language</em>: annotations can be extracted from the database and read directly into R. It should be straightforward to e.g.&nbsp;find all tokens of [i] in the database.</li>
-<li>These queried lists of annotations in R can be further queried to get the corresponding signals (e.g.&nbsp;find the formants of the [i] tokens extracted at the previous step).</li>
+<li>To manage speech databases, which are <em>collections of utterances</em> consisting of signal (waveform, formant, f0 etc) and annotation (label) files.</li>
+<li>To be able to <em>query</em> these databases: annotations can be extracted from the database. It should be straightforward to e.g.&nbsp;find all tokens of [i] in a database.</li>
+<li>These queried lists of annotations can be further queried to get the corresponding signals (e.g.&nbsp;find the formants of the [i] tokens extracted at the previous step).</li>
 </ul>
 <p>There have been some landmark changes to Emu since the APS–Edinburgh days of the 1980s.</p>
 <ol class="example" type="1">
-<li>In the 1990s (at Linguistics, Macquarie University, Sydney), Emu’s query language was updated to handle <em>hierarchically structured annotations</em>: see especially <span class="citation" data-cites="cassidy2001">Cassidy and Harrington (<a href="references.html#ref-cassidy2001" role="doc-biblioref">2001</a>)</span>. (The name Emu evolved out of <strong>E</strong>xtended <strong>MU</strong>lti-dimensional and because we were in Australia). The query language is still in use today and is the only one of its kind in existence.</li>
+<li>Since the 1990s, Emu’s query language has handled <em>hierarchically structured annotations</em>: see especially <span class="citation" data-cites="cassidy2001">Cassidy and Harrington (<a href="#ref-cassidy2001" role="doc-biblioref">2001</a>)</span>. (The name Emu evolved out of <strong>E</strong>xtended <strong>MU</strong>lti-dimensional, and of course because the developers were in Australia at the time).</li>
 </ol>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -272,16 +230,16 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="img/cassidy.png" class="img-fluid figure-img" style="width:30.0%"></p>
-<figcaption class="figure-caption">The author of the Emu query language is Steve Cassidy who can be seen here feeding the Emu ca 1996.</figcaption>
+<figcaption class="figure-caption">The author of the Emu query language is Steve Cassidy who can be seen here feeding an Emu ca 1996.</figcaption>
 </figure>
 </div>
 <p>The point of hierarchical annotations is to be able to query annotations at one tier with respect to another. For example the previous query could be extended to:</p>
 <ul>
-<li>Find all <code>[i]</code> vowels in the first syllable of trisyllabic accented words, but only if they are preceded by a function word in any <code>L%</code> intonational phrase.</li>
+<li>Find all <code>[i]</code> vowels in the first syllable of trisyllabic accented words, but only if they are preceded by a function word in any L% intonational phrase.</li>
 </ul>
 <ol start="2" class="example" type="1">
-<li><p>From 2002–2006, the <strong>A</strong>dvanced <strong>S</strong>peech <strong>S</strong>ignal <strong>P</strong>rocessor (ASSP) toolkit developed by Michel Scheffers of the IPdS, University of Kiel was integrated into Emu <span class="citation" data-cites="bombien2006">(<a href="references.html#ref-bombien2006" role="doc-biblioref">Bombien et al. 2006</a>)</span>. ASSP then morphed into the R package <code>wrassp</code> ca. 2014.</p></li>
-<li><p>In the last few years, the Emu engine was completely overhauled by Raphael Winkelmann with many excellent new features <span class="citation" data-cites="winkelmann2017">(see also <a href="references.html#ref-winkelmann2017" role="doc-biblioref">Winkelmann, Harrington, and Jänsch 2017</a>)</span>, e.g.:</p></li>
+<li><p>Since the mid-00s, the <strong>A</strong>dvanced <strong>S</strong>peech <strong>S</strong>ignal <strong>P</strong>rocessor (ASSP) toolkit developed by Michel Scheffers of the IPdS, University of Kiel has been integrated into Emu <span class="citation" data-cites="bombien2006">(<a href="#ref-bombien2006" role="doc-biblioref">Bombien et al. 2006</a>)</span>. ASSP since morphed into the R package <code>wrassp</code> ca. 2014.</p></li>
+<li><p>In the past decade or so, the Emu engine has been completely overhauled by Raphael Winkelmann with many excellent new features <span class="citation" data-cites="winkelmann2017">(see also <a href="#ref-winkelmann2017" role="doc-biblioref">Winkelmann, Harrington, and Jänsch 2017</a>)</span>, e.g.:</p></li>
 </ol>
 <ul>
 <li>Emu is launched and operates entirely within the R programming environment.</li>
@@ -293,10 +251,20 @@ div.csl-indent {
 <section id="the-emu-sdms" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="the-emu-sdms"><span class="header-section-number">1.2</span> The Emu-SDMS</h2>
 <!-- would be nice to have some discussion of this! -->
+<p>The following image provides a schematic overview of the Emu-SDMS.</p>
 <p><img src="img/emu_overview.png" class="img-fluid"></p>
+<p>The core components of the EMU-SDMS are:</p>
+<ul>
+<li><p><strong>Emu databases</strong>. These are collections of sound files, annotation files, and signal files of a particular structure, with accompanying metadata.</p></li>
+<li><p>The <strong>Emu WebApp</strong>. This is a web-based application allowing you to access their Emu databases: to view speech signals, and to annotate them in a fast, straightforward manner, among other features. You will be introduced to the Emu WebApp in <a href="first_steps.html"><span>Chapter&nbsp;2</span></a>.</p></li>
+<li><p>The R library <strong><code>emuR</code></strong>, which allows you to manage the properties of a database, adding and removing annotation levels, adding and removing signals, querying the annotations and signals of a database, etc.</p></li>
+<li><p>The R library <strong><code>wrassp</code></strong>, which is the signal processing engine of the system, including different pitch trackers, formant tracking, intensity tracking, and several other signal processing capabilities.</p></li>
+</ul>
+<p>Most of your work with the Emu-SDMS will be done in R – the WebApp is not controlled using R, but you will generally access it using R. <code>emuR</code> allows you to interface with other software though, for example to convert a collection of sound files and annotations made using <a href="https://fon.hum.uva.nl/praat" target="_blank">Praat</a> to an Emu database as we will see in <a href="praat2emu.html"><span>Chapter&nbsp;4</span></a>, and to call the <a href="https://clarin.phonetik.uni-muenchen.de/BASWebServices/interface/WebMAUSBasic" target="_blank">Munich Automatic Segmentation</a> system as we will see in <a href="forced_alignment.html"><span>Chapter&nbsp;5</span></a>.</p>
+<p>The R integration of Emu-SDMS has the major advantage of giving you immediate access to all the other tools that are available in R, such as the plotting capabilities of <code>ggplot()</code> and statistical modelling with e.g.&nbsp;<code>lmer()</code>.</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-bombien2006" class="csl-entry" role="listitem">
 Bombien, Lasse, Steve Cassidy, Jonathan Harrington, Tina John, and Sallyanne Palethorpe. 2006. <span>“Recent Developments in the Emu Speech Database System.”</span> <em>Proceedings of the Australian Speech Science and Technology Conference</em>. <a href="https://www.phonetik.uni-muenchen.de/~jmh/papers/emusst06.pdf">https://www.phonetik.uni-muenchen.de/~jmh/papers/emusst06.pdf</a>.
 </div>
