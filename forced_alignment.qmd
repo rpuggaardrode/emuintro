@@ -11,13 +11,13 @@ unlink(d, recursive=TRUE)
 
 ## Objective and preliminaries
 
-The objective of this chapter is to show how to go from a directory with `.wav` files and simple `.txt` files containing orthographic transcriptions to a phonetically annotated and force-aligned Emu database.
+The objective of this chapter is to show how to go from a directory with `.wav` files that are orthographically transcribed in simple `.txt` files to a phonetically annotated and force-aligned Emu database.
 
 The assumption is that you already have an R project called `ipsR` and that it contains the directories `emu_databases` and `testsample`. If this is not the case, please go back and follow the preliminaries chapter.
 
 <!-- add final link to prelim chapter when this is done -->
 
-Start up R in the project you are using for this course and load the following packages:
+Start up R in the project you are using for this tutorial and load the usual packages:
 
 ```{r}
 #| message: false
@@ -49,7 +49,7 @@ path.german <- file.path(sourceDir, "german")
 list.files(path.german)
 ```
 
-The above is an example of a **text collection** because it contains matching `.wav` and `.txt` files in the same directory such that, for each `.wav` file, the `.txt` file contains the corresponding orthography. We can see that this is true by using the function `read_file()` to read the context of these `.txt` files:
+The above is an example of what we'll call a *text collection* because it contains matching `.wav` and `.txt` files in the same directory, and each `.wav` file, the `.txt` file contains the corresponding orthography. We can see that this is true by using the function `read_file()` to read the content of these `.txt` files:
 
 ```{r}
 read_file(file.path(path.german, 'K01BE001.txt'))
@@ -65,14 +65,14 @@ convert_txtCollection(dbName = "ger2",
                       verbose=FALSE)
 ```
 
-Load the database into R with `load_emuDB()`: 
+You can now load the database into R with `load_emuDB()`: 
 
 ```{r}
 ger2_DB <- load_emuDB(file.path(targetDir, "ger2_emuDB"), verbose=FALSE)
 summary(ger2_DB)
 ```
 
-`serve()` the database and have a look at it:
+Try to `serve()` the database and have a look at it:
 
 
 ```{r}
@@ -81,19 +81,19 @@ summary(ger2_DB)
 serve(ger2_DB, useViewer = F)
 ```
 
-If you switch to hierarchy view, you should see that the words in the `.txt` files are a single item in the `attribute` tier of `bundle` with the name `transcription`, as shown in the figure below:
+If you switch to hierarchy view, you should see that the words in the `.txt` files are a single item in the `attribute` level of `bundle` with the name `transcription`, as shown in the image below:
 
 ![](img/transcr.png)
 
-It is evident when `query()`ing the database that the words are stored in this way, as shown below. Note that we need to include the argument `calcTimes=FALSE` here, because the annotation level `transcription` is of type `ITEM` and is not linked to a time-based level (i.e. a `SEGMENT` or an `EVENT` level).
+If we `query()` the database to find all annotations at the `transcription` level, it's clear that the words are all stored in this way. Note that we need to include the argument `calcTimes = FALSE` here, because the annotation level `transcription` is of type `ITEM` and has no time information.
 
 ```{r}
-query(ger2_DB, "transcription =~ .*", calcTimes=FALSE)
+query(ger2_DB, "transcription =~ .*", calcTimes = FALSE)
 ```
 
 ## Forced alignment
 
-We are now going to run the Munich Automatic Segmentation (MAUS) pipeline over the database. We do this with the function `runBASwebservice_all()`, which combines a number of online processing tools. Obligatory arguments are `transcriptionAttributeDefinitionName()` which will be the name of the newly created annotation level, and `language`, which in this case we set to `deu-DE`. We also set the argument `runMINNI` to `FALSE`; this is potentially used to forced-align data which has no annotations at all. Note that `runBASwebservice_all()` can only be used if you have an active internet connection.
+We are now going to run the Munich Automatic Segmentation (MAUS) pipeline over the database. We do this with the function `runBASwebservice_all()`, which combines a number of online processing tools. The obligatory arguments of this function are `transcriptionAttributeDefinitionName()` which will be the name of the newly created annotation level, and `language`, which in this case we set to `deu-DE`. We also set the argument `runMINNI` to `FALSE`; this is potentially used to forced-align data which has no annotations at all by first running the MINNI automatic speech recognition (ASR) routine. Note that `runBASwebservice_all()` can only be used if you have an active internet connection.
 
 ```{r}
 runBASwebservice_all(ger2_DB,
@@ -116,14 +116,14 @@ Let's have a look at the database summary again:
 summary(ger2_DB)
 ```
 
-Note that multiple extra levels and attributes have been created (`ORT`, `KAN`, `KAS`, `MAU`, and `MAS`), as well as links between them.
+Note that multiple extra annotation levels and attributes have been created (`ORT`, `KAN`, `KAS`, `MAU`, and `MAS`), as well as links between them.
 
 Let's `serve()` the database.
 
 ```{r}
 #| eval: false
 
-serve(ger2_DB, useViewer=FALSE)
+serve(ger2_DB, useViewer = FALSE)
 ```
 
 We immediately see that phone-level annotations have been added in the `MAU` level. Have a look at the hierarchy view and try to identify the levels, links, and attributes.
@@ -132,18 +132,19 @@ We immediately see that phone-level annotations have been added in the `MAU` lev
 
 This shows that the phone-level annotations are linked to syllable-level annotations in the `MAS` level and word-level orthographic annotations in the `ORT` level. The `ORT` level further has the attributes `KAN` and `KAS`. These contain *canonical representations* of the word, i.e. phonetic annotations corresponding to the canonical pronunciations of these words. The `MAS` level is chunked into syllables.
 
-Given this complex information, more complex queries are now also possible. Let's say we want to find the word-initial `MAU` segments of all polysyllabic words:
+Given this complex information, more complex queries are now also possible. We can find the word-initial `MAU` segments of all polysyllabic words like this:
 
 ```{r}
 mau.s <- query(ger2_DB,
                "[[MAU =~.* & Start(ORT, MAU)=1] ^ Num(ORT, MAS) > 1]")
-mau.s
+#deselect the db_uuid column for readability
+mau.s %>% select(-db_uuid)
 ```
 
 This data frame can then be passed to `requery_hier()` so we can see the labels in the `ORT` level associated with these words, like so: 
 
 ```{r}
-requery_hier(ger2_DB, mau.s, "ORT")
+requery_hier(ger2_DB, mau.s, "ORT") %>% select(-db_uuid)
 ```
 
 This may all seem rather opaque, but we'll go into much more detail with how the querying language works in @sec-query.
@@ -169,7 +170,7 @@ convert_txtCollection(dbName = "alb",
                       targetDir = targetDir,
                       verbose=FALSE)
 
-alb_DB <- load_emuDB(file.path(targetDir, "alb_emuDB"), verbose=FALSE)
+alb_DB <- load_emuDB(file.path(targetDir, "alb_emuDB"), verbose = FALSE)
 summary(alb_DB)
 ```
 
@@ -187,8 +188,8 @@ Now run MAUS, just as before. The language code for Albanian is `sqi-AL`. Note t
 runBASwebservice_all(alb_DB, 
                      transcriptionAttributeDefinitionName = "transcription",
                      language = "sqi-AL", 
-                     runMINNI = F,
-                     verbose=FALSE)
+                     runMINNI = FALSE,
+                     verbose = FALSE)
 
 summary(alb_DB)
 ```
@@ -196,19 +197,19 @@ summary(alb_DB)
 Look at the database and verify that the same kind of information has been automatically derived, as for the German database earlier.
 
 ```{r, eval=FALSE}
-serve(alb_DB, useViewer = F)
+serve(alb_DB, useViewer = FALSE)
 ```
 
 ### From a canonical representation
 
-MAUS also allows an automatic segmentation to be derived directly from the canonical level that we saw in the `KAN` attribute above. This can be useful when the canonical representation provided by MAUS deviates considerably from what was actually said. For one of the words in `0001BF_1syll_1`, the canonical representation has `J E` when what was actually said was closer to `n J E`.
+MAUS also allows to segment sound files based on the canonical level that we saw in the `KAN` attribute above. This can be useful when the canonical representation provided by MAUS deviates considerably from what was actually said. For one of the words in `0001BF_1syll_1`, the canonical representation is `J E` but what was actually said is closer to `n J E`.
 
-First switch in hierarchy view from `ORT` → `KAN` and then change the node `J E` of the `ORT:KAN` level to `n J E` for file `0001BF_1syll_1` in the manner of @fig-albhier, as we also saw in @sec-wav2emu.
+To see how this works, switch the hierarchy view in the `webApp` from `ORT` → `KAN` and then change the node `J E` of the `ORT:KAN` level to `n J E` for file `0001BF_1syll_1`, as in @fig-albhier. Remember to save the annotation after editing.
 
-![A fragment of a hierarchy view.](img/figalbhier.png){#fig-albhier}
+![](img/figalbhier.png){#fig-albhier}
 
 
-In order to run MAUS on this more appropriate pronunciation, first change it as in @fig-albhier above, and don't forget to save the annotation after editing. Now MAUS can be run directly on this canonical level using the `runBASwebservice_maus()` function. Here we again pass the language, and we pass the name of the existing annotation level with a canonical representation `KAN` to the argument `canoAttributeDefinitionName` and the name of the newly created force-aligned level `mausAttributeDefinitionName`, which we call `MAU2` to differentiate it from the already created `MAU` tier.
+We can now run MAUSdirectly on this canonical level using the `runBASwebservice_maus()` function. Here we again pass the language, and we pass the name of the existing annotation level with a canonical representation `KAN` to the argument `canoAttributeDefinitionName`. We also specify the newly created force-aligned level `mausAttributeDefinitionName`, which we call `MAU2` in order to differentiate it `MAU` level that we already created.
 
 
 ```{r}
@@ -216,16 +217,16 @@ runBASwebservice_maus(alb_DB,
                       canoAttributeDefinitionName = "KAN",
                       mausAttributeDefinitionName = "MAU2",
                       language = "sqi-AL",
-                      verbose=FALSE)
+                      verbose = FALSE)
 ```
 
-Inspect the database again. There should now be a new tier `MAU2`.
+Inspect the database again. There should now be a new annotation level called `MAU2`.
 
 ```{r}
 summary(alb_DB)
 ```
 
-If you have reason to suspect that the canonical representation will differ from what is actually said in the recording, you can use the function `runBASwebserivce_g2pForPronunciation()` as the first step. This way, you will not have to run MAUS twice, as `runBASwebserivce_g2pForPronunciation()` only generates the canonical representations without doing forced alignment. If you have much more data, this could possibly speed up your process.
+If you have reason to suspect that the canonical representation will differ from what is actually said in the recording, you can use the function `runBASwebservice_g2pForPronunciation()` as the first step. This will only generate the canonical reprsentations without doing forced alignment, and this can then be corrected before running the MAUS forced alignment routine.  If you have much more data, this may speed up your process.
 
 ## Functions introduced in this chapter
 

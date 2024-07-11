@@ -1,4 +1,4 @@
-# Configuring `emuR` for ToBI annotations
+# Configuring `emuR` for ToBI annotations {#sec-tobi2emu}
 
 ```{r}
 #| echo: false
@@ -11,15 +11,17 @@ unlink(d, recursive=TRUE)
 
 ## Objective and preliminaries
 
-The objective of this chapter is to show how to go from a collection of `.wav` and `.txt` files to an Emu database that is useful for **to**nes-and-**b**reak **i**ndices (ToBI) annotation. More specifically, the aim is to configure a database to have a configuration like that shown in @fig-tobi.
+The objective of this chapter is to show how to go from a collection of `.wav` and `.txt` files to an Emu database that is set up for **to**nes-and-**b**reak **i**ndices (ToBI) annotation. More specifically, the aim is to configure a database to have a configuration like that shown in @fig-tobi.
 
 ![An Emu database with ToBI annotations.](img/figtobi.png){#fig-tobi}
 
 The starting point is the text collection of Albanian data analyzed in @sec-forcedalignment.
 
-We will also see how an annotation level with syllable structures can be ascertained from a database by creating an CV-style annotation level.
+We will also see how an annotation level with syllable structures can be ascertained from a database by creating a CV-style annotation level.
 
-The assumption is that you already have an R project called `ipsR` and that it contains the directories `emu_databases` and `testsample`. If this is not the case, please go back and follow the preliminaries chapter.
+We assume that you already have an R project called `ipsR` and that it contains the directories `emu_databases` and `testsample`. If this is not the case, please go back and follow the preliminaries chapter. As in previous chapters, we start by loading the usual libraries and renaming the directories to `sourceDir` and `targetDir`.
+
+<!-- add final link to prelim chapter when this is done -->
 
 ```{r}
 #| message: false
@@ -34,7 +36,7 @@ targetDir <- "./emu_databases"
 
 ## Forced alignment
 
-The first task is to apply forced alignment to these Albanian data. The commands will be presented in this section without detailed comment given that these were discussed in @sec-forcedalignment. The resulting Emu database will be stored as `alb2_DB` (to distinguish it from the one created in the @sec-forcedalignment).
+The first task is to force-align these Albanian data. The commands will be presented in this section without detailed comment since these were already discussed in @sec-forcedalignment. The resulting Emu database will be stored as `alb2_DB` (to distinguish it from the one created in the @sec-forcedalignment).
 
 We first create and load the Emu database using `convert_txtCollection()` and `load_emuDB()`, and subsequently use `runBASwebservice_all()` to run the MAUS pipeline over the data.
 
@@ -47,7 +49,7 @@ convert_txtCollection(dbName = "alb2",
                       targetDir = targetDir,
                       verbose = FALSE)
 alb2_DB <- load_emuDB(file.path(targetDir, "alb2_emuDB"),
-                      verbose=FALSE)
+                      verbose = FALSE)
 runBASwebservice_all(alb2_DB,
                      transcriptionAttributeDefinitionName = "transcription", 
                      language = "sqi-AL",  
@@ -57,45 +59,45 @@ runBASwebservice_all(alb2_DB,
 
 ## Configuring a database for ToBI annotations
 
-The database currently has an `ITEM` annotation level `ORT` that dominates an `ITEM` level `MAS` containing syllabifications. `MAS` dominates the `SEGMENT` level `MAU`, which contains the phonetic segmentation. You can confirm this either by `serve()`ing the database or by calling `summary(alb2_DB)`. 
+The database currently has an `ITEM`-type annotation level `ORT` that dominates an `ITEM`-type level `MAS` containing syllabifications. `MAS` dominates the `SEGMENT`-type level `MAU`, which contains the phonetic segmentation. You can confirm this either by `serve()`ing the database or by calling `summary(alb2_DB)`. 
 
-Our next task is to add a level `Tone` for marking intonational events and to add a new `SEGMENT` level, `ORT2` which contains word-level segmentations. The tonal events of the `Tone` tier and annotations of the `ORT2` tier are to be linked automatically, just as in @fig-tobi.
+Our next task is to add a level `Tone` for marking intonational events and to add a new `SEGMENT` level, `ORT2` which contains word-level segmentations. The tonal events of the `Tone` level and annotations of the `ORT2` level are to be linked automatically, just as in @fig-tobi.
 
-Here are the steps needed:
+The steps required to get there are as follows:
 
-- Create the `SEGMENT` level `ORT2` containing word annotations linked to times.
+- Create a `SEGMENT`-type level called `ORT2` containing word annotations linked to times.
 - Create a `Tone` level and link it to `ORT2`.
 - Calculate and display pitch tracks.
 - Annotate the `Tone` level and link the annotations automatically to the word level annotations in `ORT2`.
 
 ### Create and display word level annotations
 
-This is a four step process:
+First we create and display word level annotations. This is a four step process:
 
-- Create a `SEGMENT`-type annotation level called `ORT2`.
+First, *create a `SEGMENT`-type annotation level called `ORT2`.*
 
 As covered in @sec-praat2emu, this can be done with the `add_levelDefinition()` function like so:
 
 ```{r}
 add_levelDefinition(alb2_DB, 
-                    name="ORT2",
-                    type="SEGMENT",
-                    verbose=FALSE)
+                    name = "ORT2",
+                    type = "SEGMENT",
+                    verbose = FALSE)
 ```
 
-We can confirm that this step was successful with `list_levelDefinitions()`:
+We can confirm that this step was successful with the function `list_levelDefinitions()`:
 
 ```{r}
 list_levelDefinitions(alb2_DB)
 ```
 
-- Make a list of all words in the database.
+Second, *make a list of all words in the database.*
 
-We can do this by using the `query()` function to find all annotations in the `ORT` level. 
+We can do this by using the `query()` function to find all annotations in the `ORT` level (as in previous chapters, we'll also remove the `db_uuid` column from the printed results because the data frame is more legible this way). 
 
 ```{r}
-text.s <- query(alb2_DB, "[ORT =~ .*]")
-text.s
+text.s <- query(alb2_DB, "ORT =~ .*")
+text.s %>% select(-db_uuid)
 ```
 
 We can use the segment list generated by the `query()` above to populate our new level `ORT2`. We simply need to change the columns `attribute` and `level` so they show the value `ORT2` instead of `ORT`:
@@ -105,22 +107,26 @@ text.s$attribute <- "ORT2"
 text.s$level <- "ORT2"
 ```
 
-- Add word-level annotations to `ORT2`.
+Third, *add word-level annotations to `ORT2`.*
 
 We can now pass `text.s` on to the function `create_itemsInLevel()` like so:
 
 ```{r}
+#| warning: false
+#| error: false
+
 create_itemsInLevel(alb2_DB, text.s,
-                    verbose=FALSE)
+                    verbose = FALSE,
+                    calculateEndTimeForSegments = FALSE)
 ```
 
 It is now possible to `query()` the word level annotations directly from `ORT2`:
 
 ```{r}
-query(alb2_DB, "[ORT2 =~ .*]")
+query(alb2_DB, "ORT2 =~ .*") %>% select(-db_uuid)
 ```
 
-- Display the annotations of `ORT2` time-aligned to the signals.
+Fourth, *display the annotations of `ORT2` time-aligned to the signals.*
 
 Because `ORT2` is a `SEGMENT`-type level and not an `ITEM`-type level, we can now display word-level annotations underneath the signals in the `EMU-webApp`. However, if we `serve()` the database now, only the segment-level annotations in `MAU` can be seen. As covered in @sec-praat2emu, this can be controlled with the `set_levelCanvasesOrder()` function like so:
 
@@ -140,9 +146,9 @@ serve(alb2_DB, useViewer = FALSE)
 
 ### Create a `Tone` level and link it to `ORT2`
 
-This is a three-step process:
+Creating new annotation level called `Tone` and linking it to `ORT2` is a three-step process:
 
-- Create the new annotation level named `Tone`.
+First, *create the new annotation level named `Tone`.*
 
 We do this with the `add_levelDefinition()` function, just as we did earlier when creating `ORT2`. `Tone` should be an `EVENT`-type level, since we want to mark intonational targets as single points in time. 
 
@@ -153,7 +159,7 @@ add_levelDefinition(alb2_DB,
                     verbose = FALSE)
 ```
 
-- Create the link between `Tone` and `ORT2`.
+Second, *create the link between `Tone` and `ORT2`.*
 
 The function `list_linkDefinitions()` shows that there are no currently no links between `Tone` and `ORT2`:
 
@@ -176,7 +182,7 @@ Calling `list_linkDefinitions()` again will confirm that the two levels are now 
 list_linkDefinitions(alb2_DB)
 ```
 
-- Display the `Tone` level.
+Third, *display the `Tone` level.*
 
 As before, this can be done with the `set_levelCanvasesOrder()` function. We now need to specify both `Tone` and `ORT2` in the `order` argument, like so:
 
@@ -196,11 +202,11 @@ serve(alb2_DB, useViewer = FALSE)
 
 ### Calculating and displaying *F*~0~
 
-This is a three-step process. Most of these steps were covered in @sec-praat2emu, so only a brief summary is given below.
+Calculating *F*~0~ and displaying it in the `webApp` is a three-step process. Most of these steps were covered in @sec-praat2emu, so only a brief summary is given here.
 
-- Calculate *F*~0~.
+First, *calculate F~0~.*
 
-We can do this using the `add_ssffTrackDefinition` with the "on the fly function" `mhsF0` (see @sec-praat2emu).
+We can do this using the function `add_ssffTrackDefinition` with the 'on the fly function' `mhsF0()` (see @sec-praat2emu).
 
 ```{r}
 add_ssffTrackDefinition(alb2_DB, 
@@ -215,9 +221,9 @@ We can confirm that this worked with the function `list_ssffTrackDefinitions()`:
 list_ssffTrackDefinitions(alb2_DB)
 ```
 
-- Configure the database to show the *F*~0~ track.
+Second, *configure the database to show the F~0~ track.*
 
-As explained in @sec-praat2emu, the pitch data can be displayed with the function `set_signalCanvasesOrder`. Currently, only the waveform and spectrogram are displayed, as confirmed with:
+As explained in @sec-praat2emu, the pitch data can be displayed with the function `set_signalCanvasesOrder()`. Currently, only the waveform and spectrogram are displayed, as confirmed with the `get_signalCanvasesOrder()` function:
 
 ```{r}
 get_signalCanvasesOrder(alb2_DB, perspectiveName = "default")
@@ -281,7 +287,7 @@ annot_info <- data.frame(session = rep('0000', 2),
 create_itemsInLevel(alb2_DB, annot_info, verbose=FALSE)
 ```
 
-The next task is to automatically link the annotations at the `Tone` level to the corresponding words in the `ORT2` level. We can do this using the function `autobuild_linkFromTimes()`. This function links an annotation `Tone` level to an annotation at the `ORT2` level if the `Tone` annotation falls within the segment segment boundaries of the `ORT2` annotation. In other words, if the start and end times of an `ORT2` annotation are denoted *t*~1~ and *t*~2~, and the time of a `Tone` annotation is denoted simply *t*, then annotations at the two levels are linked if *t*~1~ < *t* < *t*~2~.
+The next task is to automatically link the annotations at the `Tone` level to the corresponding words in the `ORT2` level. We can do this using the function `autobuild_linkFromTimes()`. This function links an annotation at the `Tone` level to an annotation at the `ORT2` level if the `Tone` annotation falls within the segment segment boundaries of the `ORT2` annotation. In other words, if the start and end times of an `ORT2` annotation are denoted *t*~1~ and *t*~2~, and the time of a `Tone` annotation is denoted simply *t*, then annotations at the two levels are linked if *t*~1~ < *t* < *t*~2~.
 
 ```{r}
 autobuild_linkFromTimes(alb2_DB,
@@ -292,15 +298,15 @@ autobuild_linkFromTimes(alb2_DB,
 
 If you `serve()` the database again and look at the hierarchy view, you can confirm that the links were indeed created.
 
-It should now be possible to query tones with respect to words and vice-versa. For example, this function finds all words at the `ORT2` level with an annotated pitch accent at the `Tone` level. (Much more detail on querying follows in @sec-query!)
+It should now be possible to `query()` tones with respect to words and vice-versa. For example, the below query finds all words at the `ORT2` level with an annotated pitch accent at the `Tone` level. (Much more detail on querying follows in @sec-query!)
 
 ```{r}
-query(alb2_DB, "[Tone =~.* ^ #ORT2 =~.*]")
+query(alb2_DB, "[Tone =~.* ^ #ORT2 =~.*]") %>% select(-db_uuid)
 ```
 
 ## Adding a CV level
 
-It can be helpful to have another annotation level in which every vowel corresponds to `V` and every consonant to `C`. This could then be used to establish the syllable types in the database. To do this, a new level called `CV` will be created that is an attribute of the `MAU` tier (which contains the segment annotations). We do this with the `add_attributeDefinition()` function:
+It can be helpful to have another annotation level in which every vowel corresponds to `V` and every consonant to `C`. This could then be used to establish the syllable types in the database. To do this, a new level called `CV` will be created that is an attribute of the `MAU` level (which contains the segment annotations). We do this with the `add_attributeDefinition()` function:
 
 ```{r}
 add_attributeDefinition(alb2_DB,
@@ -313,7 +319,7 @@ Here we query all segments found at the `MAU` level in the database:
 
 ```{r}
 mau.s <- query(alb2_DB, "MAU =~ .*")
-mau.s
+mau.s %>% select(-db_uuid)
 ```
 
 We can find unique segments (and their frequencies) using the `count` function available in the `tidyverse`:
@@ -328,7 +334,7 @@ We'll store the vowels in a vector `vowel_phonemes`:
 vowel_phonemes = c("a", "E", "i", "O", "u", "4")
 ```
 
-With a few `tidyverse` commands, we can wrangle `mau.s` to have the label `V` for vowels and `C` for consonants (i.e., the labels that are *not* in the `vowel_phonemes` vector), and storing this as a new data frame called `new_items`.
+With a few `tidyverse` commands, we can wrangle `mau.s` to have the label `V` for vowels and `C` for consonants (i.e., the labels that are *not* in the `vowel_phonemes` vector), and store this as a new data frame called `new_items`.
 
 We first change the values in the `attribute` column to `CV` using the `mutate()` function. We use the `rename()` function to change the `labels` column with phonemic annotations to `old_labels`. Finally we use `mutate()` in combination with `case_when()` to store the label `V` in `labels` wherever `old_labels` has a phonemic annotation found in our `vowel_phonemes` vector, and to store the label `C` in all other cases. For more resources on the `tidyverse` see the initial setup chapter. 
 
@@ -364,7 +370,7 @@ seglist_cv <- query(alb2_DB, "CV =~ .*")
 count(seglist_cv, labels)
 ```
 
-Perhaps more importantly, it is now possible to identify the different types of syllable structure. Recall that the `MAS` tier parses the `Phoneme` tier into syllables. 
+More importantly, it is now possible to identify the different types of syllable structure. Recall that the `MAS` level parses the `Phoneme` level into syllables. 
 
 ```{r}
 syll <- query(alb2_DB, "MAS =~ .*")
@@ -379,7 +385,7 @@ syll.cv <- requery_hier(alb2_DB, syll, level = "CV")
 count(syll.cv, labels)
 ```
 
-Don't worry if you don't yet understand how the `query`ing functions work -- much more on that in @sec-query!
+Don't worry if you don't yet understand how the `query()`ing functions work -- much more on that in @sec-query!
 
 
 ## Functions introduced in this chapter

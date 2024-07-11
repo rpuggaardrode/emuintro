@@ -1,1 +1,0 @@
-# Spectral processing of speech {#sec-spectral_proc}

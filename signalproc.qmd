@@ -1,1 +1,0 @@
-# An introduction to signal processing in `emuR` {#sec-signalproc}

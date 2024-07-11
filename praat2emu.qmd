@@ -1,4 +1,4 @@
-# Converting a Praat TextGrid collection {#sec-praat2emu}
+# Converting a Praat TextGrid collection and tracking pitch {#sec-praat2emu}
 
 <!-- I wonder if the structure and placement of this chapter in the larger narrative of the book really makes sense? This isn't where people would go to figure out how to use e.g. the pitch tracking algo. If keeping this same structure, perhaps add a note at the end of preceding chapter saying that it'll continue this way? -->
 
@@ -15,7 +15,7 @@ unlink(d, recursive=TRUE)
 
 The aim of this chapter is to show how to get from a Praat `.TextGrid` format to an Emu database format. We will show how to convert pairs of `.wav` and `.TextGrid` files to an Emu database, how to generate pitch tracks over the sound files, how to add annotation levels in the style of Praat's point tiers, and finally how to convert the flat annotation structure of Praat TextGrids into the layered annotation structure of an Emu database (see @sec-intro).
 
-@fig-praat2emu exemplifies such a Praat `.TextGrid` collection and the `Emu-webApp` configuration we want to achieve:
+@fig-praat2emu exemplifies an annotated sound file in Praat with pitch overlaid on the spectrogram. Below this, we see the `Emu-webApp` we want to achieve, with a visible pitch track, annotations, and a layered annotation structure.
 
 ![An utterance fragment in Praat and in Emu.](img/figpraat.png){#fig-praat2emu}
 
@@ -23,7 +23,7 @@ The assumption is that you already have an R project called `ipsR` and that it c
 
 <!-- add final link to prelim chapter when this is done -->
 
-Start up R in the project you are using for this course.
+Start up R in the project you are using for this course and load the usual libraries.
 
 ```{r}
 #| message: false
@@ -55,20 +55,20 @@ path.praat <- file.path(sourceDir, "praat")
 list.files(path.praat)
 ```
 
-The `emuR` function for converting the collection of `.wav`--`.TextGrid` pairs to an Emu database called and then storing the latter in `targetDir` (defined above) is `convert_TextGridCollection()`. It works like this:
+The `emuR` function for converting the collection of `.wav` / `.TextGrid` pairs to an Emu database called and then storing the latter in `targetDir` (defined above) is `convert_TextGridCollection()`. It works like this:
 
 ```{r}
 convert_TextGridCollection(path.praat, 
                            dbName = "praat",
                            targetDir = targetDir,
-                           verbose=FALSE)
+                           verbose = FALSE)
 ```
 
 The converted Praat database called `praat_emuDB` can now be loaded with `load_emuDB()`:
 
 ```{r}
 praat_DB <- load_emuDB(file.path(targetDir, "praat_emuDB"),
-                       verbose=FALSE)
+                       verbose = FALSE)
 ```
 
 And its properties can be examined with the `summary()` command as we've seen in previous chapters.
@@ -77,31 +77,33 @@ And its properties can be examined with the `summary()` command as we've seen in
 summary(praat_DB)
 ```
 
-And it can of course be viewed, using the `serve()` command.
+You'll see that there are no `Link definitions`, as `.TextGrid`s do not offer this kind of structure.
+
+The database can of course be viewed using the `serve()` command as we've seen in previous chapters.
 
 ```{r}
 #| eval: false
 
-serve(praat_DB, useViewer = F)
+serve(praat_DB, useViewer = FALSE)
 ```
 
 ## Calculating pitch with `wrassp`
 
 <!-- The original doc used what seemed like a very roundabout way to calculate pitch, by first generating files with wrassp::mhsF0 based on the original wav collection and then adding them in a multistep procedure. I'll go ahead and do everything with onTheFlyFunctionName. -->
 
-The `summary()` above showed that there are no SSFF tracks associated with the database. Recall from @sec-first_steps that SSFF tracks store signal data that is timelocked to the audio signal. In this next step, we will generate SSFF tracks for `praat_emuDB` containing information about pitch.
+The `summary()` above showed that there are no SSFF tracks associated with the database -- this is also not a file structure that Praat understands. Recall from @sec-first_steps that SSFF tracks store signal data that is timelocked to the audio signal. In this next step, we will generate SSFF tracks for `praat_emuDB` containing information about pitch.
 
-In order to do this, we use the signal processing package `wrassp`. There are several different signal processing packages in R, and several of them have pitch tracking algorithms. We work with `wrassp` here because it was developed in conjunction with `emuR`.
+In order to do this, we use the signal processing package `wrassp`. There are several different signal processing packages in R, and several of them have pitch tracking algorithms. We work with `wrassp` here because it was developed in conjunction with `emuR`, and thus is very easy to integrate with `emuR`.
 
-To see the full range of signal processing routines available in `wrassp`, enter `?wrassp` in the R console. There are two possible routines for calculating pitch: `ksvF0` and `mhsF0`. For this demonstration, we will use `mhsF0`.
+To see the full range of signal processing routines available in `wrassp`, enter `?wrassp` in the R console. There are two functions for calculating pitch: `ksvF0()` and `mhsF0()`. For this demonstration, we will use `mhsF0()`.
 
-The function `mhsF0` (and other signal processing functions in `wrassp`) operates directly on one or more `.wav` files, and creates corresponding new files containing pitch tracks. It does not care whether those `.wav` files are part of an Emu database, so to speak. In order to add SSFF tracks that are based on the signal processing capabilities in `wrassp` directly to an Emu database, we can use the handy `emuR` function `add_ssffTrackDefinition()` with the argument `onTheFlyFunctionName`. The `onTheFlyFunctionName` should be one of the signal processing routines in `wrassp`.
+The function `mhsF0()` (and other signal processing functions in `wrassp`) operates directly on one or more `.wav` files, and creates corresponding new files containing pitch tracks. It does not care whether those `.wav` files are part of an Emu database, so to speak. In order to add SSFF tracks that are based on the signal processing capabilities in `wrassp` directly to an Emu database, we can use the handy `emuR` function `add_ssffTrackDefinition()` with the argument `onTheFlyFunctionName`. The `onTheFlyFunctionName` should usually be one of the signal processing routines in `wrassp`, although other functions can also be used.
 
-Here's how to use `mhsF0` to generate pitch tracks with the default settings and add them to a Emu database:
+Here's how to use `mhsF0()` to generate pitch tracks with the default settings and add them to a Emu database:
 
 ```{r}
 add_ssffTrackDefinition(praat_DB, name='pitch', onTheFlyFunctionName='mhsF0',
-                        verbose=FALSE)
+                        verbose = FALSE)
 ```
 
 If we run `list_ssffTrackDefinitions()` we will now see that an SSFF track called `pitch` with the file extension `.pit` has been added:
@@ -113,7 +115,7 @@ list_ssffTrackDefinitions(praat_DB)
 ::: {.callout-note}
 ## Changing the pitch tracking parameters
 
-It is often not a good idea to use the default parameters for pitch tracking. For example, `mhsF0()` and `ksvF0()` by default search for pitch in an extremely broad frequency range (between 50--600 Hz), and it can often be a good idea to narrow this down. We can see all possible `mhsF0()` parameters using the `args()` function, which returns all arguments of a given function:
+It is often not a good idea to use the default parameters for pitch tracking. For example, `mhsF0()` and `ksvF0()` by default search for pitch in an extremely broad frequency range (between 50--600 Hz), and narrowing this down often gives better results. We can see all possible `mhsF0()` parameters using the `args()` function, which returns all arguments of a given function:
 
 ```{r}
 args(mhsF0)
@@ -122,7 +124,7 @@ args(mhsF0)
 All of these arguments can be changed. If you want to change the settings when adding an SSFF track, you can pass a *named list* of parameters to the argument `onTheFlyParams` in the `add_ssffTrackDefinition()` call. A named list looks e.g. like this:
 
 ```{r}
-pitch_params <- list(maxF=400, minF=75)
+pitch_params <- list(maxF = 400, minF = 75)
 ```
 
 The function call to add pitch tracks with these parameters looks like this. Since we already have a track called `pitch` with the file extension `pit`, we call this one `pitch2` and use the file extension `pit2`.
@@ -138,8 +140,6 @@ add_ssffTrackDefinition(praat_DB, name='pitch2',
 <!-- would be good to have an explainer about how to add non-wrassp files -->
 
 :::
-
-The functions in `wrassp` are discussed in much more detail in @sec-signalproc.
 
 ## Displaying the pitch files in the `Emu-webApp`
 
@@ -160,29 +160,29 @@ set_signalCanvasesOrder(praat_DB,
 
 (Alternatively, if you have installed `emuhelpeR`, you can add it like so: `praat_DB %>% add_signal_canvas('pitch')`).
 
-And the pitch track should now be visible when you `serve()`:
+The pitch track should now be visible when you `serve()` the database:
 
 ```{r}
 #| eval: false
 
-serve(praat_DB, useViewer = F)
+serve(praat_DB, useViewer = FALSE)
 ```
 
 ## Adding an event level
 
-The next task is to add an annotation level of type `EVENT` (similar to the point tiers in Praat) that can be used for labeling tones. We will call this level `Tone`. So far, the only existing time tier is `ORT` as confirmed with:
+The next task is to add an annotation level of type `EVENT` (similar to "point tiers" in Praat) that can be used for labeling tones. We will call this level `Tone`. So far, the only existing annotation level with time information is `ORT` as confirmed with:
 
 ```{r}
 list_levelDefinitions(praat_DB)
 ```
 
-In order to add a new `EVENT`-type level called `Tone`, we use the function `add_levelDefinition like so:
+In order to add a new `EVENT`-type level called `Tone`, we use the function `add_levelDefinition()` like so:
 
 ```{r}
 add_levelDefinition(praat_DB, 
-                    name="Tone", 
-                    type="EVENT",
-                    verbose=FALSE)
+                    name = "Tone", 
+                    type = "EVENT",
+                    verbose = FALSE)
 ```
 
 `set_levelCanvasesOrder()` can be used to ensure that `Tone` is shown when directly underneath the signals when `serve()`ing the database:
@@ -196,12 +196,12 @@ set_levelCanvasesOrder(praat_DB,
 
 ## Labelling some tones
 
-Try and add two tone labels `H*` at the time of the pitch peaks of *morgens* and *ruhig* in the bundle `wetter1` as in @fig-praat2emu and save the result. The pointers for annotating given in @sec-first_steps also apply here.
+Try and add two tone labels `H*` at the time of the pitch peaks of `morgens` and `ruhig` in the bundle `wetter1` as in @fig-praat2emu and save the result. The pointers for annotating given in @sec-first_steps also apply here.
 
 ```{r}
 #| eval: false
 
-serve(praat_DB, useViewer=F)
+serve(praat_DB, useViewer = FALSE)
 ```
 
 At present, there are no defined relationships between the different annotation levels, as confirmed with `list_linkDefinitions()`: 
@@ -227,7 +227,7 @@ To see the results of this procedure, `serve()` the database again and switch to
 ```{r}
 #| eval: false
 
-serve(praat_DB, useViewer = F)
+serve(praat_DB, useViewer = FALSE)
 ```
 
 ## Automatically linking event and segment times
@@ -238,7 +238,7 @@ Once a hierarchical relationship has been established, between two levels, times
 autobuild_linkFromTimes(praat_DB,
                         superlevelName = "ORT",
                         sublevelName = "Tone",
-                        verbose=FALSE)
+                        verbose = FALSE)
 ```
 
 To see the results of this procedure, `serve()` the database again and switch to hierarchy view. 
@@ -246,20 +246,22 @@ To see the results of this procedure, `serve()` the database again and switch to
 ```{r}
 #| eval: false
 
-serve(praat_DB, useViewer = F)
+serve(praat_DB, useViewer = FALSE)
 ```
+
+In this chapter, we have seen how to convert a collection of Praat-based annotations and sound files into an Emu database, and we've taken the first steps towards analyzing and annotating pitch. In @sec-tobi2emu, we'll go into more detail about the analysis and annotation of intonation. 
 
 ::: {.callout-note}
 ## Want to make plots in the style of Praat Picture?
 
 A very nice feature of Praat is that when you've found a nice portion of the signal, it's fairly simple to make a plot that combines waveform, spectrogram, other derived tracks, and annotations. Say you've fallen in love with the portion in `wetter3` in our `praat_emuDB`, and you want to plot the *zu Samstag* portion. Unfortunately, there are no functions internal to `emuR` that allows you to plot audio data along with annotations, but the package `praatpicture` allows this. 
 
-`praatpicture` can be installed from GitHub like so, assuming that `devtools` is installed on your machine:
+`praatpicture` can be installed in the usual way:
 
 ```{r}
 #| eval: false
 
-devtools::install_github('rpuggaardrode/praatpicture')
+install.packages("praatpicture")
 ```
 
 The function `emupicture()` can now be called to produce a Praat-style plot like so, setting the `start` and `end` time to plot our favorite part of the signal. The argument `tg_tiers` specifies which annotation levels (equivalent to *TextGrid tiers* should be plotted), and the `wave_channels` argument specifies which channels of the sound file should be plotted. (This is not visible in the `Emu-webApp`, but the sound files in `praat_DB` actually have two channels).
@@ -270,7 +272,7 @@ emupicture(praat_DB, bundle='wetter3', start=0.6, end=1.275, tg_tiers='ORT',
            wave_channels=1)
 ```
 
-`emupicture()` is under development, but it is a quite flexible function with functionality that goes way beyond what was shown here. See the [GitHub page](https://github.com/rpuggaardrode/praatpicture) for my information.
+For my information about the options you get with `emupicture()` and the `praatpicture` library, see [the manual](https://rpuggaardrode.github.io/praatpicture_manual){target='_blank'}.
 
 :::
 

@@ -20,13 +20,6 @@ book:
     - forced_alignment.qmd
     - tobi2emu.qmd
     - query.qmd
-    - signalproc.qmd
-    - formants.qmd
-    - vowel_norm_dist.qmd
-    - dct.qmd
-    - spectral_proc.qmd
-    - dct_spec.qmd
-    - references.qmd
 
 bibliography: references.bib
 crossref:

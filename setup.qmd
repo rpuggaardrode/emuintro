@@ -3,19 +3,19 @@
 ## Required set up for the course on `emuR`
 
 - In order to use `emuR`, you must first download and install [the program R](https://ftp.fau.de/cran/){target='_blank'}. The latest version is currently `4.3.x` (September 2023).
-- Also download and install the program  [RStudio](https://rstudio.com/products/rstudio/download/#download){target='_blank'}, which is a so-called *integrated development environment*.
+- Also download and install the program  [RStudio](https://rstudio.com/products/rstudio/download/#download){target='_blank'}, which is a so-called *integrated development environment* that makes working with R much much easier.
 
 ## Default browser
 
-The `EMU-webApp` for visualizing sound files and editing transcriptions should in theory work with most modern browsers, but you may run into unexpected problems if you use it with other browsers than Google Chrome. For this reason, we recommend that change standard browser to ensure that the `EMU-webApp` is opened in Chrome.
+The `EMU-webApp` for visualizing sound files and editing transcriptions should in theory work with most modern browsers, but you may run into unexpected problems if you use it with other browsers than Google Chrome. For this reason, we recommend that you change your standard browser to ensure that the `EMU-webApp` is opened in Chrome.
 
 If you [install Chrome](https://www.google.com/chrome/){target='_blank'}, you can do this from the [Settings](chrome://settings/){target='_blank'} tab as shown below: 
 
 ![](img/setup0.png){width='60%' fig-align='center'}
 
-## Start up Rstudio
+## Start up RStudio
 
-Start Rstudio by clicking on the Rstudio icon -- it should look like this:
+Start RStudio by clicking on the RStudio icon -- it should look like this:
 
 ![](img/Rstudio_icon.png){width='10%' fig-align='center'}
 
@@ -27,7 +27,7 @@ Create a directory on your hard drive to be used on this course. You can do this
 ```{r}
 #| eval: false
 
-dir.create('C:/users/rasmu/desktop/ipsR')
+dir.create('C:/users/Rasmus/desktop/ipsR')
 ```
 
 If I was a Mac user, I would have done it like this:
@@ -35,10 +35,10 @@ If I was a Mac user, I would have done it like this:
 ```{r}
 #| eval: false
 
-dir.create('/Users/rasmu/Desktop/ipsR')
+dir.create('/Users/Rasmus/Desktop/ipsR')
 ```
 
-Alternatively you can just create a directory in the usual way -- e.g. by right clicking anywhere on your desktop and selecting new directory.
+Alternatively you can just create a directory in the usual way -- e.g. by right clicking anywhere on your desktop and selecting `New directory` or similar.
 
 ## Create a project
 
@@ -46,11 +46,11 @@ In RStudio, go to `File` > `New Project...`. Choose the directory you just creat
 
 ![](img/setup2.png){width='60%' fig-align='center'}
 
-You only need to create the project once. When you start up Rstudio the next time, the system should automatically open up inside this project that you created. If not, or if you closed the project, you can open it again:
+You only need to create the project once. When you start up RStudio the next time, the system should automatically open up inside this project that you created. If not, or if you closed the project, you can open it again:
 
 ![](img/setup2b.png){width='60%' fig-align='center'}
 
-You can get back to your default directory (if you were using R before then) any time by selecting close project in the above menu.
+You can get back to your default directory (if you were using R before then) any time by selecting `Close project` in the above menu.
 
 ## Install packages
 
@@ -61,27 +61,27 @@ In the RStudio console window, run the following code to install packages needed
 
 install.packages(c("Rcpp", "remotes", "knitr", 
                    "tidyverse", "magrittr",
-                   "rmarkdown", "emuR", "gridExtra", "emmeans", 
-                   "broom", "lmerTest", "pbkrtest", "MuMIn", "wrassp"))
+                   "rmarkdown", "emuR", "gridExtra", 
+                   "broom", "pbkrtest", "wrassp"))
 ```
 
 ::: {.callout-note}
 ## More information: Installation of R packages
 
-Should the above result in the error message `installation of package had non-zero exit status`, then it means that installation has failed. For Windows, you might then additionally have to install [Rtools](https://cran.r-project.org/bin/windows/Rtools/){target='_blank'}. For iOS you might need to install/reset the *XCode command-line tools*. For this purpose, open a Mac terminal window and execute the following:
+Should the above result in the error message `installation of package had non-zero exit status`, then it means that installation has failed. For Windows, you might then additionally have to install [Rtools](https://cran.r-project.org/bin/windows/Rtools/){target='_blank'}. For iOS you might need to install/reset the *XCode command-line tools*. For this purpose, you can call the following code in the R console:
 
 ```{r}
 #| eval: false
 
-xcode-select --install
+system("xcode-select --install")
 ```
 
-If the installation of R packages still does not work, execute the following:
+If the installation of R packages still does not work, call the following code:
 
 ```{r}
 #| eval: false
 
-xcode-select --reset
+system("xcode-select --reset")
 ```
 
 :::
@@ -121,7 +121,7 @@ ae <- load_emuDB(file.path(tempdir(), "emuR_demoData", "ae_emuDB"))
 serve(ae, useViewer=F)
 ```
 
-The third command `serve(ae, useViewer=F)` should produce the following image in your browser:
+The third command `serve(ae, useViewer=F)` should produce the following view in your browser:
 
 ![](img/setup3.png)
 
@@ -129,7 +129,7 @@ Have a look around and close the window to move on.
 
 ## Quitting from RStudio (and R)
 
-You shut down RStudio by either clicking `Session > Quit Session` in the main Rstudio toolbar or by running `q()` in the R console as below:
+You shut down RStudio by either clicking `Session` > `Quit Session` in the main Rstudio toolbar or by running `q()` in the R console:
 
 ```{r}
 #| eval: false
@@ -137,20 +137,20 @@ You shut down RStudio by either clicking `Session > Quit Session` in the main Rs
 q()
 ```
 
-You will then be asked whether you want to save the *workspace image*. **For this course, please never save the workspace i.e. (`Don't save`).**
+You will then be asked whether you want to save the *workspace image*. **For working through the materials in this tutorial, you shouldn't save the workspace image -- i.e. (`Don't save`).**
 
 ## Learning R
 
-A basic knowledge in R is a prerequisite for this course. If you are unfamiliar with R then please start by working through these two sources:
+A basic knowledge in R is a prerequisite for this tutorial. If you are unfamiliar with R then please start by working through these two sources:
 
 - [A short introduction to R by Raphael Winkelmann (in English)](https://www.phonetik.uni-muenchen.de/~jmh/lehre/sem/ws2122/WP_4.1/IntroR.html){target='_blank'}
 - A more detailed introduction to R and the `tidyverse` package by Johanna Cronenberg in [German](https://johannacronenberg.github.io/files/basicR_book/deutsch/book-output/index.html){target='_blank'} or [English](https://johannacronenberg.github.io/files/basicR_book/english/book-output/index.html){target='_blank'}
 
 There is a very large and helpful R community online that will make learning R easier for you. Here are a few useful links and commands in case you get stuck:
 
-- [Stack Overflow](https://stackoverflow.com/questions/tagged/r){target='_blank'}: A blog where you can often find an answer to your questions about R. The easiest way is to google your question in English; a Stack Overflow member’s answer will be included in the first search results.
+- [Stack Overflow](https://stackoverflow.com/questions/tagged/r){target='_blank'}: A blog where you can often find an answer to your questions about R. The easiest way is to do an internet search of your question in English; a Stack Overflow member's answer is usually included in the first search results.
 - The book [*R for Data Science*](https://r4ds.hadley.nz/){target='_blank'} [@wickham2023]: Hadley Wickham is the chief programmer of the `tidyverse`. His books are very readable, well-structured, and entertaining.
-- Cheat sheets: These are PDFs that provide an overview of functions with explanations and examples in a very compact form. You will find some cheat sheets in the main RStudio toolbar via `Help > Cheat Sheets`. The first three are especially useful. 
+- Cheat sheets: These are PDFs that provide an overview of functions with explanations and examples in a very compact form. You will find some cheat sheets in the main RStudio toolbar via `Help` > `Cheat Sheets`. The first three are especially useful. 
 - Vignettes: For some packages there are so-called *vignettes* available. These are mostly HTMLs or PDFs that have been written by the package authors. You can search for vignettes using the following input to the console (this example finds a vignette for `dplyr`, one of the libraries from `tidyverse`):
 
 ```{r}
@@ -159,7 +159,7 @@ There is a very large and helpful R community online that will make learning R e
 vignette("dplyr")
 ```
 
-- You can get information about a function by entering its name in the RStudio `Help` toolbar. You’ll then get information about the function’s arguments and often some examples. You can also get help via the console, as follows ( e.g. here for `getwd()`):
+- You can get information about a function by entering its name in the RStudio `Help` toolbar. You’ll then get information about the function’s arguments and often some examples. You can also get help via the console by typing a question mark followed by the function name, as follows (e.g. here for `getwd()`):
 
 ```{r}
 #| eval: false
@@ -168,17 +168,15 @@ vignette("dplyr")
 help("getwd")
 ```
 
-`ggplot2` is both a well-known and popular program for creating plots. There is plenty of help available for `ggplot2` from the R community. Here are some useful links for creating graphics:
-
-- The chapter [Visualize](https://r4ds.hadley.nz/visualize){target='_blank'} in @wickham2023
-- [Cookbook for R](http://www.cookbook-r.com/Graphs/){target='_blank'}
-- [Stack Overflow](https://stackoverflow.com/questions/tagged/ggplot2?sort=faq){target='_blank'}
-
-R is first and foremost an environment for developed for statistical computing. If you need more information about using statistics in R, the following are recommended:
+R is first and foremost an environment developed for statistical computing. If you need more information about using statistics in R, the following are recommended:
 
 - @winter2019 is a recent book with excellent explanations to all major themes in inferential statistics.
 - @gries2021 is a recent update of a classic which gives a methodical introduction to both R data structures and statistical models, starting with the very basics. It is useful for decision making about which model to use for which kind of question.
 - @sonderegger2023 is a very recent book which introduces regression models and discusses in depth which problems you may run into when fitting them.
 - Although the R code in @baayen2008 is a bit out of date, the explanations and examples of statistics foundations are very helpful. 
 
-<!-- may be worth writing explicitly that we encourage people to submit GitHub issues if they run into trouble -->
+Based on personal experience, we cannot recommend using large language models like ChatGPT to fix or explain R functions. Current versions of these models make many mistakes which can be difficult to solve without a solid understanding of R.
+
+# Having trouble?
+
+If you run into trouble with `emuR`, e.g. something doesn't seem to be working like it's supposed to and you're fairly confident that the mistake isn't yours, we strongly encourage you to alert the developers to this. You can do this via the [issue tracker](https://github.com/IPS-LMU/emuR/issues){target='_blank'} on GitHub. If you do so, please include as much information as possible, ideally providing a so-called *reproducible example* of code that produces the error.
